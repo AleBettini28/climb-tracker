@@ -1,11 +1,5 @@
 
-  # Climbing Management App
+  # Climb tracker
 
-  This is a code bundle for Climbing Management App. The original project is available at https://www.figma.com/design/DpDB6ROP4yR9X8xJLZ0mOS/Climbing-Management-App.
-
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
+  This is a small web application for climbers to track their progresses and sends in crags or boulder zones.
   
