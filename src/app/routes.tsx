@@ -54,4 +54,6 @@ export const router = createBrowserRouter([
       { path: 'nuovo-boulder-archivio', Component: NewBoulderArchive },
     ],
   },
-]);
+], {
+  basename: '/climb-tracker',
+});

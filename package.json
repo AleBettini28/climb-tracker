@@ -3,13 +3,13 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-   "scripts": {
+  "scripts": {
     "build": "vite build",
     "dev": "vite",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://AleBettini28.github.io/climb-tracker",
+  "homepage": "https://alebettini28.github.io/climb-tracker/",
   "dependencies": {
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
@@ -74,9 +74,12 @@
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@types/leaflet": "^1.9.21",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "4.7.0",
     "gh-pages": "^6.3.0",
     "tailwindcss": "4.1.12",
+    "typescript": "^6.0.3",
     "vite": "6.3.5"
   },
   "peerDependencies": {
