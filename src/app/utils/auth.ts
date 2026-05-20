@@ -17,7 +17,7 @@ export const auth = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`,
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwYWRtY3BiZGVsbW5zbml6Y3dlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDc1ODAsImV4cCI6MjA5MTkyMzU4MH0.oxm23lI_xtlZu9-RUBgIj1_h9QQx7bXERdahbg91pxg`,
         },
         body: JSON.stringify({ email, password, name }),
       });
