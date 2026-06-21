@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { boulderArchiveStorage } from '../utils/boulderArchiveStorage';
 import { boulderStorage } from '../utils/boulderStorage';

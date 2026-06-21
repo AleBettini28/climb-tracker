@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { storage } from '../utils/storage';
 import { boulderStorage } from '../utils/boulderStorage';

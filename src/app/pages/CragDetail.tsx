@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link, data } from 'react-router';
 import { routeStorage } from '../utils/routeStorage';
 import { cragStorage } from '../utils/cragStorage';
-import { storage } from '../utils/storage';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -13,14 +12,17 @@ import { toast } from 'sonner';
 import { MapView } from '../components/MapView';
 import { MapPicker } from '../components/MapPicker';
 import { ImageUpload } from '../components/ImageUpload';
+import { CragDetailResponse, cragsApi } from '../api';
+import { RouteDetailResponse } from '../api/crags';
 
 export function CragDetail() {
   const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
-  const [routes, setRoutes] = useState<any[]>([]);
-  const [crag, setCrag] = useState<any>(null);
+  const [routes, setRoutes] = useState<RouteDetailResponse[]>([]);
+  const [crag, setCrag] = useState<CragDetailResponse | undefined>(undefined);
   const [climbs, setClimbs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadingRoutes, setLoadingRoutes] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: '',
@@ -31,41 +33,61 @@ export function CragDetail() {
     longitude: 0,
     mapImageUrl: undefined as string | undefined,
   });
-  const cragName = decodeURIComponent(name || '');
+
+  const id = useParams<{ id: string }>().id;
 
   useEffect(() => {
-    loadCragData();
-  }, [name]);
+    if (loading || !id || crag) return;
 
-  const loadCragData = async () => {
-    try {
-      const [allRoutes, cragData, userClimbs] = await Promise.all([
-        routeStorage.getRoutes(),
-        cragStorage.getCragByName(cragName),
-        storage.getClimbs()
-      ]);
-      const cragRoutes = allRoutes.filter(r => r.crag === cragName);
-      setRoutes(cragRoutes);
-      setCrag(cragData);
-      setClimbs(userClimbs);
-      if (cragData) {
-        setEditForm({
-          name: cragData.name,
-          description: cragData.description || '',
-          city: cragData.city || '',
-          country: cragData.country || '',
-          latitude: cragData.latitude,
-          longitude: cragData.longitude,
-          mapImageUrl: cragData.mapImageUrl,
-        });
+    let cancelled = false;
+
+    (async () => {
+      try {
+        setLoading(true);
+        const data = await cragsApi.getOne(id);
+        setCrag(data);
+        setLoading(false);
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Error loading crags:', error);
+          toast.error('Errore nel caricamento della falesia');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+          console.log('loading set to false');
+        }
       }
-    } catch (error) {
-      console.error('Error loading crag data:', error);
-      toast.error('Errore nel caricamento dei dati');
-    } finally {
-      setLoading(false);
-    }
-  };
+    })();
+
+    return () => { cancelled = true; };
+  }, [loading]);
+
+  useEffect(() => {
+    if (loadingRoutes || !id || crag) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        setLoadingRoutes(true);
+        const data = await cragsApi.getOneRoutes(id);
+        setRoutes(data);
+        setLoadingRoutes(false);
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Error loading routes:', error);
+          toast.error('Errore nel caricamento delle vie');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingRoutes(false);
+        }
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [loadingRoutes]);
 
   const handleAddRoute = () => {
     if (crag) {
@@ -84,7 +106,7 @@ export function CragDetail() {
           country: crag.country || '',
           latitude: crag.latitude,
           longitude: crag.longitude,
-          mapImageUrl: crag.mapImageUrl,
+          mapImageUrl: crag.map_image_url,
         });
       }
     }
@@ -106,12 +128,7 @@ export function CragDetail() {
       });
       toast.success('Falesia aggiornata con successo!');
       setIsEditing(false);
-      // Navigate to new URL if name changed
-      if (editForm.name !== cragName) {
-        navigate(`/falesia/${encodeURIComponent(editForm.name)}`, { replace: true });
-      } else {
-        loadCragData();
-      }
+      navigate(`/falesia/${crag.id}`);
     } catch (error) {
       console.error('Error updating crag:', error);
       toast.error('Errore durante l\'aggiornamento della falesia');
@@ -125,7 +142,7 @@ export function CragDetail() {
     try {
       await routeStorage.deleteRoute(routeId);
       toast.success('Via eliminata con successo!');
-      loadCragData();
+      navigate(`/esplora`);
     } catch (error) {
       console.error('Error deleting route:', error);
       toast.error('Errore durante l\'eliminazione della via');
@@ -150,11 +167,11 @@ export function CragDetail() {
   }
 
   // Use crag coordinates if available, otherwise calculate from routes
-  const displayLat = crag?.latitude || (routes.length > 0 ? routes.reduce((sum, r) => sum + r.latitude, 0) / routes.length : 0);
-  const displayLng = crag?.longitude || (routes.length > 0 ? routes.reduce((sum, r) => sum + r.longitude, 0) / routes.length : 0);
+  const displayLat = crag ? crag.latitude : 0;
+  const displayLng = crag ? crag.longitude : 0;
 
   const gradeOrder = ['3B', '3C', '4A', '4B', '4C', '5A', '5A+', '5B', '5B+', '5C', '5C+', '6A', '6A+', '6B', '6B+', '6C', '6C+', '7A', '7A+', '7B', '7B+', '7C', '7C+', '8A', '8A+', '8B', '8B+', '8C', '8C+', '9A', '9A+', '9B', '9B+', '9C'];
-  const sortedGrades = routes.map(r => r.grade).sort((a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b));
+  const sortedGrades = routes.map(r => r.grado).sort((a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b));
   const minGrade = sortedGrades.length > 0 ? sortedGrades[0] : '-';
   const maxGrade = sortedGrades.length > 0 ? sortedGrades[sortedGrades.length - 1] : '-';
 
@@ -174,7 +191,7 @@ export function CragDetail() {
               <Mountain className="w-6 h-6 text-primary" />
             </div>
             {!isEditing ? (
-              <h1 className="text-2xl sm:text-3xl font-bold">{cragName}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">{crag ? crag.name : ''}</h1>
             ) : (
               <div className="space-y-2 flex-1">
                 <Label htmlFor="crag-name">Nome Falesia</Label>
@@ -273,7 +290,7 @@ export function CragDetail() {
           {!isEditing ? (
             <>
               {displayLat !== 0 && displayLng !== 0 ? (
-                <MapView latitude={displayLat} longitude={displayLng} title={cragName} height="250px" />
+                <MapView latitude={displayLat} longitude={displayLng} title={crag ? crag.name : ''} height="250px" />
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">Posizione non disponibile</p>
               )}
@@ -309,9 +326,9 @@ export function CragDetail() {
           </div>
           {!isEditing ? (
             <>
-              {crag?.mapImageUrl ? (
+              {crag?.map_image_url ? (
                 <img
-                  src={crag.mapImageUrl}
+                  src={crag.map_image_url}
                   alt="Mappa delle vie"
                   className="w-full h-auto rounded-lg border border-border"
                 />
@@ -344,9 +361,9 @@ export function CragDetail() {
                   className={`flex items-center justify-between p-3 rounded-lg transition-colors border border-border ${!isEditing ? 'hover:bg-muted cursor-pointer hover:border-primary' : ''}`}
                 >
                   <div className="flex-1">
-                    <div className="font-medium">{route.name}</div>
-                    {route.length && (
-                      <div className="text-sm text-muted-foreground">{route.length}m</div>
+                    <div className="font-medium">{route.nome_via}</div>
+                    {route.lunghezza && (
+                      <div className="text-sm text-muted-foreground">{route.lunghezza}m</div>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
@@ -354,7 +371,7 @@ export function CragDetail() {
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     )}
                     <span className="inline-flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
-                      {route.grade}
+                      {route.grado}
                     </span>
                     {isEditing && (
                       <Button
@@ -362,7 +379,7 @@ export function CragDetail() {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleDeleteRoute(route.id, route.name);
+                          handleDeleteRoute(route.id, route.nome_via);
                         }}
                         className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       >

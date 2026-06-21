@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { routeStorage } from '../utils/routeStorage';
 import { storage } from '../utils/storage';
@@ -9,43 +9,42 @@ import { Button } from '../components/ui/button';
 import { ReportRouteModal } from '../components/ReportRouteModal';
 import { ArrowLeft, Mountain, MapPin, Ruler, Flag } from 'lucide-react';
 import { toast } from 'sonner';
+import { RouteDetailResponseExtended, routesApi } from '../api/routes';
 
 export function RouteDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [route, setRoute] = useState<Route | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [route, setRoute] = useState<RouteDetailResponseExtended | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
   const [alreadyClimbed, setAlreadyClimbed] = useState(false);
   const [alreadyReported, setAlreadyReported] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
-    const fetchRoute = async () => {
+    if (loading || !id || route) return;
+
+    let cancelled = false;
+
+    (async () => {
       try {
-        if (!id) return;
-        const data = await routeStorage.getRouteById(id);
+        setLoading(true);
+        const data = await routesApi.getOne(id);
         setRoute(data);
-
-        // Check if user already climbed this route
-        if (data) {
-          const climbs = await storage.getClimbs();
-          const hasClimbed = climbs.some(climb => climb.routeId === data.id);
-          setAlreadyClimbed(hasClimbed);
-
-          // Check if user already reported this route
-          const hasReported = await reportStorage.hasUserReportedRoute(data.id);
-          setAlreadyReported(hasReported);
-        }
-      } catch (error) {
-        console.error('Error loading route:', error);
-        toast.error('Errore nel caricamento della via');
-      } finally {
         setLoading(false);
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Error loading route:', error);
+          toast.error('Errore nel caricamento della via');
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
-    };
+    })();
 
-    fetchRoute();
-  }, [id]);
+    return () => { cancelled = true; };
+  }, [loading]);
 
   const handleSelectForClimb = () => {
     if (!route) return;
@@ -58,7 +57,7 @@ export function RouteDetail() {
     }
 
     // Navigate to new climb page with route pre-selected
-    navigate('/nuova-salita', { state: { selectedRoute: route } });
+    navigate(`/nuova-salita/${route.id}`, { state: { selectedRoute: route } });
   };
 
   const handleReport = async (reason: string) => {
@@ -94,12 +93,11 @@ export function RouteDetail() {
           <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Via non trovata</h2>
           <p className="text-muted-foreground mb-4">La via che stai cercando non esiste.</p>
-          <Link to="/tutte-le-vie">
-            <Button variant="outline">
+          
+            <Button variant="outline" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Torna all'elenco
             </Button>
-          </Link>
         </Card>
       </div>
     );
@@ -110,12 +108,10 @@ export function RouteDetail() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <Link to="/tutte-le-vie">
-            <Button variant="ghost" className="mb-4">
+            <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Torna all'elenco
             </Button>
-          </Link>
 
           <div className="flex items-start justify-between gap-4 mb-2">
             <div className="flex items-center gap-3">
@@ -123,7 +119,7 @@ export function RouteDetail() {
                 <Mountain className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl">{route.name}</h1>
+                <h1 className="text-xl sm:text-2xl">{route.nome_via}</h1>
                 <p className="text-sm sm:text-base text-muted-foreground">
                   Dettagli della via
                 </p>
@@ -150,24 +146,24 @@ export function RouteDetail() {
             {/* Crag */}
             <div>
               <p className="text-sm text-muted-foreground mb-1">Falesia</p>
-              <p className="text-lg font-semibold">{route.crag}</p>
+              <p className="text-lg font-semibold">{route.crag_name}</p>
             </div>
 
             {/* Grade */}
             <div>
               <p className="text-sm text-muted-foreground mb-1">Grado</p>
               <span className="inline-flex items-center px-3 py-1.5 bg-primary text-primary-foreground rounded-full text-base font-medium">
-                {route.grade}
+                {route.grado}
               </span>
             </div>
 
             {/* Length */}
-            {route.length && (
+            {route.lunghezza && (
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Lunghezza</p>
                 <div className="flex items-center gap-2">
                   <Ruler className="w-4 h-4 text-muted-foreground" />
-                  <p className="text-base">{route.length} metri</p>
+                  <p className="text-base">{route.lunghezza} metri</p>
                 </div>
               </div>
             )}
@@ -203,7 +199,7 @@ export function RouteDetail() {
           isOpen={showReportModal}
           onClose={() => setShowReportModal(false)}
           onSubmit={handleReport}
-          routeName={route.name}
+          routeName={route.nome_via}
         />
       </div>
     </div>

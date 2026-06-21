@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link, useParams } from 'react-router';
 import { storage } from '../utils/storage';
 import { Route } from '../types/route';
 import { Card } from '../components/ui/card';
@@ -11,12 +11,14 @@ import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { PlusCircle, Mountain, ArrowRight } from 'lucide-react';
 import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
+import { ClimbCreateRequest, RouteDetailResponseExtended, routesApi } from '../api/routes';
+import { auth } from '../utils/auth';
 
 export function NewClimb() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [selectedRoute, setSelectedRoute] = useState<RouteDetailResponseExtended | null>(null);
   const [formData, setFormData] = useState({
     leadType: 'lead' as 'lead' | 'second',
     perceivedDifficulty: '3' as '1' | '2' | '3' | '4' | '5',
@@ -27,33 +29,41 @@ export function NewClimb() {
   useEffect(() => {
     // Check if a route was passed from RouteDetail page
     if (location.state?.selectedRoute) {
-      setSelectedRoute(location.state.selectedRoute as Route);
+      setSelectedRoute(location.state.selectedRoute as RouteDetailResponseExtended);
     }
   }, [location.state]);
+
+  const { id: routeId } = useParams<{ id: string }>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedRoute) {
+    if (!selectedRoute || !routeId) {
       toast.error('Seleziona una via dall\'archivio');
+      return;
+    }
+
+    const user = await auth.getSession();
+
+    if(!user) {
+      toast.error('Errore nel recuperare i dati dell utente.');
       return;
     }
 
     setIsSubmitting(true);
 
-    const newClimb = {
-      id: crypto.randomUUID(),
-      routeId: selectedRoute.id,
-      leadType: formData.leadType,
-      perceivedDifficulty: parseInt(formData.perceivedDifficulty) as 1 | 2 | 3 | 4 | 5,
-      date: formData.date,
-      description: formData.description || undefined,
+    const newClimb: ClimbCreateRequest = {
+      route_id: routeId,
+      is_lead: formData.leadType === "lead" ? true : false,
+      difficulty: parseInt(formData.perceivedDifficulty) as 1 | 2 | 3 | 4 | 5,
+      day: formData.date,
+      description: formData.description || "",
     };
 
     try {
-      await storage.addClimb(newClimb);
+      await routesApi.climbOne(user.id, newClimb);
       toast.success('Scalata aggiunta con successo! 🎉');
-      navigate('/');
+      navigate(`/falesia/${selectedRoute.crag_id}`);
     } catch (error) {
       console.error('Error adding climb:', error);
       toast.error('Errore durante l\'aggiunta della scalata');
@@ -83,10 +93,10 @@ export function NewClimb() {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1">
                 <p className="text-xs text-muted-foreground mb-1">Via Selezionata</p>
-                <h3 className="text-lg font-semibold mb-1">{selectedRoute.name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{selectedRoute.crag}</p>
+                <h3 className="text-lg font-semibold mb-1">{selectedRoute.nome_via}</h3>
+                <p className="text-sm text-muted-foreground mb-2">{selectedRoute.crag_name}</p>
                 <span className="inline-flex items-center px-2.5 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
-                  {selectedRoute.grade}
+                  {selectedRoute.grado}
                 </span>
               </div>
               <Link to="/tutte-le-vie">

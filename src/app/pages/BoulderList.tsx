@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { boulderStorage } from '../utils/boulderStorage';
 import { BoulderSend, BOULDER_GRADES } from '../types/boulder';
