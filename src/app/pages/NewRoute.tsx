@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate, useLocation, useParams } from 'react-router';
 import { routeStorage } from '../utils/routeStorage';
 import { cragStorage } from '../utils/cragStorage';
 import { CLIMBING_GRADES } from '../types/route';
@@ -12,6 +12,7 @@ import { PlusCircle, Mountain, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import { MapPicker } from '../components/MapPicker';
 import { auth } from '../utils/auth';
+import { routesApi } from '../api/routes';
 
 export function NewRoute() {
   const navigate = useNavigate();
@@ -68,6 +69,8 @@ export function NewRoute() {
     setShowSuggestions(false);
   };
 
+  const id = useParams<{ id: string }>().id;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -85,32 +88,22 @@ export function NewRoute() {
 
     try {
       const session = await auth.getSession();
-      if (!session?.id) {
+      if (!session?.id ) {
         toast.error('Devi essere autenticato per aggiungere una via');
         return;
       }
 
-      // Find or create the crag
-      const crag = await cragStorage.findOrCreateCrag(
-        formData.crag,
-        formData.latitude,
-        formData.longitude,
-        session.id
-      );
+      if(!id) {
+        toast.error('Id via non trovato');
+        return;
+      }
 
-      const newRoute = {
-        id: crypto.randomUUID(),
-        name: formData.name,
-        cragId: crag.id,
-        crag: crag.name,
-        grade: formData.grade,
-        length: formData.length,
-        latitude: crag.latitude,
-        longitude: crag.longitude,
-        addedBy: session.id,
-      };
+      await routesApi.createOneRoute(session.id, id, {
+        nome_via: formData.name,
+        grado: formData.grade,
+        lunghezza: formData.length ?? null,
+      });
 
-      await routeStorage.addRoute(newRoute);
       toast.success('Via aggiunta con successo! 🎉');
       navigate('/tutte-le-vie');
     } catch (error) {

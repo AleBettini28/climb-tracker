@@ -86,13 +86,6 @@ export function Navigation() {
                         >
                           Le Mie Vie
                         </Link>
-                        <Link
-                          to="/boulder"
-                          onClick={() => setShowActivityMenu(false)}
-                          className="block px-4 py-3 text-sm hover:bg-muted transition-colors"
-                        >
-                          I Miei Boulder
-                        </Link>
                       </div>
                     </>
                   )}

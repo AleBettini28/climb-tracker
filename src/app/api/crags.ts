@@ -13,6 +13,18 @@ export interface CragDetailResponse {
   longitude: number;
 }
 
+export interface CragCreateUpdateRequest {
+  name: string;
+  description: string;
+  city?: string;
+  country?: string;
+  map_image_url?: string;
+  added_by: string;
+  latitude: number;
+  longitude: number;
+}
+
+
 export interface RouteDetailResponse {
   id: string;
   nome_via: string;
@@ -33,4 +45,8 @@ export const cragsApi = {
     const data = await apiRequest<RouteDetailResponse[]>(`/crags/one/${id}/routes`);
     return data;
   },
+  createOneCrag: async (body: CragCreateUpdateRequest): Promise<null> => {
+      const data = await apiRequest<null>(`/crags/create/one`, {body: body, method: "POST"});
+      return data;
+    },
 };

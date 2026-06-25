@@ -9,6 +9,7 @@ import { Label } from '../components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Mountain, PlusCircle, Search, Filter, ChevronDown, ChevronUp, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { RouteDetailResponseExtended, routesApi } from '../api/routes';
 
 type SortField = 'grade' | 'length' | null;
 type SortDirection = 'asc' | 'desc';
@@ -17,7 +18,7 @@ const FILTERS_STORAGE_KEY = 'all-routes-filters';
 
 export function AllRoutesList() {
   const navigate = useNavigate();
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<RouteDetailResponseExtended[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Load filters from localStorage on mount
@@ -62,7 +63,7 @@ export function AllRoutesList() {
 
   const loadRoutes = async () => {
     try {
-      const data = await routeStorage.getRoutes();
+      const data = await routesApi.list();
       setRoutes(data);
     } catch (error) {
       console.error('Error loading routes:', error);
@@ -74,7 +75,7 @@ export function AllRoutesList() {
 
   // Get unique crags
   const crags = useMemo(() => {
-    const uniqueCrags = new Set(routes.map(r => r.crag));
+    const uniqueCrags = new Set(routes.map(r => r.crag_name));
     return Array.from(uniqueCrags).sort();
   }, [routes]);
 
@@ -85,25 +86,25 @@ export function AllRoutesList() {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(route =>
-        route.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        route.crag.toLowerCase().includes(searchTerm.toLowerCase())
+        route.nome_via.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        route.crag_name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Grade filter
     if (selectedGrade !== 'all') {
-      filtered = filtered.filter(route => route.grade === selectedGrade);
+      filtered = filtered.filter(route => route.grado === selectedGrade);
     }
 
     // Crag filter
     if (selectedCrag !== 'all') {
-      filtered = filtered.filter(route => route.crag === selectedCrag);
+      filtered = filtered.filter(route => route.crag_name === selectedCrag);
     }
 
     // Length filter
     if (maxLength) {
       const maxLen = parseInt(maxLength);
-      filtered = filtered.filter(route => !route.length || route.length <= maxLen);
+      filtered = filtered.filter(route => !route.lunghezza || route.lunghezza <= maxLen);
     }
 
     // Sorting
@@ -114,12 +115,12 @@ export function AllRoutesList() {
         let comparison = 0;
 
         if (sortField === 'grade') {
-          const indexA = gradeOrder.indexOf(a.grade as any);
-          const indexB = gradeOrder.indexOf(b.grade as any);
+          const indexA = gradeOrder.indexOf(a.grado as any);
+          const indexB = gradeOrder.indexOf(b.grado as any);
           comparison = indexA - indexB;
         } else if (sortField === 'length') {
-          const lengthA = a.length || 0;
-          const lengthB = b.length || 0;
+          const lengthA = a.lunghezza || 0;
+          const lengthB = b.lunghezza || 0;
           comparison = lengthA - lengthB;
         }
 
@@ -319,15 +320,15 @@ export function AllRoutesList() {
                       onClick={() => navigate(`/via/${route.id}`)}
                       className="border-b border-border hover:bg-muted/50 transition-colors cursor-pointer"
                     >
-                      <td className="p-4 font-medium">{route.name}</td>
-                      <td className="p-4 text-muted-foreground">{route.crag}</td>
+                      <td className="p-4 font-medium">{route.nome_via}</td>
+                      <td className="p-4 text-muted-foreground">{route.crag_name}</td>
                       <td className="p-4">
                         <span className="inline-flex items-center px-2.5 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
-                          {route.grade}
+                          {route.grado}
                         </span>
                       </td>
                       <td className="p-4 text-muted-foreground">
-                        {route.length ? `${route.length}m` : '-'}
+                        {route.lunghezza ? `${route.lunghezza}m` : '-'}
                       </td>
                     </tr>
                   ))}
@@ -343,16 +344,8 @@ export function AllRoutesList() {
               <p className="text-sm sm:text-base text-muted-foreground mb-4">
                 {hasActiveFilters
                   ? 'Prova a modificare i filtri di ricerca'
-                  : 'Inizia ad aggiungere vie all\'archivio'}
+                  : 'Aggiungi o seleziona una falesia per aggiungere vie'}
               </p>
-              {!hasActiveFilters && (
-                <Link to="/nuova-via">
-                  <Button>
-                    <PlusCircle className="w-4 h-4 mr-2" />
-                    Aggiungi la prima via
-                  </Button>
-                </Link>
-              )}
             </div>
           </Card>
         )}

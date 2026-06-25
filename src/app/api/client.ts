@@ -49,9 +49,11 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     throw new ApiError(message, response.status, errorBody);
   }
 
+  // Sostituisci le ultime righe con questo:
   if (response.status === 204) {
     return undefined as T;
   }
-
-  return response.json() as Promise<T>;
+  
+  const text = await response.text();
+  return text ? JSON.parse(text) as T : undefined as T;
 }

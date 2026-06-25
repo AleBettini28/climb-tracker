@@ -11,6 +11,8 @@ import { toast } from 'sonner';
 import { MapPicker } from '../components/MapPicker';
 import { ImageUpload } from '../components/ImageUpload';
 import { auth } from '../utils/auth';
+import { cragsApi } from '../api';
+import { CragCreateUpdateRequest } from '../api/crags';
 
 export function NewCrag() {
   const navigate = useNavigate();
@@ -47,16 +49,18 @@ export function NewCrag() {
         return;
       }
 
-      const newCrag = await cragStorage.addCrag({
-        name: formData.name,
-        description: formData.description || undefined,
-        city: formData.city || undefined,
-        country: formData.country || undefined,
-        latitude: formData.latitude,
-        longitude: formData.longitude,
-        mapImageUrl: formData.mapImageUrl,
-        addedBy: session.id,
-      });
+       const newCrag: CragCreateUpdateRequest = {
+          name: formData.name,
+          description: formData.description || "",
+          city: formData.city || undefined,
+          country: formData.country || undefined,
+          latitude: formData.latitude,
+          longitude: formData.longitude,
+          map_image_url: formData.mapImageUrl || undefined,
+          added_by: session.id,
+      };
+
+      await cragsApi.createOneCrag(newCrag);
 
       toast.success('Falesia aggiunta con successo! 🎉');
       navigate(`/falesia/${encodeURIComponent(newCrag.name)}`);

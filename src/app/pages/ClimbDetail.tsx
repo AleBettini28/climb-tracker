@@ -10,11 +10,13 @@ import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { ArrowLeft, Mountain, MapPin, Trash2, Edit, Save, X } from 'lucide-react';
 import { DIFFICULTY_LABELS, Climb } from '../types/climb';
 import { toast } from 'sonner';
+import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
+import { auth } from '../utils/auth';
 
 export function ClimbDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [climb, setClimb] = useState<Climb | null>(null);
+  const [climb, setClimb] = useState<ClimbDetailExtendedResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -27,18 +29,20 @@ export function ClimbDetail() {
 
   useEffect(() => {
     const fetchClimb = async () => {
+      const user = await auth.getSession();
+      if (!user || !id) {
+        toast.error('Errore nel recuperare i dati dell utente.');
+        return;
+      }
       try {
-        const climbs = await storage.getClimbs();
-        const foundClimb = climbs.find(c => c.id === id);
-        if (foundClimb) {
-          setClimb(foundClimb);
-          setEditForm({
-            leadType: foundClimb.leadType,
-            perceivedDifficulty: foundClimb.perceivedDifficulty,
-            date: foundClimb.date,
-            description: foundClimb.description || ''
-          });
-        }
+        const foundClimb = await routesApi.getOneUserClimb(user.id, id);
+        setClimb(foundClimb);
+        setEditForm({
+          leadType: foundClimb.is_lead ? 'lead' : 'second',
+          perceivedDifficulty: foundClimb.difficulty as 1 | 2 | 3 | 4 | 5,
+          date: foundClimb.day,
+          description: foundClimb.description || ''
+        });
       } catch (error) {
         console.error('Error loading climb:', error);
         toast.error('Errore nel caricamento della scalata');
@@ -53,11 +57,11 @@ export function ClimbDetail() {
   const handleSave = async () => {
     if (!climb) return;
 
-    setSaving(true);
-    try {
+    //setSaving(true);
+    /*try {
       const updatedClimb = {
-        id: climb.id,
-        routeId: climb.routeId,
+        id: climb.route.id,
+        routeId: climb.route.id,
         leadType: editForm.leadType,
         perceivedDifficulty: editForm.perceivedDifficulty,
         date: editForm.date,
@@ -78,15 +82,15 @@ export function ClimbDetail() {
       toast.error('Errore durante l\'aggiornamento');
     } finally {
       setSaving(false);
-    }
+    }*/
   };
 
   const handleCancel = () => {
     if (climb) {
       setEditForm({
-        leadType: climb.leadType,
-        perceivedDifficulty: climb.perceivedDifficulty,
-        date: climb.date,
+        leadType: climb.is_lead ? 'lead' : 'second',
+        perceivedDifficulty: climb.difficulty as 1 | 2 | 3 | 4 | 5,
+        date: climb.day,
         description: climb.description || ''
       });
     }
@@ -97,10 +101,15 @@ export function ClimbDetail() {
     if (!climb) return;
 
     if (confirm(`Sei sicuro di voler eliminare questa scalata?`)) {
+      const user = await auth.getSession();
+      if (!user) {
+        toast.error('Errore nel recuperare i dati dell utente.');
+        return;
+      }
       try {
-        await storage.deleteClimb(climb.id);
-        toast.success('Scalata eliminata con successo');
+        await routesApi.deleteOneClimb(user.id, climb.route.id);
         navigate('/vie');
+        toast.success('Scalata eliminata con successo');
       } catch (error) {
         console.error('Error deleting climb:', error);
         toast.error('Errore durante l\'eliminazione');
@@ -158,7 +167,7 @@ export function ClimbDetail() {
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Mountain className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <h1 className="text-xl sm:text-2xl">{isEditing ? 'Modifica Scalata' : climb.routeName || 'Via sconosciuta'}</h1>
+              <h1 className="text-xl sm:text-2xl">{isEditing ? 'Modifica Scalata' : climb.route.nome_via || 'Via sconosciuta'}</h1>
             </div>
             {!isEditing && (
               <div className="flex gap-2">
@@ -184,25 +193,25 @@ export function ClimbDetail() {
           <div className="space-y-3">
             <div>
               <p className="text-xs text-muted-foreground mb-1">Nome Via</p>
-              <p className="text-base font-semibold">{climb.routeName || 'N/A'}</p>
+              <p className="text-base font-semibold">{climb.route.nome_via || 'N/A'}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Falesia</p>
-              <p className="text-base font-medium">{climb.routeCrag || 'N/A'}</p>
+              <p className="text-base font-medium">{climb.route.crag_name || 'N/A'}</p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Grado</p>
               <span className="inline-flex items-center px-3 py-1.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">
-                {climb.routeGrade || 'N/A'}
+                {climb.route.grado || 'N/A'}
               </span>
             </div>
-            {climb.routeLatitude && climb.routeLongitude && (
+            {climb.route.latitude && climb.route.longitude && (
               <div>
                 <p className="text-xs text-muted-foreground mb-1">Posizione</p>
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                   <p className="text-xs font-mono">
-                    {climb.routeLatitude.toFixed(4)}, {climb.routeLongitude.toFixed(4)}
+                    {climb.route.latitude.toFixed(4)}, {climb.route.longitude.toFixed(4)}
                   </p>
                 </div>
               </div>
@@ -269,7 +278,7 @@ export function ClimbDetail() {
                 </RadioGroup>
               ) : (
                 <span className="inline-flex items-center px-3 py-1.5 bg-accent/30 text-accent-foreground rounded-full text-sm">
-                  {climb.leadType === 'lead' ? '🧗 Da Primo' : '⛓️ Da Secondo'}
+                  {climb.is_lead === true ? '🧗 Da Primo' : '⛓️ Da Secondo'}
                 </span>
               )}
             </div>
@@ -306,7 +315,7 @@ export function ClimbDetail() {
                 </RadioGroup>
               ) : (
                 <span className="inline-flex items-center px-3 py-1.5 bg-secondary text-secondary-foreground rounded-full text-sm">
-                  {DIFFICULTY_LABELS[climb.perceivedDifficulty]}
+                  {DIFFICULTY_LABELS[climb.difficulty as 1 | 2 | 3 | 4 | 5]}
                 </span>
               )}
             </div>
@@ -326,7 +335,7 @@ export function ClimbDetail() {
                 />
               ) : (
                 <p className="text-base">
-                  {new Date(climb.date).toLocaleDateString('it-IT', {
+                  {new Date(climb.day).toLocaleDateString('it-IT', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric'

@@ -20,7 +20,6 @@ export function CragDetail() {
   const navigate = useNavigate();
   const [routes, setRoutes] = useState<RouteDetailResponse[]>([]);
   const [crag, setCrag] = useState<CragDetailResponse | undefined>(undefined);
-  const [climbs, setClimbs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingRoutes, setLoadingRoutes] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -91,7 +90,7 @@ export function CragDetail() {
 
   const handleAddRoute = () => {
     if (crag) {
-      navigate('/nuova-via', { state: { selectedCrag: crag } });
+      navigate(`/nuova-via/${crag.id}`, { state: { selectedCrag: crag } });
     }
   };
 
@@ -147,10 +146,6 @@ export function CragDetail() {
       console.error('Error deleting route:', error);
       toast.error('Errore durante l\'eliminazione della via');
     }
-  };
-
-  const isRouteClimbed = (routeId: string) => {
-    return climbs.some(climb => climb.routeId === routeId);
   };
 
   if (loading) {
@@ -367,7 +362,9 @@ export function CragDetail() {
                     )}
                   </div>
                   <div className="flex items-center gap-3">
-                    {isRouteClimbed(route.id) && !isEditing && (
+
+                    {!isEditing && 1 === 2 && (
+                      //FIXME add isRouteClimbed(route.id) check to show the check icon if the route has been climbed
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     )}
                     <span className="inline-flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">

@@ -8,11 +8,13 @@ import { Button } from '../components/ui/button';
 import { Search, Filter, Trash2, Mountain, ChevronDown, ChevronUp } from 'lucide-react';
 import { CLIMBING_GRADES, DIFFICULTY_LABELS, Climb } from '../types/climb';
 import { toast } from 'sonner';
+import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
+import { auth } from '../utils/auth';
 
 const FILTERS_STORAGE_KEY = 'climb-list-filters';
 
 export function ClimbList() {
-  const [climbs, setClimbs] = useState<Climb[]>([]);
+  const [climbs, setClimbs] = useState<ClimbDetailExtendedResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Load filters from localStorage
@@ -49,10 +51,18 @@ export function ClimbList() {
     localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
   }, [searchTerm, selectedGrade, selectedCrag, selectedPeriod, selectedLeadType]);
 
+
   useEffect(() => {
     const fetchClimbs = async () => {
+        const user = await auth.getSession();
+        
+        if(!user) {
+          toast.error('Errore nel recuperare i dati dell utente.');
+          return;
+        }
+
       try {
-        const data = await storage.getClimbs();
+        const data = await routesApi.getUserClimbs(user.id);
         setClimbs(data);
       } catch (error) {
         console.error('Error loading climbs:', error);
@@ -67,7 +77,7 @@ export function ClimbList() {
 
   // Get unique crags
   const crags = useMemo(() => {
-    const uniqueCrags = new Set(climbs.map(c => c.routeCrag).filter(Boolean));
+    const uniqueCrags = new Set(climbs.map(c => c.route.crag_name).filter(Boolean));
     return Array.from(uniqueCrags).sort();
   }, [climbs]);
 
@@ -78,24 +88,24 @@ export function ClimbList() {
     // Search filter
     if (searchTerm) {
       filtered = filtered.filter(climb =>
-        (climb.routeName?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
-        (climb.routeCrag?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
+        (climb.route.nome_via?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+        (climb.route.crag_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
       );
     }
 
     // Grade filter
     if (selectedGrade !== 'all') {
-      filtered = filtered.filter(climb => climb.routeGrade === selectedGrade);
+      filtered = filtered.filter(climb => climb.route.grado === selectedGrade);
     }
 
     // Crag filter
     if (selectedCrag !== 'all') {
-      filtered = filtered.filter(climb => climb.routeCrag === selectedCrag);
+      filtered = filtered.filter(climb => climb.route.crag_name === selectedCrag);
     }
 
     // Lead type filter
     if (selectedLeadType !== 'all') {
-      filtered = filtered.filter(climb => climb.leadType === selectedLeadType);
+      filtered = filtered.filter(climb => climb.is_lead === (selectedLeadType === 'lead'));
     }
 
     // Period filter
@@ -110,27 +120,33 @@ export function ClimbList() {
       const days = periodMap[selectedPeriod];
       if (days) {
         const cutoffDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(climb => new Date(climb.date) >= cutoffDate);
+        filtered = filtered.filter(climb => new Date(climb.day) >= cutoffDate);
       }
     }
 
     // Sort by date (most recent first)
     return filtered.sort((a, b) =>
-      new Date(b.date).getTime() - new Date(a.date).getTime()
+      new Date(b.day).getTime() - new Date(a.day).getTime()
     );
   }, [climbs, searchTerm, selectedGrade, selectedCrag, selectedLeadType, selectedPeriod]);
 
   const handleDelete = async (id: string, name: string) => {
     if (confirm(`Sei sicuro di voler eliminare la scalata "${name}"?`)) {
+      const user = await auth.getSession();
+      if (!user) {
+        toast.error('Errore nel recuperare i dati dell utente.');
+        return;
+      }
       try {
-        await storage.deleteClimb(id);
-        const updatedClimbs = await storage.getClimbs();
-        setClimbs(updatedClimbs);
+        await routesApi.deleteOneClimb(user.id, id);
         toast.success('Scalata eliminata con successo');
       } catch (error) {
         console.error('Error deleting climb:', error);
         toast.error('Errore durante l\'eliminazione');
       }
+
+      const updatedClimbs = await routesApi.getUserClimbs(user.id);
+      setClimbs(updatedClimbs);
     }
   };
 
@@ -278,7 +294,7 @@ export function ClimbList() {
       {filteredClimbs.length > 0 ? (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {filteredClimbs.map((climb) => (
-            <Link key={climb.id} to={`/vie/${climb.id}`}>
+            <Link key={climb.route.id} to={`/vie/${climb.route.id}`}>
               <Card className="p-4 sm:p-5 hover:shadow-md transition-shadow group cursor-pointer">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
@@ -287,23 +303,23 @@ export function ClimbList() {
                         <Mountain className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">{climb.routeName || 'Via sconosciuta'}</h3>
-                        <p className="text-sm text-muted-foreground mb-3 truncate">{climb.routeCrag || 'N/A'}</p>
+                        <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">{climb.route.nome_via || 'Via sconosciuta'}</h3>
+                        <p className="text-sm text-muted-foreground mb-3 truncate">{climb.route.crag_name || 'N/A'}</p>
 
                         <div className="flex flex-wrap gap-2">
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground rounded-full text-xs sm:text-sm font-medium">
-                            {climb.routeGrade || 'N/A'}
+                            {climb.route.grado || 'N/A'}
                           </span>
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-accent/30 text-accent-foreground rounded-full text-xs sm:text-sm">
-                            {climb.leadType === 'lead' ? '🧗 Primo' : '⛓️ Secondo'}
+                            {climb.is_lead === true ? '🧗 Primo' : '⛓️ Secondo'}
                           </span>
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs sm:text-sm">
-                            {DIFFICULTY_LABELS[climb.perceivedDifficulty]}
+                            {DIFFICULTY_LABELS[climb.difficulty.toString() as unknown as 1 | 2 | 3 | 4 | 5] || 'N/A'}
                           </span>
                         </div>
 
                         <p className="text-xs text-muted-foreground mt-3">
-                          {new Date(climb.date).toLocaleDateString('it-IT', {
+                          {new Date(climb.day).toLocaleDateString('it-IT', {
                             day: 'numeric',
                             month: 'long',
                             year: 'numeric'
@@ -319,7 +335,7 @@ export function ClimbList() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleDelete(climb.id, climb.routeName || 'questa scalata');
+                      handleDelete(climb.route.id, climb.route.nome_via || 'questa scalata');
                     }}
                     className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
                   >
