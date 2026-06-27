@@ -48,5 +48,9 @@ export const cragsApi = {
   createOneCrag: async (body: CragCreateUpdateRequest): Promise<null> => {
       const data = await apiRequest<null>(`/crags/create/one`, {body: body, method: "POST"});
       return data;
-    },
+  },
+  updateOneCrag: async (body: CragCreateUpdateRequest, id: string): Promise<null> => {
+      const data = await apiRequest<null>(`/crags/update/${id}`, {body: body, method: "PUT"});
+      return data;
+  },
 };

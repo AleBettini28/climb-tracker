@@ -116,18 +116,19 @@ export function CragDetail() {
     if (!crag) return;
 
     try {
-      await cragStorage.updateCrag(crag.id, {
+      await cragsApi.updateOneCrag({
         name: editForm.name,
         description: editForm.description,
         city: editForm.city,
         country: editForm.country,
         latitude: editForm.latitude,
         longitude: editForm.longitude,
-        mapImageUrl: editForm.mapImageUrl,
-      });
+        map_image_url: editForm.mapImageUrl,
+        added_by: crag.added_by, 
+      }, crag.id);
       toast.success('Falesia aggiornata con successo!');
       setIsEditing(false);
-      navigate(`/falesia/${crag.id}`);
+      navigate(0);
     } catch (error) {
       console.error('Error updating crag:', error);
       toast.error('Errore durante l\'aggiornamento della falesia');

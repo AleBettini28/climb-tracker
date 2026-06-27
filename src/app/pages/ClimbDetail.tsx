@@ -171,10 +171,6 @@ export function ClimbDetail() {
             </div>
             {!isEditing && (
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-                  <Edit className="w-4 h-4 mr-1" />
-                  Modifica
-                </Button>
                 <Button variant="destructive" size="sm" onClick={handleDelete}>
                   <Trash2 className="w-4 h-4 mr-1" />
                   Elimina
