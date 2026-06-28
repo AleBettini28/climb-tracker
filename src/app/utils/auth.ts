@@ -1,5 +1,7 @@
 // auth.ts
-const API_BASE = 'http://192.168.1.80:8080/auth'; // il tuo Spring Boot backend
+import { API_BASE_URL } from '../api/config';
+
+const API_BASE = API_BASE_URL + '/auth'; // il tuo Spring Boot backend
 
 export interface User {
   id: string;
