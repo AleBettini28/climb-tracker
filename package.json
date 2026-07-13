@@ -9,7 +9,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://alebettini28.github.io/climb-tracker/",
+  "homepage": "https://climbtracker-ui.alebettini.com/",
   "dependencies": {
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",

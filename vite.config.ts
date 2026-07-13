@@ -24,7 +24,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: "/climb-tracker/",
+  base: "/",
   resolve: {
     alias: {
       // Alias @ to the src directory
