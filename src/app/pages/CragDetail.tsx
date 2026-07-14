@@ -126,7 +126,7 @@ export function CragDetail() {
       }, crag.id);
       toast.success('Falesia aggiornata con successo!');
       setIsEditing(false);
-      navigate(0); // Refresh the page to show updated data
+      navigate(`/falesia/${id}`);
     } catch (error) {
       console.error('Error updating crag:', error);
       toast.error('Errore durante l\'aggiornamento della falesia');
