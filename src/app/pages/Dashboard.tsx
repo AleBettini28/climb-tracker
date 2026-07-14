@@ -1,15 +1,13 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { storage } from '../utils/storage';
-import { boulderStorage } from '../utils/boulderStorage';
 import { Card } from '../components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Trophy, Clock, Mountain, TrendingUp } from 'lucide-react';
 import { Climb, DIFFICULTY_LABELS } from '../types/climb';
-import { BoulderSend } from '../types/boulder';
 
 export function Dashboard() {
-  const [climbs, setClimbs] = useState<Climb[]>([]);
+  return null;
+  /*const [climbs, setClimbs] = useState<Climb[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -101,7 +99,7 @@ export function Dashboard() {
         <p className="text-sm sm:text-base text-muted-foreground">Panoramica delle tue scalate</p>
       </div>
 
-      {/* Summary Cards */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <Card className="p-4 sm:p-6">
           <div className="flex items-center gap-3 sm:gap-4">
@@ -150,7 +148,7 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* Chart */}
+       
         <Card className="p-4 sm:p-6">
           <h2 className="mb-4 text-lg sm:text-xl">Vie per Grado</h2>
           {stats.chartData.length > 0 ? (
@@ -183,7 +181,6 @@ export function Dashboard() {
           )}
         </Card>
 
-        {/* Recent Climbs */}
         <Card className="p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg sm:text-xl">Ultime Scalate</h2>
@@ -228,7 +225,6 @@ export function Dashboard() {
           )}
         </Card>
 
-        {/* Top Grades */}
         <Card className="p-4 sm:p-6 lg:col-span-2">
           <h2 className="mb-4 text-lg sm:text-xl">Migliori Gradi (Vie)</h2>
           {stats.topGrades.length > 0 ? (
@@ -263,5 +259,5 @@ export function Dashboard() {
         </Card>
       </div>
     </div>
-  );
+  );*/
 }

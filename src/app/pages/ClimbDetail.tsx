@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
-import { storage } from '../utils/storage';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -8,7 +7,7 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { ArrowLeft, Mountain, MapPin, Trash2, Edit, Save, X } from 'lucide-react';
-import { DIFFICULTY_LABELS, Climb } from '../types/climb';
+import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
 import { auth } from '../utils/auth';

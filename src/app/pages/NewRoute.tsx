@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router';
-import { routeStorage } from '../utils/routeStorage';
-import { cragStorage } from '../utils/cragStorage';
 import { CLIMBING_GRADES } from '../types/route';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -19,9 +17,6 @@ export function NewRoute() {
   const location = useLocation();
   const selectedCrag = (location.state as any)?.selectedCrag;
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [allCrags, setAllCrags] = useState<any[]>([]);
-  const [filteredCrags, setFilteredCrags] = useState<any[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     crag: selectedCrag?.name || '',
@@ -30,44 +25,6 @@ export function NewRoute() {
     latitude: selectedCrag?.latitude || undefined,
     longitude: selectedCrag?.longitude || undefined,
   });
-
-  useEffect(() => {
-    loadExistingCrags();
-  }, []);
-
-  const loadExistingCrags = async () => {
-    try {
-      const crags = await cragStorage.getCrags();
-      setAllCrags(crags);
-    } catch (error) {
-      console.error('Error loading crags:', error);
-    }
-  };
-
-  const handleCragChange = (value: string) => {
-    setFormData({ ...formData, crag: value });
-
-    if (value.trim()) {
-      const filtered = allCrags.filter(crag =>
-        crag.name.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredCrags(filtered);
-      setShowSuggestions(filtered.length > 0);
-    } else {
-      setShowSuggestions(false);
-    }
-  };
-
-  const selectCrag = (crag: any) => {
-    setFormData({
-      ...formData,
-      crag: crag.name,
-      latitude: crag.latitude,
-      longitude: crag.longitude
-    });
-    toast.info('Coordinate pre-compilate dalla falesia esistente');
-    setShowSuggestions(false);
-  };
 
   const id = useParams<{ id: string }>().id;
 
@@ -105,7 +62,7 @@ export function NewRoute() {
       });
 
       toast.success('Via aggiunta con successo! 🎉');
-      navigate('/tutte-le-vie');
+      navigate(`/falesia/${id}`);
     } catch (error) {
       console.error('Error adding route:', error);
       toast.error('Errore durante l\'aggiunta della via');
@@ -164,39 +121,10 @@ export function NewRoute() {
                   type="text"
                   placeholder="Es. Arco, Val di Mello"
                   value={formData.crag}
-                  onChange={(e) => handleCragChange(e.target.value)}
-                  onFocus={() => {
-                    if (formData.crag && filteredCrags.length > 0) {
-                      setShowSuggestions(true);
-                    }
-                  }}
-                  onBlur={() => {
-                    // Delay to allow click on suggestion
-                    setTimeout(() => setShowSuggestions(false), 200);
-                  }}
                   className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                   required
                   autoComplete="off"
                 />
-
-              {/* Autocomplete Suggestions */}
-              {showSuggestions && filteredCrags.length > 0 && (
-                <div className="absolute z-[10000] w-full mt-1 bg-card border-2 border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                  {filteredCrags.map((crag) => (
-                    <button
-                      key={crag.id}
-                      type="button"
-                      onClick={() => selectCrag(crag)}
-                      className="w-full text-left px-4 py-2.5 hover:bg-accent transition-colors text-sm border-b border-border last:border-b-0"
-                    >
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-muted-foreground" />
-                        <span className="font-medium">{crag.name}</span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
               </div>
             )}
 

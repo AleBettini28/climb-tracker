@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
-import { routeStorage } from '../utils/routeStorage';
-import { storage } from '../utils/storage';
-import { reportStorage } from '../utils/reportStorage';
-import { Route } from '../types/route';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { ReportRouteModal } from '../components/ReportRouteModal';
@@ -58,19 +54,6 @@ export function RouteDetail() {
 
     // Navigate to new climb page with route pre-selected
     navigate(`/nuova-salita/${route.id}`, { state: { selectedRoute: route } });
-  };
-
-  const handleReport = async (reason: string) => {
-    if (!route) return;
-
-    try {
-      await reportStorage.reportRoute(route.id, reason);
-      setAlreadyReported(true);
-      toast.success('Segnalazione inviata con successo!');
-    } catch (error) {
-      console.error('Error reporting route:', error);
-      toast.error('Errore durante l\'invio della segnalazione');
-    }
   };
 
   if (loading) {
@@ -194,13 +177,6 @@ export function RouteDetail() {
           )}
         </div>
 
-        {/* Report Modal */}
-        <ReportRouteModal
-          isOpen={showReportModal}
-          onClose={() => setShowReportModal(false)}
-          onSubmit={handleReport}
-          routeName={route.nome_via}
-        />
       </div>
     </div>
   );

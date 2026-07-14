@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { getSupabase } from '../utils/supabase';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';

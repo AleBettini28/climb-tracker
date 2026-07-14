@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link, data } from 'react-router';
-import { routeStorage } from '../utils/routeStorage';
-import { cragStorage } from '../utils/cragStorage';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -14,9 +12,9 @@ import { MapPicker } from '../components/MapPicker';
 import { ImageUpload } from '../components/ImageUpload';
 import { CragDetailResponse, cragsApi } from '../api';
 import { RouteDetailResponse } from '../api/crags';
+import { routesApi } from '../api/routes';
 
 export function CragDetail() {
-  const { name } = useParams<{ name: string }>();
   const navigate = useNavigate();
   const [routes, setRoutes] = useState<RouteDetailResponse[]>([]);
   const [crag, setCrag] = useState<CragDetailResponse | undefined>(undefined);
@@ -128,7 +126,7 @@ export function CragDetail() {
       }, crag.id);
       toast.success('Falesia aggiornata con successo!');
       setIsEditing(false);
-      navigate(0);
+      navigate(0); // Refresh the page to show updated data
     } catch (error) {
       console.error('Error updating crag:', error);
       toast.error('Errore durante l\'aggiornamento della falesia');
@@ -140,13 +138,14 @@ export function CragDetail() {
     if (!confirmed) return;
 
     try {
-      await routeStorage.deleteRoute(routeId);
+      await routesApi.deleteOneRoute(routeId);
       toast.success('Via eliminata con successo!');
-      navigate(`/esplora`);
     } catch (error) {
       console.error('Error deleting route:', error);
       toast.error('Errore durante l\'eliminazione della via');
     }
+
+    setRoutes(prevRoutes => prevRoutes.filter(route => route.id !== routeId));
   };
 
   if (loading) {

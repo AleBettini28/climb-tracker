@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { routeStorage } from '../utils/routeStorage';
 import { Route, CLIMBING_GRADES } from '../types/route';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';

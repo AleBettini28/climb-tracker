@@ -1,25 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { boulderArchiveStorage } from '../utils/boulderArchiveStorage';
-import { zoneStorage } from '../utils/zoneStorage';
 import { cragsApi, CragDetailResponse } from '../api';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Compass, Search, Mountain, MapPin, TrendingUp, Plus } from 'lucide-react';
 import { toast } from 'sonner';
-
-type Tab = 'crags' | 'zones';
-
-interface ZoneListItem {
-  name: string;
-  city?: string;
-  country?: string;
-  boulderCount: number;
-  hardestGrade: string;
-  latitude: number;
-  longitude: number;
-}
 
 export function Explore() {
   const navigate = useNavigate();

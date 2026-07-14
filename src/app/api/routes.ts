@@ -43,6 +43,10 @@ export const routesApi = {
     const data = await apiRequest<RouteDetailResponseExtended>(`/routes/one/${id}`);
     return data;
   },
+  deleteOneRoute: async (routeId: string): Promise<null> => {
+    const data = await apiRequest<null>(`/routes/one/${routeId}/delete`, { method: "DELETE"});
+    return data;
+  },
   climbOne: async (userId: string, body: ClimbCreateRequest): Promise<null> => {
     const data = await apiRequest<null>(`/routes/create-one/${userId}/climb-one`, {body: body, method: "POST"});
     return data;

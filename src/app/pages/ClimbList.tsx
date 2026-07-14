@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
-import { storage } from '../utils/storage';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Button } from '../components/ui/button';
 import { Search, Filter, Trash2, Mountain, ChevronDown, ChevronUp } from 'lucide-react';
-import { CLIMBING_GRADES, DIFFICULTY_LABELS, Climb } from '../types/climb';
+import { CLIMBING_GRADES, DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
 import { auth } from '../utils/auth';

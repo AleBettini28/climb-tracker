@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link, useParams } from 'react-router';
-import { storage } from '../utils/storage';
-import { Route } from '../types/route';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
