@@ -1,5 +1,4 @@
 import { apiRequest } from './client';
-import { RouteDetailResponse } from './crags';
 
 export interface RouteDetailResponseExtended {
   id: string;

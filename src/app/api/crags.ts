@@ -30,6 +30,7 @@ export interface RouteDetailResponse {
   nome_via: string;
   grado: string;
   lunghezza: number;
+  number: number;
 }
 
 export const cragsApi = {

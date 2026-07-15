@@ -356,7 +356,7 @@ export function CragDetail() {
                   className={`flex items-center justify-between p-3 rounded-lg transition-colors border border-border ${!isEditing ? 'hover:bg-muted cursor-pointer hover:border-primary' : ''}`}
                 >
                   <div className="flex-1">
-                    <div className="font-medium">{route.nome_via}</div>
+                    <div className="font-medium">{route.number} - {route.nome_via}</div>
                     {route.lunghezza && (
                       <div className="text-sm text-muted-foreground">{route.lunghezza}m</div>
                     )}
