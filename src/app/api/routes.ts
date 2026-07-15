@@ -15,6 +15,7 @@ export interface RouteCreateUpdateRequest {
   nome_via: string;
   grado: string;
   lunghezza: number | null;
+  number: number;
 }
 
 export interface ClimbCreateRequest {

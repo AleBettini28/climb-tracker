@@ -22,6 +22,7 @@ export function NewRoute() {
     crag: selectedCrag?.name || '',
     grade: '',
     length: undefined as number | undefined,
+    number:  undefined as number | undefined,
     latitude: selectedCrag?.latitude || undefined,
     longitude: selectedCrag?.longitude || undefined,
   });
@@ -59,6 +60,7 @@ export function NewRoute() {
         nome_via: formData.name,
         grado: formData.grade,
         lunghezza: formData.length ?? null,
+        number: formData.number ?? 0,
       });
 
       toast.success('Via aggiunta con successo! 🎉');
@@ -107,6 +109,20 @@ export function NewRoute() {
                 placeholder="Es. La Fenice"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                required
+              />
+            </div>
+
+             <div className="space-y-2">
+              <Label htmlFor="number">Numero della Via *</Label>
+              <Input
+                id="number"
+                type="number"
+                min="0"
+                placeholder="Es. 1"
+                value={formData.number}
+                onChange={(e) => setFormData({ ...formData, number: e.target.value ? parseInt(e.target.value) : 0 })}
                 className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 required
               />
