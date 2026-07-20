@@ -57,7 +57,7 @@ export function Dashboard() {
         <p className="text-sm sm:text-base text-muted-foreground">Panoramica delle tue scalate</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <Card className="p-4 sm:p-6">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="p-2 sm:p-3 bg-primary/10 rounded-lg shrink-0">
@@ -80,25 +80,6 @@ export function Dashboard() {
               <p className="text-xl sm:text-2xl font-semibold">
                 {stats.best_grade || 'N/A'}
               </p>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4 sm:p-6 sm:col-span-2 lg:col-span-1">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="p-2 sm:p-3 bg-secondary/50 rounded-lg shrink-0">
-              <Mountain className="w-5 h-5 sm:w-6 sm:h-6 text-secondary-foreground" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs sm:text-sm text-muted-foreground">Falesia Preferita</p>
-              <p className="text-lg sm:text-xl font-semibold truncate">
-                {stats.best_crag?.name || 'N/A'}
-              </p>
-              {stats.best_crag_climb_count != null && stats.best_crag_climb_count > 0 && (
-                <p className="text-xs text-muted-foreground">
-                  {stats.best_crag_climb_count} {stats.best_crag_climb_count === 1 ? 'via' : 'vie'}
-                </p>
-              )}
             </div>
           </div>
         </Card>
