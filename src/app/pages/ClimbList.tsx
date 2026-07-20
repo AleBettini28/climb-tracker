@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
@@ -14,7 +14,6 @@ const FILTERS_STORAGE_KEY = 'climb-list-filters';
 
 export function ClimbList() {
   const [climbs, setClimbs] = useState<ClimbDetailExtendedResponse[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // Load filters from localStorage
   const loadSavedFilters = () => {
@@ -66,8 +65,6 @@ export function ClimbList() {
       } catch (error) {
         console.error('Error loading climbs:', error);
         toast.error('Errore nel caricamento delle scalate');
-      } finally {
-        setLoading(false);
       }
     };
 

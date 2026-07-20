@@ -7,11 +7,10 @@ import { toast } from 'sonner';
 interface ImageUploadProps {
   currentImageUrl?: string;
   onImageUrlChange: (url: string | undefined) => void;
-  bucketName: string;
   label: string;
 }
 
-export function ImageUpload({ currentImageUrl, onImageUrlChange, bucketName, label }: ImageUploadProps) {
+export function ImageUpload({ currentImageUrl, onImageUrlChange, label }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(currentImageUrl);
 

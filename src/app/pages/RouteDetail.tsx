@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { ReportRouteModal } from '../components/ReportRouteModal';
-import { ArrowLeft, Mountain, MapPin, Ruler, Flag } from 'lucide-react';
+import { ArrowLeft, Mountain, MapPin, Ruler } from 'lucide-react';
 import { toast } from 'sonner';
 import { RouteDetailResponseExtended, routesApi } from '../api/routes';
 
@@ -12,9 +11,6 @@ export function RouteDetail() {
   const navigate = useNavigate();
   const [route, setRoute] = useState<RouteDetailResponseExtended | undefined>(undefined);
   const [loading, setLoading] = useState(false);
-  const [alreadyClimbed, setAlreadyClimbed] = useState(false);
-  const [alreadyReported, setAlreadyReported] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
     if (loading || !id || route) return;
@@ -44,13 +40,6 @@ export function RouteDetail() {
 
   const handleSelectForClimb = () => {
     if (!route) return;
-
-    if (alreadyClimbed) {
-      const confirm = window.confirm(
-        'Hai già registrato una scalata per questa via. Vuoi aggiungerne un\'altra?'
-      );
-      if (!confirm) return;
-    }
 
     // Navigate to new climb page with route pre-selected
     navigate(`/nuova-salita/${route.id}`, { state: { selectedRoute: route } });
@@ -108,18 +97,6 @@ export function RouteDetail() {
                 </p>
               </div>
             </div>
-
-            {/* Report Button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowReportModal(true)}
-              disabled={alreadyReported}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
-              title={alreadyReported ? 'Già Segnalata' : 'Segnala Errore'}
-            >
-              <Flag className="w-4 h-4" />
-            </Button>
           </div>
         </div>
 
@@ -168,13 +145,8 @@ export function RouteDetail() {
         <div className="space-y-3">
           <Button className="w-full" size="lg" onClick={handleSelectForClimb}>
             <Mountain className="w-4 h-4 mr-2" />
-            {alreadyClimbed ? 'Ho Arrampicato Questa Via di Nuovo' : 'Ho Arrampicato Questa Via'}
+            Ho Arrampicato Questa Via
           </Button>
-          {alreadyClimbed && (
-            <p className="text-xs text-center text-muted-foreground">
-              Hai già registrato una scalata per questa via
-            </p>
-          )}
         </div>
 
       </div>

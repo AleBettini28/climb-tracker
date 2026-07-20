@@ -111,43 +111,6 @@ export function Navigation() {
           </div>
         </div>
       </nav>
-
-      {/* Floating Action Button */}
-      <div className="fixed bottom-6 right-6 z-40">
-        <div className="relative">
-          <button
-            onClick={() => setShowQuickAdd(!showQuickAdd)}
-            className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-primary to-accent text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110"
-          >
-            <Plus className="w-6 h-6" />
-          </button>
-
-          {showQuickAdd && (
-            <>
-              <div
-                className="fixed inset-0"
-                onClick={() => setShowQuickAdd(false)}
-              />
-              <div className="absolute bottom-16 right-0 w-56 bg-card border border-border rounded-lg shadow-lg">
-                <Link
-                  to="/tutte-le-vie"
-                  onClick={() => setShowQuickAdd(false)}
-                  className="block px-4 py-3 text-sm hover:bg-muted transition-colors border-b border-border rounded-t-lg"
-                >
-                  Registra Salita
-                </Link>
-                <Link
-                  to="/tutti-i-boulder"
-                  onClick={() => setShowQuickAdd(false)}
-                  className="block px-4 py-3 text-sm hover:bg-muted transition-colors"
-                >
-                  Registra Boulder
-                </Link>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
     </>
   );
 }

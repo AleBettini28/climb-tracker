@@ -124,7 +124,7 @@ export function Explore() {
                     <span className="text-sm text-muted-foreground flex items-center gap-1">
                       <TrendingUp className="w-3 h-3" />Grado max
                     </span>
-                    <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{'-'}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
                   </div>
                 </div>
               </Card>

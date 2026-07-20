@@ -11,6 +11,7 @@ export interface CragDetailResponse {
   added_by: string;
   latitude: number;
   longitude: number;
+  max_grade: string;
 }
 
 export interface CragCreateUpdateRequest {
@@ -31,6 +32,7 @@ export interface RouteDetailResponse {
   grado: string;
   lunghezza: number;
   number: number;
+  is_climbed: boolean;
 }
 
 export const cragsApi = {
@@ -42,8 +44,8 @@ export const cragsApi = {
     const data = await apiRequest<CragDetailResponse>(`/crags/one/${id}`);
     return data;
   },
-  getOneRoutes: async (id: string): Promise<RouteDetailResponse[]> => {
-    const data = await apiRequest<RouteDetailResponse[]>(`/crags/one/${id}/routes`);
+  getOneRoutes: async (id: string, userId: string): Promise<RouteDetailResponse[]> => {
+    const data = await apiRequest<RouteDetailResponse[]>(`/crags/one/${id}/routes/${userId}`);
     return data;
   },
   createOneCrag: async (body: CragCreateUpdateRequest): Promise<null> => {

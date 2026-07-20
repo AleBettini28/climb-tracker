@@ -45,7 +45,7 @@ export function MapView({ latitude, longitude, title, height = '300px' }: MapVie
   return (
     <div
       ref={mapContainerRef}
-      className="rounded-lg overflow-hidden border border-border"
+      className="relative isolate z-0 rounded-lg overflow-hidden border border-border"
       style={{ height }}
     />
   );

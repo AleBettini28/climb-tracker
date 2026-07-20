@@ -13,6 +13,7 @@ import { ImageUpload } from '../components/ImageUpload';
 import { CragDetailResponse, cragsApi } from '../api';
 import { RouteDetailResponse } from '../api/crags';
 import { routesApi } from '../api/routes';
+import { auth } from '../utils/auth';
 
 export function CragDetail() {
   const navigate = useNavigate();
@@ -68,7 +69,12 @@ export function CragDetail() {
     (async () => {
       try {
         setLoadingRoutes(true);
-        const data = await cragsApi.getOneRoutes(id);
+        const user = await auth.getSession();
+        if(!user) {
+          toast.error('Errore nel recuperare i dati dell utente.');
+          return;
+        }
+        const data = await cragsApi.getOneRoutes(id, user.id);
         setRoutes(data);
         setLoadingRoutes(false);
       } catch (error) {
@@ -93,19 +99,18 @@ export function CragDetail() {
   };
 
   const handleEditToggle = () => {
-    if (isEditing) {
-      // Reset form if canceling
-      if (crag) {
-        setEditForm({
-          name: crag.name,
-          description: crag.description || '',
-          city: crag.city || '',
-          country: crag.country || '',
-          latitude: crag.latitude,
-          longitude: crag.longitude,
-          mapImageUrl: crag.map_image_url,
-        });
-      }
+    // Populate the form with the current crag data whenever we enter or leave
+    // edit mode, so the fields are never left blank/stale.
+    if (crag) {
+      setEditForm({
+        name: crag.name,
+        description: crag.description || '',
+        city: crag.city || '',
+        country: crag.country || '',
+        latitude: crag.latitude,
+        longitude: crag.longitude,
+        mapImageUrl: crag.map_image_url,
+      });
     }
     setIsEditing(!isEditing);
   };
@@ -335,7 +340,6 @@ export function CragDetail() {
             <ImageUpload
               currentImageUrl={editForm.mapImageUrl}
               onImageUrlChange={(url) => setEditForm({ ...editForm, mapImageUrl: url })}
-              bucketName="crag-maps"
               label=""
             />
           )}
@@ -363,8 +367,7 @@ export function CragDetail() {
                   </div>
                   <div className="flex items-center gap-3">
 
-                    {!isEditing && 1 === 2 && (
-                      //FIXME add isRouteClimbed(route.id) check to show the check icon if the route has been climbed
+                    {!isEditing && route.is_climbed && (
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     )}
                     <span className="inline-flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">

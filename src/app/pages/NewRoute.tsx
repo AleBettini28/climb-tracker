@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router';
 import { CLIMBING_GRADES } from '../types/route';
 import { Card } from '../components/ui/card';

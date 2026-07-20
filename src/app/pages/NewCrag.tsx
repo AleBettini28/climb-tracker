@@ -143,7 +143,6 @@ export function NewCrag() {
             <ImageUpload
               currentImageUrl={formData.mapImageUrl}
               onImageUrlChange={(url) => setFormData({ ...formData, mapImageUrl: url })}
-              bucketName="crag-maps"
               label="Foto Mappa Vie (opzionale)"
             />
 

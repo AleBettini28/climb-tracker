@@ -126,7 +126,7 @@ export function MapPicker({ latitude, longitude, onLocationSelect }: MapPickerPr
 
       <div
         ref={mapContainerRef}
-        className="rounded-lg overflow-hidden border border-border h-[300px] sm:h-[400px]"
+        className="relative isolate z-0 rounded-lg overflow-hidden border border-border h-[300px] sm:h-[400px]"
       />
 
       {latitude && longitude && (

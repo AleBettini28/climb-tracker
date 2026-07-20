@@ -33,7 +33,6 @@ export const router = createBrowserRouter([
       { path: 'vie', Component: ClimbList },
       { path: 'vie/:id', Component: ClimbDetail },
       { path: 'nuova-salita/:id', Component: NewClimb },
-      { path: 'tutte-le-vie', Component: AllRoutesList },
       { path: 'via/:id', Component: RouteDetail },
       { path: 'nuova-via/:id', Component: NewRoute },
     ],
