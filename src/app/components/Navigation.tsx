@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { Home, Compass, List, ChevronDown, LogOut, LogIn } from 'lucide-react';
+import { Home, LayoutDashboardIcon, Compass, List, ChevronDown, LogOut, LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ConfirmDialog } from './ConfirmDialog';
 
 export function Navigation() {
   const location = useLocation();
@@ -9,9 +10,11 @@ export function Navigation() {
   const { user, logout } = useAuth();
   const [showActivityMenu, setShowActivityMenu] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogout = async () => {
     await logout();
+    setShowLogoutDialog(false);
     navigate('/esplora');
   };
 
@@ -40,8 +43,8 @@ export function Navigation() {
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   }`}
                 >
-                  <Home className="w-4 h-4" />
-                  <span className="hidden md:inline text-sm font-medium">Home</span>
+                  <LayoutDashboardIcon className="w-4 h-4" />
+                  <span className="hidden md:inline text-sm font-medium">Dashboard</span>
                 </Link>
 
                 {/* Esplora */}
@@ -101,7 +104,7 @@ export function Navigation() {
                       {user.name || user.email}
                     </span>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => setShowLogoutDialog(true)}
                       className="flex items-center gap-1.5 px-2 sm:px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                       title="Esci"
                     >
@@ -124,6 +127,15 @@ export function Navigation() {
           </div>
         </div>
       </nav>
+      <ConfirmDialog
+        open={showLogoutDialog}
+        title="Conferma uscita"
+        message="Sei sicuro di voler uscire?"
+        confirmLabel="Esci"
+        icon={LogOut}
+        onConfirm={handleLogout}
+        onClose={() => setShowLogoutDialog(false)}
+      />
     </>
   );
 }

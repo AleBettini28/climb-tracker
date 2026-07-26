@@ -103,7 +103,7 @@ export function Dashboard() {
               <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-accent-foreground" />
             </div>
             <div className="min-w-0">
-              <p className="text-xs sm:text-sm text-muted-foreground">Grado Migliore (Primo)</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">Grado Migliore (Lead)</p>
               <p className="text-xl sm:text-2xl font-semibold">
                 {stats.best_grade || 'N/A'}
               </p>
