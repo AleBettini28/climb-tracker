@@ -6,9 +6,11 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import { Compass, Search, Mountain, MapPin, TrendingUp, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '../context/AuthContext';
 
 export function Explore() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [crags, setCrags] = useState<CragDetailResponse[]>([]);
   const [loadingCrags, setLoadingCrags] = useState(true);
@@ -89,10 +91,12 @@ export function Explore() {
               className="pl-10 border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </div>
-          <Button onClick={() => navigate('/nuova-falesia')}>
-            <Plus className="w-4 h-4 mr-2" />
-            Nuova Falesia
-          </Button>
+          {user && (
+            <Button onClick={() => navigate('/nuova-falesia')}>
+              <Plus className="w-4 h-4 mr-2" />
+              Nuova Falesia
+            </Button>
+          )}
         </div>
 
         {displayData.length > 0 ? (

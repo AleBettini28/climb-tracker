@@ -25,7 +25,7 @@ export default function Auth() {
         await auth.signup(email, password, name);
       }
       await refreshUser();
-      navigate('/');
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Autenticazione fallita');
     } finally {

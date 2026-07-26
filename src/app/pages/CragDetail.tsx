@@ -13,10 +13,11 @@ import { ImageUpload } from '../components/ImageUpload';
 import { CragDetailResponse, cragsApi } from '../api';
 import { RouteDetailResponse } from '../api/crags';
 import { routesApi } from '../api/routes';
-import { auth } from '../utils/auth';
+import { useAuth } from '../context/AuthContext';
 
 export function CragDetail() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [routes, setRoutes] = useState<RouteDetailResponse[]>([]);
   const [crag, setCrag] = useState<CragDetailResponse | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -69,12 +70,9 @@ export function CragDetail() {
     (async () => {
       try {
         setLoadingRoutes(true);
-        const user = await auth.getSession();
-        if(!user) {
-          toast.error('Errore nel recuperare i dati dell utente.');
-          return;
-        }
-        const data = await cragsApi.getOneRoutes(id, user.id);
+        const data = user
+          ? await cragsApi.getOneRoutes(id, user.id)
+          : await cragsApi.getOneRoutesPublic(id);
         setRoutes(data);
         setLoadingRoutes(false);
       } catch (error) {
@@ -90,7 +88,7 @@ export function CragDetail() {
     })();
 
     return () => { cancelled = true; };
-  }, [loadingRoutes]);
+  }, [loadingRoutes, user]);
 
   const handleAddRoute = () => {
     if (crag) {
@@ -205,7 +203,7 @@ export function CragDetail() {
               </div>
             )}
           </div>
-          {crag && !isEditing && (
+          {crag && !isEditing && user && (
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
               <Button variant="outline" onClick={handleEditToggle} className="flex-1 sm:flex-initial">
                 <Edit2 className="w-4 h-4 sm:mr-2" />

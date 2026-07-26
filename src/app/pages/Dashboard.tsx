@@ -4,23 +4,27 @@ import { Card } from '../components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Trophy, Clock, Mountain, TrendingUp } from 'lucide-react';
 import { dashboardApi, DashboardStatsResponse } from '../api/dashboard';
-import { auth } from '../utils/auth';
 import { toast } from 'sonner';
+import { useAuth } from '../context/AuthContext';
+import { LoginRequiredDialog } from '../components/LoginRequiredDialog';
 
 export function Dashboard() {
+  const { user, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<DashboardStatsResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      setLoading(false);
+      setShowLoginDialog(true);
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        const user = await auth.getSession();
-
-        if (!user) {
-          toast.error('Errore nel recuperare i dati dell utente.');
-          return;
-        }
-
         const data = await dashboardApi.getStats(user.id);
         setStats(data);
       } catch (error) {
@@ -32,12 +36,35 @@ export function Dashboard() {
     };
 
     fetchData();
-  }, []);
+  }, [authLoading, user]);
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="container mx-auto px-4 py-6 sm:py-8">
         <p className="text-muted-foreground">Caricamento...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="container mx-auto px-4 py-6 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="mb-2 text-xl sm:text-2xl">Dashboard</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Panoramica delle tue scalate</p>
+        </div>
+        <Card className="p-8 sm:p-12 text-center">
+          <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Accedi per vedere la tua dashboard</h2>
+          <p className="text-muted-foreground">
+            Registrati o accedi per tracciare le tue scalate e vedere le tue statistiche.
+          </p>
+        </Card>
+        <LoginRequiredDialog
+          open={showLoginDialog}
+          onClose={() => setShowLoginDialog(false)}
+          message="Devi accedere per vedere la tua dashboard."
+        />
       </div>
     );
   }

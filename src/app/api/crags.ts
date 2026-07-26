@@ -48,6 +48,10 @@ export const cragsApi = {
     const data = await apiRequest<RouteDetailResponse[]>(`/crags/one/${id}/routes/${userId}`);
     return data;
   },
+  getOneRoutesPublic: async (id: string): Promise<RouteDetailResponse[]> => {
+    const data = await apiRequest<RouteDetailResponse[]>(`/crags/one/${id}/routes/public`);
+    return data;
+  },
   createOneCrag: async (body: CragCreateUpdateRequest): Promise<null> => {
       const data = await apiRequest<null>(`/crags/create/one`, {body: body, method: "POST"});
       return data;

@@ -5,12 +5,16 @@ import { Button } from '../components/ui/button';
 import { ArrowLeft, Mountain, MapPin, Ruler } from 'lucide-react';
 import { toast } from 'sonner';
 import { RouteDetailResponseExtended, routesApi } from '../api/routes';
+import { useAuth } from '../context/AuthContext';
+import { LoginRequiredDialog } from '../components/LoginRequiredDialog';
 
 export function RouteDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [route, setRoute] = useState<RouteDetailResponseExtended | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   useEffect(() => {
     if (loading || !id || route) return;
@@ -40,6 +44,11 @@ export function RouteDetail() {
 
   const handleSelectForClimb = () => {
     if (!route) return;
+
+    if (!user) {
+      setShowLoginDialog(true);
+      return;
+    }
 
     // Navigate to new climb page with route pre-selected
     navigate(`/nuova-salita/${route.id}`, { state: { selectedRoute: route } });
@@ -150,6 +159,11 @@ export function RouteDetail() {
         </div>
 
       </div>
+      <LoginRequiredDialog
+        open={showLoginDialog}
+        onClose={() => setShowLoginDialog(false)}
+        message="Devi accedere per segnare una via come scalata."
+      />
     </div>
   );
 }

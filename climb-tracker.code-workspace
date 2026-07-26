@@ -1,11 +1,14 @@
 {
 	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../climb-tracker-java"
-		}
-	],
+    {
+      "path": "."
+    },
+    {
+      "path": "../climb-tracker-java"
+    },
+    {
+      "path": "../climb-tracker-db"
+    }
+  ],
 	"settings": {}
 }
