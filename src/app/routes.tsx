@@ -10,6 +10,15 @@ import { NewRoute } from './pages/NewRoute';
 import { Explore } from './pages/Explore';
 import { CragDetail } from './pages/CragDetail';
 import { NewCrag } from './pages/NewCrag';
+import { BoulderAreaDetail } from './pages/BoulderAreaDetail';
+import { NewBoulderArea } from './pages/NewBoulderArea';
+import { BoulderDetail } from './pages/BoulderDetail';
+import { NewBoulder } from './pages/NewBoulder';
+import { BoulderRouteDetail } from './pages/BoulderRouteDetail';
+import { NewBoulderRoute } from './pages/NewBoulderRoute';
+import { NewBoulderSend } from './pages/NewBoulderSend';
+import { BoulderSendList } from './pages/BoulderSendList';
+import { BoulderSendDetail } from './pages/BoulderSendDetail';
 import Auth from './pages/Auth';
 
 export const router = createBrowserRouter([
@@ -29,6 +38,9 @@ export const router = createBrowserRouter([
       { path: 'dashboard', Component: Dashboard },
       { path: 'falesia/:id', Component: CragDetail },
       { path: 'via/:id', Component: RouteDetail },
+      { path: 'area-boulder/:id', Component: BoulderAreaDetail },
+      { path: 'masso/:id', Component: BoulderDetail },
+      { path: 'blocco/:id', Component: BoulderRouteDetail },
 
       // Protected routes: require an authenticated user.
       {
@@ -68,6 +80,54 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <NewRoute />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'nuova-area-boulder',
+        element: (
+          <ProtectedRoute>
+            <NewBoulderArea />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'nuovo-masso/:id',
+        element: (
+          <ProtectedRoute>
+            <NewBoulder />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'nuovo-blocco/:id',
+        element: (
+          <ProtectedRoute>
+            <NewBoulderRoute />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'nuovo-invio/:id',
+        element: (
+          <ProtectedRoute>
+            <NewBoulderSend />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'boulder',
+        element: (
+          <ProtectedRoute>
+            <BoulderSendList />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'boulder/:id',
+        element: (
+          <ProtectedRoute>
+            <BoulderSendDetail />
           </ProtectedRoute>
         ),
       },
