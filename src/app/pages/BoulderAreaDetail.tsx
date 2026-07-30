@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
-import { ArrowLeft, Circle, MapPin, List, Plus, Edit2, Save, X, Trash2, TrendingUp, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Hexagon, MapPin, List, Plus, Edit2, Save, X, Trash2, TrendingUp, Image as ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { MapView } from '../components/MapView';
 import { MapPicker } from '../components/MapPicker';
@@ -191,7 +191,7 @@ export function BoulderAreaDetail() {
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <Circle className="w-6 h-6 text-primary" />
+              <Hexagon className="w-6 h-6 text-primary" />
             </div>
             {!isEditing ? (
               <h1 className="text-2xl sm:text-3xl font-bold">{boulderArea ? boulderArea.name : ''}</h1>

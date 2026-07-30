@@ -19,6 +19,11 @@ import { NewBoulderRoute } from './pages/NewBoulderRoute';
 import { NewBoulderSend } from './pages/NewBoulderSend';
 import { BoulderSendList } from './pages/BoulderSendList';
 import { BoulderSendDetail } from './pages/BoulderSendDetail';
+import { Workouts } from './pages/Workouts';
+import { NewWorkout } from './pages/NewWorkout';
+import { WorkoutList } from './pages/WorkoutList';
+import { WorkoutDetail } from './pages/WorkoutDetail';
+import { AIPlan } from './pages/AIPlan';
 import Auth from './pages/Auth';
 
 export const router = createBrowserRouter([
@@ -128,6 +133,46 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <BoulderSendDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'allenamenti',
+        element: (
+          <ProtectedRoute>
+            <Workouts />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'allenamenti/nuovo',
+        element: (
+          <ProtectedRoute>
+            <NewWorkout />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'allenamenti/lista',
+        element: (
+          <ProtectedRoute>
+            <WorkoutList />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'allenamenti/piano-ai',
+        element: (
+          <ProtectedRoute>
+            <AIPlan />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'allenamento/:id',
+        element: (
+          <ProtectedRoute>
+            <WorkoutDetail />
           </ProtectedRoute>
         ),
       },

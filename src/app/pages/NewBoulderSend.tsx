@@ -6,7 +6,7 @@ import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
-import { PlusCircle, Circle, ArrowRight } from 'lucide-react';
+import { PlusCircle, Hexagon, ArrowRight } from 'lucide-react';
 import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { BoulderSendCreateRequest, BoulderRouteDetailResponseExtended, boulderRoutesApi } from '../api/boulderRoutes';
@@ -77,7 +77,7 @@ export function NewBoulderSend() {
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <Hexagon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
             <h1 className="text-xl sm:text-2xl">Nuovo Invio</h1>
           </div>
@@ -100,14 +100,14 @@ export function NewBoulderSend() {
           </Card>
         ) : (
           <Card className="p-6 sm:p-8 mb-6 text-center">
-            <Circle className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
+            <Hexagon className="w-12 h-12 text-muted-foreground/50 mx-auto mb-3" />
             <h3 className="text-lg font-semibold mb-2">Nessun blocco selezionato</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Seleziona un blocco dall'archivio per registrare il tuo invio
             </p>
             <Link to="/esplora">
               <Button>
-                <Circle className="w-4 h-4 mr-2" />
+                <Hexagon className="w-4 h-4 mr-2" />
                 Cerca Boulder nell'Archivio
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>

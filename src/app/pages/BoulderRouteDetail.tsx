@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Circle, MapPin } from 'lucide-react';
+import { ArrowLeft, Hexagon, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import { BoulderRouteDetailResponseExtended, boulderRoutesApi } from '../api/boulderRoutes';
 import { useAuth } from '../context/AuthContext';
@@ -70,7 +70,7 @@ export function BoulderRouteDetail() {
     return (
       <div className="container mx-auto px-4 py-6 sm:py-8">
         <Card className="p-8 sm:p-12 text-center">
-          <Circle className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+          <Hexagon className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Blocco non trovato</h2>
           <p className="text-muted-foreground mb-4">Il blocco che stai cercando non esiste.</p>
 
@@ -96,7 +96,7 @@ export function BoulderRouteDetail() {
           <div className="flex items-start justify-between gap-4 mb-2">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
-                <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                <Hexagon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl">{boulderRoute.route_name}</h1>
@@ -152,7 +152,7 @@ export function BoulderRouteDetail() {
         {/* Action Buttons */}
         <div className="space-y-3">
           <Button className="w-full" size="lg" onClick={handleSelectForSend}>
-            <Circle className="w-4 h-4 mr-2" />
+            <Hexagon className="w-4 h-4 mr-2" />
             Ho Inviato Questo Blocco
           </Button>
         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { Home, LayoutDashboardIcon, Compass, List, ChevronDown, LogOut, LogIn } from 'lucide-react';
+import { Home, LayoutDashboardIcon, Compass, List, ChevronDown, LogOut, LogIn, Dumbbell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ConfirmDialog } from './ConfirmDialog';
 
@@ -46,6 +46,21 @@ export function Navigation() {
                   <LayoutDashboardIcon className="w-4 h-4" />
                   <span className="hidden md:inline text-sm font-medium">Dashboard</span>
                 </Link>
+
+                {/* Tracciamento progressi (Allenamenti) */}
+                {user && (
+                  <Link
+                    to="/allenamenti"
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
+                      location.pathname.startsWith('/allenamenti') || location.pathname.startsWith('/allenamento')
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    <Dumbbell className="w-4 h-4" />
+                    <span className="hidden md:inline text-sm font-medium">Tracciamento progressi</span>
+                  </Link>
+                )}
 
                 {/* Esplora */}
                 <Link

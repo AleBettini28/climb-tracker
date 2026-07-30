@@ -4,13 +4,18 @@ import { cragsApi, CragDetailResponse, boulderAreasApi, BoulderAreaDetailRespons
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import { Compass, Search, Mountain, Circle, Building2, MapPin, TrendingUp, Plus, Sparkles } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Compass, Search, Mountain, Hexagon, MapPin, TrendingUp, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
+
+type ExploreSection = 'falesie' | 'boulder';
 
 export function Explore() {
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const [section, setSection] = useState<ExploreSection>('falesie');
 
   const [cragSearchTerm, setCragSearchTerm] = useState('');
   const [crags, setCrags] = useState<CragDetailResponse[]>([]);
@@ -100,176 +105,169 @@ export function Explore() {
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold">Esplora</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Scopri falesie, aree boulder e palestre indoor</p>
+          <p className="text-sm sm:text-base text-muted-foreground">Scopri falesie e aree boulder da tutto il mondo</p>
         </div>
 
-        {/* Falesie */}
-        <section className="mb-10 sm:mb-12">
-          <div className="flex items-center gap-2 mb-4">
-            <Mountain className="w-5 h-5 text-primary" />
-            <h2 className="text-xl sm:text-2xl font-semibold">Falesie</h2>
-          </div>
+        <Tabs value={section} onValueChange={(value) => setSection(value as ExploreSection)}>
+          <TabsList className="mb-6 sm:mb-8">
+            <TabsTrigger value="falesie">
+              <Mountain className="w-4 h-4" />
+              Falesie
+            </TabsTrigger>
+            <TabsTrigger value="boulder">
+              <Hexagon className="w-4 h-4" />
+              Aree Boulder
+            </TabsTrigger>
+          </TabsList>
 
-          <div className="mb-6 flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder={'Cerca falesie per nome o luogo'}
-                value={cragSearchTerm}
-                onChange={(e) => setCragSearchTerm(e.target.value)}
-                className="pl-10 border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            {user && (
-              <Button onClick={() => navigate('/nuova-falesia')}>
-                <Plus className="w-4 h-4 mr-2" />
-                Nuova Falesia
-              </Button>
-            )}
-          </div>
-
-          {loadingCrags ? (
-            <div className="flex items-center justify-center min-h-[200px]">
-              <div className="text-center">
-                <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-amber-700 border-r-transparent"></div>
-                <p className="mt-4 text-stone-600">Caricamento...</p>
+          {/* Falesie */}
+          <TabsContent value="falesie">
+            <section>
+              <div className="mb-6 flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder={'Cerca falesie per nome o luogo'}
+                    value={cragSearchTerm}
+                    onChange={(e) => setCragSearchTerm(e.target.value)}
+                    className="pl-10 border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                {user && (
+                  <Button onClick={() => navigate('/nuova-falesia')}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Nuova Falesia
+                  </Button>
+                )}
               </div>
-            </div>
-          ) : filteredCrags.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredCrags.map((item) => (
-                <Card key={item.id} onClick={() => navigate(`/falesia/${item.id}`)} className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
-                      {(item.city || item.country) && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <MapPin className="w-3 h-3" />
-                          <span>
-                            {item.city && item.country ? `${item.city}, ${item.country}` : item.city || item.country}
-                          </span>
+
+              {loadingCrags ? (
+                <div className="flex items-center justify-center min-h-[200px]">
+                  <div className="text-center">
+                    <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-amber-700 border-r-transparent"></div>
+                    <p className="mt-4 text-stone-600">Caricamento...</p>
+                  </div>
+                </div>
+              ) : filteredCrags.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredCrags.map((item) => (
+                    <Card key={item.id} onClick={() => navigate(`/falesia/${item.id}`)} className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
+                          {(item.city || item.country) && (
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <MapPin className="w-3 h-3" />
+                              <span>
+                                {item.city && item.country ? `${item.city}, ${item.country}` : item.city || item.country}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Mountain className="w-5 h-5 text-primary" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">{'Vie'}</span>
-                      <span className="text-lg font-bold text-primary">{item.number_of_routes}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3" />Grado max
-                      </span>
-                      <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
-                    </div>
-                  </div>
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Mountain className="w-5 h-5 text-primary" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">{'Vie'}</span>
+                          <span className="text-lg font-bold text-primary">{item.number_of_routes}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3" />Grado max
+                          </span>
+                          <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card className="p-12 text-center">
+                  <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Nessun risultato</h3>
+                  <p className="text-sm text-muted-foreground">{cragSearchTerm ? 'Prova a modificare la ricerca' : 'Nessuna falesia disponibile'}</p>
                 </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="p-12 text-center">
-              <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">Nessun risultato</h3>
-              <p className="text-sm text-muted-foreground">{cragSearchTerm ? 'Prova a modificare la ricerca' : 'Nessuna falesia disponibile'}</p>
-            </Card>
-          )}
-        </section>
+              )}
+            </section>
+          </TabsContent>
 
-        {/* Aree Boulder */}
-        <section className="mb-10 sm:mb-12">
-          <div className="flex items-center gap-2 mb-4">
-            <Circle className="w-5 h-5 text-primary" />
-            <h2 className="text-xl sm:text-2xl font-semibold">Aree Boulder</h2>
-          </div>
-
-          <div className="mb-6 flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder={'Cerca aree boulder per nome o luogo'}
-                value={boulderAreaSearchTerm}
-                onChange={(e) => setBoulderAreaSearchTerm(e.target.value)}
-                className="pl-10 border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-            {user && (
-              <Button onClick={() => navigate('/nuova-area-boulder')}>
-                <Plus className="w-4 h-4 mr-2" />
-                Nuova Area Boulder
-              </Button>
-            )}
-          </div>
-
-          {loadingBoulderAreas ? (
-            <div className="flex items-center justify-center min-h-[200px]">
-              <div className="text-center">
-                <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-amber-700 border-r-transparent"></div>
-                <p className="mt-4 text-stone-600">Caricamento...</p>
+          {/* Aree Boulder */}
+          <TabsContent value="boulder">
+            <section>
+              <div className="mb-6 flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder={'Cerca aree boulder per nome o luogo'}
+                    value={boulderAreaSearchTerm}
+                    onChange={(e) => setBoulderAreaSearchTerm(e.target.value)}
+                    className="pl-10 border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+                {user && (
+                  <Button onClick={() => navigate('/nuova-area-boulder')}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Nuova Area Boulder
+                  </Button>
+                )}
               </div>
-            </div>
-          ) : filteredBoulderAreas.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredBoulderAreas.map((item) => (
-                <Card key={item.id} onClick={() => navigate(`/area-boulder/${item.id}`)} className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
-                      {(item.city || item.country) && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <MapPin className="w-3 h-3" />
-                          <span>
-                            {item.city && item.country ? `${item.city}, ${item.country}` : item.city || item.country}
-                          </span>
+
+              {loadingBoulderAreas ? (
+                <div className="flex items-center justify-center min-h-[200px]">
+                  <div className="text-center">
+                    <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-amber-700 border-r-transparent"></div>
+                    <p className="mt-4 text-stone-600">Caricamento...</p>
+                  </div>
+                </div>
+              ) : filteredBoulderAreas.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredBoulderAreas.map((item) => (
+                    <Card key={item.id} onClick={() => navigate(`/area-boulder/${item.id}`)} className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
+                          {(item.city || item.country) && (
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <MapPin className="w-3 h-3" />
+                              <span>
+                                {item.city && item.country ? `${item.city}, ${item.country}` : item.city || item.country}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="p-2 bg-primary/10 rounded-lg">
-                      <Circle className="w-5 h-5 text-primary" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">{'Boulder'}</span>
-                      <span className="text-lg font-bold text-primary">{item.number_of_boulders}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3" />Grado max
-                      </span>
-                      <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
-                    </div>
-                  </div>
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Hexagon className="w-5 h-5 text-primary" />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">{'Boulder'}</span>
+                          <span className="text-lg font-bold text-primary">{item.number_of_boulders}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3" />Grado max
+                          </span>
+                          <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card className="p-12 text-center">
+                  <Hexagon className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Nessun risultato</h3>
+                  <p className="text-sm text-muted-foreground">{boulderAreaSearchTerm ? 'Prova a modificare la ricerca' : 'Nessuna area boulder disponibile'}</p>
                 </Card>
-              ))}
-            </div>
-          ) : (
-            <Card className="p-12 text-center">
-              <Circle className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">Nessun risultato</h3>
-              <p className="text-sm text-muted-foreground">{boulderAreaSearchTerm ? 'Prova a modificare la ricerca' : 'Nessuna area boulder disponibile'}</p>
-            </Card>
-          )}
-        </section>
-
-        {/* Progressi Indoor */}
-        <section>
-          <div className="flex items-center gap-2 mb-4">
-            <Building2 className="w-5 h-5 text-primary" />
-            <h2 className="text-xl sm:text-2xl font-semibold">Progressi Indoor</h2>
-          </div>
-
-          <Card className="p-12 text-center">
-            <Sparkles className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">Prossimamente</h3>
-            <p className="text-sm text-muted-foreground">Il tracciamento dei progressi in palestra arriverà presto</p>
-          </Card>
-        </section>
+              )}
+            </section>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

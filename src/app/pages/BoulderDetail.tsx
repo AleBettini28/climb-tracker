@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Circle, MapPin, List, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Hexagon, MapPin, List, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { BoulderDetailResponseExtended, BoulderRouteDetailResponse, bouldersApi } from '../api/boulders';
 import { boulderRoutesApi } from '../api/boulderRoutes';
@@ -124,7 +124,7 @@ export function BoulderDetail() {
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <Circle className="w-6 h-6 text-primary" />
+              <Hexagon className="w-6 h-6 text-primary" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold">{boulder ? boulder.name : ''}</h1>
           </div>

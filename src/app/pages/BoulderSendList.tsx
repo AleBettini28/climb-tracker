@@ -4,7 +4,7 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Button } from '../components/ui/button';
-import { Search, Filter, Trash2, Circle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Filter, Trash2, Hexagon, ChevronDown, ChevronUp } from 'lucide-react';
 import { BOULDER_GRADES } from '../types/boulderArea';
 import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
@@ -287,7 +287,7 @@ export function BoulderSendList() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start gap-3">
                       <div className="p-2 bg-primary/10 rounded-lg shrink-0">
-                        <Circle className="w-5 h-5 text-primary" />
+                        <Hexagon className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">{send.boulder_route.route_name || 'Blocco sconosciuto'}</h3>
@@ -336,7 +336,7 @@ export function BoulderSendList() {
       ) : (
         <Card className="p-8 sm:p-12">
           <div className="flex flex-col items-center justify-center text-center">
-            <Circle className="w-12 sm:w-16 h-12 sm:h-16 text-muted-foreground/50 mb-4" />
+            <Hexagon className="w-12 sm:w-16 h-12 sm:h-16 text-muted-foreground/50 mb-4" />
             <h3 className="text-base sm:text-lg font-medium mb-2">Nessun boulder trovato</h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4">
               {hasActiveFilters

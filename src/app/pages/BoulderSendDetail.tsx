@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { ArrowLeft, Circle, MapPin, Trash2 } from 'lucide-react';
+import { ArrowLeft, Hexagon, MapPin, Trash2 } from 'lucide-react';
 import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { BoulderSendDetailExtendedResponse, boulderRoutesApi } from '../api/boulderRoutes';
@@ -72,7 +72,7 @@ export function BoulderSendDetail() {
     return (
       <div className="container mx-auto px-4 py-6 sm:py-8">
         <Card className="p-8 sm:p-12 text-center">
-          <Circle className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+          <Hexagon className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Invio non trovato</h2>
           <p className="text-muted-foreground mb-4">L'invio che stai cercando non esiste.</p>
           <Link to="/boulder">
@@ -101,7 +101,7 @@ export function BoulderSendDetail() {
           <div className="flex items-center justify-between gap-3 mb-2">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
-                <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                <Hexagon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <h1 className="text-xl sm:text-2xl">{boulderSend.boulder_route.route_name || 'Blocco sconosciuto'}</h1>
             </div>

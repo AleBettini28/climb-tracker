@@ -7,7 +7,7 @@ import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { PlusCircle, Circle } from 'lucide-react';
+import { PlusCircle, Hexagon } from 'lucide-react';
 import { toast } from 'sonner';
 import { auth } from '../utils/auth';
 import { boulderRoutesApi } from '../api/boulderRoutes';
@@ -69,7 +69,7 @@ export function NewBoulderRoute() {
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <Circle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <Hexagon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
             <h1 className="text-xl sm:text-2xl">Aggiungi Nuovo Blocco</h1>
           </div>
@@ -79,7 +79,7 @@ export function NewBoulderRoute() {
         {selectedBoulder && (
           <Card className="p-4 mb-4 bg-accent/10">
             <div className="flex items-start gap-3">
-              <Circle className="w-5 h-5 text-primary mt-0.5" />
+              <Hexagon className="w-5 h-5 text-primary mt-0.5" />
               <div className="flex-1">
                 <h3 className="font-semibold mb-1">Boulder selezionato</h3>
                 <p className="text-sm text-muted-foreground">{selectedBoulder.name}</p>

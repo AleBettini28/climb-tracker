@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Mountain } from 'lucide-react';
 import { auth } from '../utils/auth';
 import { useAuth } from '../context/AuthContext';
 
@@ -38,11 +39,16 @@ export default function Auth() {
       <div className="max-w-md w-full">
         <div className="bg-white rounded-lg shadow-xl p-8">
           <div className="text-center mb-8">
+            <div className="inline-flex p-3 bg-gradient-to-br from-primary to-accent rounded-full mb-4">
+              <Mountain className="w-7 h-7 text-primary-foreground" />
+            </div>
             <h1 className="text-3xl font-bold text-stone-800 mb-2">
-              {isLogin ? 'Accedi' : 'Registrati'}
+              {isLogin ? 'Accedi a ClimbTracker' : 'Crea il tuo account'}
             </h1>
             <p className="text-stone-600">
-              {isLogin ? 'Bentornato!' : 'Inizia a tracciare le tue scalate'}
+              {isLogin
+                ? 'Bentornato! Accedi per tracciare falesie, boulder e allenamenti.'
+                : 'Registrati per iniziare a salvare le tue scalate e i tuoi allenamenti.'}
             </p>
           </div>
 
