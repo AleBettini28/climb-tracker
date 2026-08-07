@@ -1,4 +1,5 @@
 import { apiRequest } from './client';
+import { RouteDetailResponse } from './crags';
 
 export interface RouteDetailResponseExtended {
   id: string;
@@ -34,6 +35,11 @@ export interface ClimbDetailExtendedResponse {
   route: RouteDetailResponseExtended;
 }
 
+export interface ExtractRoutesFromImageResponse {
+  created_routes: RouteDetailResponse[];
+  skipped_routes: RouteDetailResponse[];
+}
+
 export const routesApi = {
   list: async (): Promise<RouteDetailResponseExtended[]> => {
     const data = await apiRequest<RouteDetailResponseExtended[]>('/routes/list');
@@ -53,6 +59,10 @@ export const routesApi = {
   },
   createOneRoute: async (userId: string, cragId: string, body: RouteCreateUpdateRequest): Promise<null> => {
     const data = await apiRequest<null>(`/routes/create-one/${userId}/${cragId}`, {body: body, method: "POST"});
+    return data;
+  },
+  extractRoutesFromImage: async (userId: string, cragId: string): Promise<ExtractRoutesFromImageResponse> => {
+    const data = await apiRequest<ExtractRoutesFromImageResponse>(`/routes/extract-from-image/${userId}/${cragId}`, { method: "POST" });
     return data;
   },
   getUserClimbs: async (userId: string): Promise<ClimbDetailExtendedResponse[]> => {

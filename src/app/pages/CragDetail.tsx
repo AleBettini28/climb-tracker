@@ -5,11 +5,12 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
-import { ArrowLeft, Mountain, MapPin, List, Plus, Edit2, Save, X, Trash2, CheckCircle2, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Mountain, MapPin, List, Plus, Edit2, Save, X, Trash2, CheckCircle2, Image as ImageIcon, Sparkles, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { MapView } from '../components/MapView';
 import { MapPicker } from '../components/MapPicker';
 import { ImageUpload } from '../components/ImageUpload';
+import { ConfirmDialog } from '../components/ConfirmDialog';
 import { CragDetailResponse, cragsApi } from '../api';
 import { RouteDetailResponse } from '../api/crags';
 import { routesApi } from '../api/routes';
@@ -23,6 +24,10 @@ export function CragDetail() {
   const [loading, setLoading] = useState(false);
   const [loadingRoutes, setLoadingRoutes] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [extractingRoutes, setExtractingRoutes] = useState(false);
+  const [showExtractDialog, setShowExtractDialog] = useState(false);
+  const [showSkippedDialog, setShowSkippedDialog] = useState(false);
+  const [skippedRoutesMessage, setSkippedRoutesMessage] = useState('');
   const [editForm, setEditForm] = useState({
     name: '',
     description: '',
@@ -93,6 +98,58 @@ export function CragDetail() {
   const handleAddRoute = () => {
     if (crag) {
       navigate(`/nuova-via/${crag.id}`, { state: { selectedCrag: crag } });
+    }
+  };
+
+  const handleExtractRoutesFromImage = () => {
+    if (!crag) return;
+
+    if (routes.length > 0) {
+      toast.error('La falesia deve avere 0 vie per poter usare la generazione automatica');
+      return;
+    }
+
+    if (!crag.map_image_url) {
+      toast.error('Carica prima un\'immagine della falesia');
+      return;
+    }
+
+    if (!user) return;
+
+    setShowExtractDialog(true);
+  };
+
+  const confirmExtractRoutesFromImage = async () => {
+    if (!crag || !user) return;
+
+    setShowExtractDialog(false);
+
+    try {
+      setExtractingRoutes(true);
+      const result = await routesApi.extractRoutesFromImage(user.id, crag.id);
+      const { created_routes: createdRoutes, skipped_routes: skippedRoutes } = result;
+
+      if (createdRoutes.length > 0) {
+        setRoutes(prevRoutes => [...prevRoutes, ...createdRoutes].sort((a, b) => a.number - b.number));
+        toast.success(`${createdRoutes.length} vie aggiunte automaticamente dall'immagine!`);
+      } else if (skippedRoutes.length === 0) {
+        toast.info('Nessuna via trovata nell\'immagine');
+      }
+
+      if (skippedRoutes.length > 0) {
+        const routesList = skippedRoutes
+          .map(route => `• ${route.nome_via}${route.grado ? ` (${route.grado})` : ''}`)
+          .join('\n');
+        setSkippedRoutesMessage(
+          `Le seguenti vie esistevano già nel sistema e non sono state create:\n\n${routesList}`
+        );
+        setShowSkippedDialog(true);
+      }
+    } catch (error) {
+      console.error('Error extracting routes from image:', error);
+      toast.error('Errore durante l\'estrazione automatica delle vie');
+    } finally {
+      setExtractingRoutes(false);
     }
   };
 
@@ -328,10 +385,28 @@ export function CragDetail() {
                 <img
                   src={crag.map_image_url}
                   alt="Mappa delle vie"
-                  className="w-full h-auto rounded-lg border border-border"
+                  className="w-full h-auto rounded-lg border border-border mb-3"
                 />
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">Nessuna foto mappa caricata</p>
+              )}
+              {user && (
+                <div className="space-y-2">
+                  <Button
+                    variant="outline"
+                    onClick={handleExtractRoutesFromImage}
+                    disabled={extractingRoutes || routes.length > 0}
+                    className="w-full sm:w-auto"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {extractingRoutes ? 'Estrazione in corso...' : 'Aggiungi vie da immagine automaticamente'}
+                  </Button>
+                  {routes.length > 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      La falesia deve avere 0 vie per poter usare la generazione automatica.
+                    </p>
+                  )}
+                </div>
               )}
             </>
           ) : (
@@ -393,6 +468,27 @@ export function CragDetail() {
           )}
         </Card>
       </div>
+
+      <ConfirmDialog
+        open={showExtractDialog}
+        title="Estrazione automatica vie"
+        message="Questa operazione genererà automaticamente le vie nel sistema usando l'IA. Potrebbe richiedere del tempo. Al termine, controlla il risultato e assicurati che tutto sia corretto."
+        confirmLabel="Continua"
+        icon={Sparkles}
+        onConfirm={confirmExtractRoutesFromImage}
+        onClose={() => setShowExtractDialog(false)}
+      />
+
+      <ConfirmDialog
+        open={showSkippedDialog}
+        title="Vie già presenti"
+        message={skippedRoutesMessage}
+        confirmLabel="Ok"
+        showCancel={false}
+        icon={Info}
+        onConfirm={() => setShowSkippedDialog(false)}
+        onClose={() => setShowSkippedDialog(false)}
+      />
     </div>
   );
 }

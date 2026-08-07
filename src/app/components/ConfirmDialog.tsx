@@ -7,6 +7,7 @@ interface ConfirmDialogProps {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
+  showCancel?: boolean;
   icon?: LucideIcon;
   onConfirm: () => void;
   onClose: () => void;
@@ -18,6 +19,7 @@ export function ConfirmDialog({
   message,
   confirmLabel = 'Conferma',
   cancelLabel = 'Annulla',
+  showCancel = true,
   icon: Icon = AlertTriangle,
   onConfirm,
   onClose,
@@ -45,11 +47,13 @@ export function ConfirmDialog({
             <Icon className="w-6 h-6 text-primary" />
           </div>
           <h2 className="text-lg font-semibold">{title}</h2>
-          <p className="text-sm text-muted-foreground">{message}</p>
+          <p className="text-sm text-muted-foreground whitespace-pre-line">{message}</p>
           <div className="flex gap-2 w-full mt-2">
-            <Button variant="outline" className="flex-1" onClick={onClose}>
-              {cancelLabel}
-            </Button>
+            {showCancel && (
+              <Button variant="outline" className="flex-1" onClick={onClose}>
+                {cancelLabel}
+              </Button>
+            )}
             <Button className="flex-1" onClick={onConfirm}>
               {confirmLabel}
             </Button>
