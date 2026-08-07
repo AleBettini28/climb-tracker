@@ -2,17 +2,27 @@ import { AiTrainingPlanResponse } from '../api/aiPlan';
 import {
   AiPlanFallComfort,
   AiPlanLimiter,
+  AiPlanSex,
   AiPlanStyleAspect,
 } from '../types/aiPlan';
 
 const STORAGE_KEY = 'climb-tracker:ai-training-plan';
 
 export interface AiPlanFormSnapshot {
-  sessionsPerWeek: string;
-  sessionDurationHours: string;
-  sessionsOutdoor: string;
-  sessionsBoulder: string;
-  sessionsLead: string;
+  sex: AiPlanSex | '';
+  weightKg: string;
+  heightCm: string;
+  age: string;
+  currentSessionsPerWeek: string;
+  currentSessionDurationHours: string;
+  currentSessionsOutdoor: string;
+  currentSessionsBoulder: string;
+  currentSessionsLead: string;
+  desiredSessionsPerWeek: string;
+  desiredSessionDurationHours: string;
+  desiredSessionsOutdoor: string;
+  desiredSessionsBoulder: string;
+  desiredSessionsLead: string;
   highestGradeBoulder: string;
   highestGradeLead: string;
   highestFlashBoulder: string;
@@ -43,11 +53,20 @@ export interface SavedAiPlan {
 }
 
 export const EMPTY_AI_PLAN_FORM: AiPlanFormSnapshot = {
-  sessionsPerWeek: '3',
-  sessionDurationHours: '1.5',
-  sessionsOutdoor: '1',
-  sessionsBoulder: '2',
-  sessionsLead: '1',
+  sex: '',
+  weightKg: '',
+  heightCm: '',
+  age: '',
+  currentSessionsPerWeek: '3',
+  currentSessionDurationHours: '1.5',
+  currentSessionsOutdoor: '1',
+  currentSessionsBoulder: '2',
+  currentSessionsLead: '1',
+  desiredSessionsPerWeek: '4',
+  desiredSessionDurationHours: '1.5',
+  desiredSessionsOutdoor: '1',
+  desiredSessionsBoulder: '2',
+  desiredSessionsLead: '2',
   highestGradeBoulder: '',
   highestGradeLead: '',
   highestFlashBoulder: '',
@@ -71,6 +90,52 @@ export const EMPTY_AI_PLAN_FORM: AiPlanFormSnapshot = {
   additionalInfo: '',
 };
 
+type LegacyFormFields = Partial<AiPlanFormSnapshot> & {
+  sessionsPerWeek?: string;
+  sessionDurationHours?: string;
+  sessionsOutdoor?: string;
+  sessionsBoulder?: string;
+  sessionsLead?: string;
+};
+
+function normalizeForm(raw: LegacyFormFields): AiPlanFormSnapshot {
+  const merged: AiPlanFormSnapshot = {
+    ...EMPTY_AI_PLAN_FORM,
+    ...raw,
+    currentSessionsPerWeek:
+      raw.currentSessionsPerWeek ?? raw.sessionsPerWeek ?? EMPTY_AI_PLAN_FORM.currentSessionsPerWeek,
+    currentSessionDurationHours:
+      raw.currentSessionDurationHours
+      ?? raw.sessionDurationHours
+      ?? EMPTY_AI_PLAN_FORM.currentSessionDurationHours,
+    currentSessionsOutdoor:
+      raw.currentSessionsOutdoor ?? raw.sessionsOutdoor ?? EMPTY_AI_PLAN_FORM.currentSessionsOutdoor,
+    currentSessionsBoulder:
+      raw.currentSessionsBoulder ?? raw.sessionsBoulder ?? EMPTY_AI_PLAN_FORM.currentSessionsBoulder,
+    currentSessionsLead:
+      raw.currentSessionsLead ?? raw.sessionsLead ?? EMPTY_AI_PLAN_FORM.currentSessionsLead,
+    desiredSessionsPerWeek:
+      raw.desiredSessionsPerWeek ?? raw.sessionsPerWeek ?? EMPTY_AI_PLAN_FORM.desiredSessionsPerWeek,
+    desiredSessionDurationHours:
+      raw.desiredSessionDurationHours
+      ?? raw.sessionDurationHours
+      ?? EMPTY_AI_PLAN_FORM.desiredSessionDurationHours,
+    desiredSessionsOutdoor:
+      raw.desiredSessionsOutdoor ?? raw.sessionsOutdoor ?? EMPTY_AI_PLAN_FORM.desiredSessionsOutdoor,
+    desiredSessionsBoulder:
+      raw.desiredSessionsBoulder ?? raw.sessionsBoulder ?? EMPTY_AI_PLAN_FORM.desiredSessionsBoulder,
+    desiredSessionsLead:
+      raw.desiredSessionsLead ?? raw.sessionsLead ?? EMPTY_AI_PLAN_FORM.desiredSessionsLead,
+  };
+
+  const stronger = merged.strongerAspects ?? [];
+  return {
+    ...merged,
+    strongerAspects: stronger,
+    weakerAspects: (merged.weakerAspects ?? []).filter((item) => !stronger.includes(item)),
+  };
+}
+
 export function saveAiPlan(plan: AiTrainingPlanResponse, form: AiPlanFormSnapshot): void {
   const payload: SavedAiPlan = {
     plan,
@@ -88,7 +153,7 @@ export function loadAiPlan(): SavedAiPlan | null {
     if (!parsed?.plan || !parsed?.form) return null;
     return {
       ...parsed,
-      form: { ...EMPTY_AI_PLAN_FORM, ...parsed.form },
+      form: normalizeForm(parsed.form as LegacyFormFields),
     };
   } catch {
     return null;

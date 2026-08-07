@@ -2,11 +2,20 @@ import { apiRequest, ApiError } from './client';
 import { API_BASE_URL } from './config';
 
 export interface AiTrainingPlanRequest {
-  sessions_per_week: number;
-  session_duration_hours: number;
-  sessions_outdoor: number;
-  sessions_boulder: number;
-  sessions_lead: number;
+  sex: string;
+  weight_kg: number;
+  height_cm: number;
+  age: number;
+  current_sessions_per_week: number;
+  current_session_duration_hours: number;
+  current_sessions_outdoor: number;
+  current_sessions_boulder: number;
+  current_sessions_lead: number;
+  desired_sessions_per_week: number;
+  desired_session_duration_hours: number;
+  desired_sessions_outdoor: number;
+  desired_sessions_boulder: number;
+  desired_sessions_lead: number;
   highest_grade_boulder: string;
   highest_grade_lead: string;
   highest_flash_boulder: string;

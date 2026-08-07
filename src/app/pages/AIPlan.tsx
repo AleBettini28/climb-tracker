@@ -31,10 +31,13 @@ import {
   AI_PLAN_FALL_COMFORT_LABELS,
   AI_PLAN_LIMITERS,
   AI_PLAN_LIMITER_LABELS,
+  AI_PLAN_SEX_LABELS,
+  AI_PLAN_SEX_OPTIONS,
   AI_PLAN_STYLE_ASPECTS,
   AI_PLAN_STYLE_LABELS,
   AiPlanFallComfort,
   AiPlanLimiter,
+  AiPlanSex,
   AiPlanStyleAspect,
 } from '../types/aiPlan';
 import { ApiError } from '../api/client';
@@ -84,13 +87,16 @@ function GradeSelect({
 function MultiSelectChips({
   options,
   selected,
+  excluded = [],
   onChange,
 }: {
   options: readonly { value: string; label: string }[];
   selected: string[];
+  excluded?: string[];
   onChange: (next: string[]) => void;
 }) {
   const toggle = (value: string) => {
+    if (excluded.includes(value) && !selected.includes(value)) return;
     onChange(
       selected.includes(value)
         ? selected.filter((item) => item !== value)
@@ -102,16 +108,21 @@ function MultiSelectChips({
     <div className="flex flex-wrap gap-2">
       {options.map((option) => {
         const isSelected = selected.includes(option.value);
+        const isExcluded = excluded.includes(option.value) && !isSelected;
         return (
           <button
             key={option.value}
             type="button"
             onClick={() => toggle(option.value)}
+            disabled={isExcluded}
+            title={isExcluded ? 'Già selezionato nell\'altro elenco' : undefined}
             className={cn(
               'px-3 py-1.5 rounded-md border text-sm transition-colors',
               isSelected
                 ? 'bg-primary text-primary-foreground border-primary'
-                : 'bg-background hover:bg-muted border-input',
+                : isExcluded
+                  ? 'bg-muted/40 text-muted-foreground border-transparent opacity-50 cursor-not-allowed'
+                  : 'bg-background hover:bg-muted border-input',
             )}
           >
             {option.label}
@@ -144,11 +155,29 @@ export function AIPlan() {
   };
 
   const validateForm = (): string | null => {
-    if (!form.sessionsPerWeek || Number(form.sessionsPerWeek) < 1) {
-      return 'Indica quante sessioni fai a settimana';
+    if (!form.sex) {
+      return 'Seleziona il sesso';
     }
-    if (!form.sessionDurationHours || Number(form.sessionDurationHours) <= 0) {
-      return 'Indica la durata delle sessioni in ore';
+    if (!form.weightKg || Number(form.weightKg) <= 0) {
+      return 'Indica il peso in kg';
+    }
+    if (!form.heightCm || Number(form.heightCm) <= 0) {
+      return "Indica l'altezza in cm";
+    }
+    if (!form.age || Number(form.age) <= 0) {
+      return "Indica l'età";
+    }
+    if (!form.currentSessionsPerWeek || Number(form.currentSessionsPerWeek) < 1) {
+      return 'Indica quante sessioni fai attualmente a settimana';
+    }
+    if (!form.currentSessionDurationHours || Number(form.currentSessionDurationHours) <= 0) {
+      return 'Indica la durata attuale delle sessioni in ore';
+    }
+    if (!form.desiredSessionsPerWeek || Number(form.desiredSessionsPerWeek) < 1) {
+      return 'Indica quante sessioni vorresti fare a settimana';
+    }
+    if (!form.desiredSessionDurationHours || Number(form.desiredSessionDurationHours) <= 0) {
+      return 'Indica la durata desiderata delle sessioni in ore';
     }
     if (!form.highestGradeBoulder || !form.highestGradeLead) {
       return 'Indica i gradi massimi boulder e lead';
@@ -210,11 +239,20 @@ export function AIPlan() {
     setIsGenerating(true);
     try {
       const response = await aiPlanApi.generate({
-        sessions_per_week: Number(form.sessionsPerWeek),
-        session_duration_hours: Number(form.sessionDurationHours),
-        sessions_outdoor: Number(form.sessionsOutdoor || 0),
-        sessions_boulder: Number(form.sessionsBoulder || 0),
-        sessions_lead: Number(form.sessionsLead || 0),
+        sex: AI_PLAN_SEX_LABELS[form.sex as AiPlanSex],
+        weight_kg: Number(form.weightKg),
+        height_cm: Number(form.heightCm),
+        age: Number(form.age),
+        current_sessions_per_week: Number(form.currentSessionsPerWeek),
+        current_session_duration_hours: Number(form.currentSessionDurationHours),
+        current_sessions_outdoor: Number(form.currentSessionsOutdoor || 0),
+        current_sessions_boulder: Number(form.currentSessionsBoulder || 0),
+        current_sessions_lead: Number(form.currentSessionsLead || 0),
+        desired_sessions_per_week: Number(form.desiredSessionsPerWeek),
+        desired_session_duration_hours: Number(form.desiredSessionDurationHours),
+        desired_sessions_outdoor: Number(form.desiredSessionsOutdoor || 0),
+        desired_sessions_boulder: Number(form.desiredSessionsBoulder || 0),
+        desired_sessions_lead: Number(form.desiredSessionsLead || 0),
         highest_grade_boulder: form.highestGradeBoulder,
         highest_grade_lead: form.highestGradeLead,
         highest_flash_boulder: form.highestFlashBoulder,
@@ -364,73 +402,155 @@ export function AIPlan() {
 
         {step === 'form' && (
           <form onSubmit={handleGenerate} className="space-y-6">
-            <Card className="p-5 sm:p-6 space-y-4">
+            <Card className="p-5 sm:p-6 space-y-6">
               <div className="flex items-center gap-2 mb-1">
                 <CalendarDays className="w-4 h-4 text-primary" />
                 <h2 className="font-semibold">Volume di allenamento</h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="sessionsPerWeek">Sessioni a settimana</Label>
-                  <Input
-                    id="sessionsPerWeek"
-                    type="number"
-                    min={1}
-                    max={14}
-                    value={form.sessionsPerWeek}
-                    onChange={(e) => updateField('sessionsPerWeek', e.target.value)}
-                    required
-                  />
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-1">Cosa fai adesso</h3>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Il tuo volume attuale di allenamento.
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sessionDurationHours">Durata sessione (ore)</Label>
-                  <Input
-                    id="sessionDurationHours"
-                    type="number"
-                    min={0.5}
-                    max={8}
-                    step={0.5}
-                    value={form.sessionDurationHours}
-                    onChange={(e) => updateField('sessionDurationHours', e.target.value)}
-                    required
-                  />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentSessionsPerWeek">Sessioni a settimana</Label>
+                    <Input
+                      id="currentSessionsPerWeek"
+                      type="number"
+                      min={1}
+                      max={14}
+                      value={form.currentSessionsPerWeek}
+                      onChange={(e) => updateField('currentSessionsPerWeek', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="currentSessionDurationHours">Durata sessione (ore)</Label>
+                    <Input
+                      id="currentSessionDurationHours"
+                      type="number"
+                      min={0.5}
+                      max={8}
+                      step={0.5}
+                      value={form.currentSessionDurationHours}
+                      onChange={(e) => updateField('currentSessionDurationHours', e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  Quante di queste sessioni sono outdoor, boulder o lead?
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentSessionsOutdoor">Outdoor</Label>
+                    <Input
+                      id="currentSessionsOutdoor"
+                      type="number"
+                      min={0}
+                      value={form.currentSessionsOutdoor}
+                      onChange={(e) => updateField('currentSessionsOutdoor', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="currentSessionsBoulder">Boulder</Label>
+                    <Input
+                      id="currentSessionsBoulder"
+                      type="number"
+                      min={0}
+                      value={form.currentSessionsBoulder}
+                      onChange={(e) => updateField('currentSessionsBoulder', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="currentSessionsLead">Lead / Vie</Label>
+                    <Input
+                      id="currentSessionsLead"
+                      type="number"
+                      min={0}
+                      value={form.currentSessionsLead}
+                      onChange={(e) => updateField('currentSessionsLead', e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground pt-1">
-                Quante di queste sessioni sono outdoor, boulder o lead?
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="sessionsOutdoor">Outdoor</Label>
-                  <Input
-                    id="sessionsOutdoor"
-                    type="number"
-                    min={0}
-                    value={form.sessionsOutdoor}
-                    onChange={(e) => updateField('sessionsOutdoor', e.target.value)}
-                  />
+              <div className="border-t pt-5 space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium mb-1">Cosa vorresti fare per l&apos;obiettivo</h3>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Il volume di allenamento che sei disposto a sostenere per arrivare al goal.
+                  </p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sessionsBoulder">Boulder</Label>
-                  <Input
-                    id="sessionsBoulder"
-                    type="number"
-                    min={0}
-                    value={form.sessionsBoulder}
-                    onChange={(e) => updateField('sessionsBoulder', e.target.value)}
-                  />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="desiredSessionsPerWeek">Sessioni a settimana</Label>
+                    <Input
+                      id="desiredSessionsPerWeek"
+                      type="number"
+                      min={1}
+                      max={14}
+                      value={form.desiredSessionsPerWeek}
+                      onChange={(e) => updateField('desiredSessionsPerWeek', e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="desiredSessionDurationHours">Durata sessione (ore)</Label>
+                    <Input
+                      id="desiredSessionDurationHours"
+                      type="number"
+                      min={0.5}
+                      max={8}
+                      step={0.5}
+                      value={form.desiredSessionDurationHours}
+                      onChange={(e) => updateField('desiredSessionDurationHours', e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sessionsLead">Lead / Vie</Label>
-                  <Input
-                    id="sessionsLead"
-                    type="number"
-                    min={0}
-                    value={form.sessionsLead}
-                    onChange={(e) => updateField('sessionsLead', e.target.value)}
-                  />
+
+                <p className="text-xs text-muted-foreground">
+                  Come vorresti distribuire outdoor, boulder e lead?
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="desiredSessionsOutdoor">Outdoor</Label>
+                    <Input
+                      id="desiredSessionsOutdoor"
+                      type="number"
+                      min={0}
+                      value={form.desiredSessionsOutdoor}
+                      onChange={(e) => updateField('desiredSessionsOutdoor', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="desiredSessionsBoulder">Boulder</Label>
+                    <Input
+                      id="desiredSessionsBoulder"
+                      type="number"
+                      min={0}
+                      value={form.desiredSessionsBoulder}
+                      onChange={(e) => updateField('desiredSessionsBoulder', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="desiredSessionsLead">Lead / Vie</Label>
+                    <Input
+                      id="desiredSessionsLead"
+                      type="number"
+                      min={0}
+                      value={form.desiredSessionsLead}
+                      onChange={(e) => updateField('desiredSessionsLead', e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
             </Card>
@@ -510,6 +630,61 @@ export function AIPlan() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
+                  <Label>Sesso</Label>
+                  <Select
+                    value={form.sex || undefined}
+                    onValueChange={(value) => updateField('sex', value as AiPlanSex)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleziona" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {AI_PLAN_SEX_OPTIONS.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="age">Età</Label>
+                  <Input
+                    id="age"
+                    type="number"
+                    min={10}
+                    max={100}
+                    value={form.age}
+                    onChange={(e) => updateField('age', e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="weightKg">Peso (kg)</Label>
+                  <Input
+                    id="weightKg"
+                    type="number"
+                    min={30}
+                    max={200}
+                    step={0.1}
+                    value={form.weightKg}
+                    onChange={(e) => updateField('weightKg', e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="heightCm">Altezza (cm)</Label>
+                  <Input
+                    id="heightCm"
+                    type="number"
+                    min={100}
+                    max={250}
+                    value={form.heightCm}
+                    onChange={(e) => updateField('heightCm', e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="climbingExperience">Da quanto tempo arrampichi?</Label>
                   <Input
                     id="climbingExperience"
@@ -538,7 +713,16 @@ export function AIPlan() {
                 <MultiSelectChips
                   options={AI_PLAN_STYLE_ASPECTS}
                   selected={form.strongerAspects}
-                  onChange={(next) => updateField('strongerAspects', next as AiPlanStyleAspect[])}
+                  excluded={form.weakerAspects}
+                  onChange={(next) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      strongerAspects: next as AiPlanStyleAspect[],
+                      weakerAspects: prev.weakerAspects.filter(
+                        (item) => !(next as AiPlanStyleAspect[]).includes(item),
+                      ),
+                    }))
+                  }
                 />
               </div>
 
@@ -547,7 +731,16 @@ export function AIPlan() {
                 <MultiSelectChips
                   options={AI_PLAN_STYLE_ASPECTS}
                   selected={form.weakerAspects}
-                  onChange={(next) => updateField('weakerAspects', next as AiPlanStyleAspect[])}
+                  excluded={form.strongerAspects}
+                  onChange={(next) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      weakerAspects: next as AiPlanStyleAspect[],
+                      strongerAspects: prev.strongerAspects.filter(
+                        (item) => !(next as AiPlanStyleAspect[]).includes(item),
+                      ),
+                    }))
+                  }
                 />
               </div>
 

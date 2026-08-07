@@ -21,6 +21,18 @@ export const AI_PLAN_STYLE_LABELS: Record<AiPlanStyleAspect, string> = Object.fr
   AI_PLAN_STYLE_ASPECTS.map((item) => [item.value, item.label]),
 ) as Record<AiPlanStyleAspect, string>;
 
+export const AI_PLAN_SEX_OPTIONS = [
+  { value: 'MALE', label: 'Maschio' },
+  { value: 'FEMALE', label: 'Femmina' },
+  { value: 'OTHER', label: 'Altro' },
+] as const;
+
+export type AiPlanSex = (typeof AI_PLAN_SEX_OPTIONS)[number]['value'];
+
+export const AI_PLAN_SEX_LABELS: Record<AiPlanSex, string> = Object.fromEntries(
+  AI_PLAN_SEX_OPTIONS.map((item) => [item.value, item.label]),
+) as Record<AiPlanSex, string>;
+
 export const AI_PLAN_LIMITERS = [
   { value: 'POMPA', label: 'Pompa' },
   { value: 'FORZA_DITA', label: 'Forza dita' },
