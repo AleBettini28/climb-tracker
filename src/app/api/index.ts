@@ -11,3 +11,11 @@ export type {
   WorkoutSendDetailResponse,
   WorkoutSendCreateUpdateRequest,
 } from './workouts';
+export { aiPlanApi } from './aiPlan';
+export type {
+  AiTrainingPlanRequest,
+  AiTrainingPlanResponse,
+  AiTrainingPlanPhase,
+  AiTrainingPlanSession,
+  AiTrainingPlanMetric,
+} from './aiPlan';
