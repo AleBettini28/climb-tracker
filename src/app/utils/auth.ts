@@ -7,6 +7,7 @@ export interface User {
   id: string;
   email: string;
   name?: string;
+  isAdmin?: boolean;
 }
 
 export const auth = {
@@ -25,7 +26,15 @@ export const auth = {
 
       const data = await response.json();
       localStorage.setItem('access_token', data.token);
-      localStorage.setItem('user', JSON.stringify({ id: String(data.userId), email, name }));
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          id: String(data.userId),
+          email: data.email || email,
+          name: data.name || name,
+          isAdmin: Boolean(data.isAdmin),
+        }),
+      );
     } catch (error) {
       console.error('Signup error:', error);
       throw error;
@@ -46,7 +55,12 @@ export const auth = {
       }
 
       const data = await response.json();
-      const user: User = { id: String(data.userId), email, name: data.name };
+      const user: User = {
+        id: String(data.userId),
+        email: data.email || email,
+        name: data.name,
+        isAdmin: Boolean(data.isAdmin),
+      };
 
       localStorage.setItem('access_token', data.token);
       localStorage.setItem('user', JSON.stringify(user));
@@ -78,7 +92,11 @@ export const auth = {
         return null;
       }
 
-      return JSON.parse(userStr) as User;
+      const user = JSON.parse(userStr) as User;
+      if (typeof payload.isAdmin === 'boolean') {
+        user.isAdmin = payload.isAdmin;
+      }
+      return user;
     } catch (error) {
       console.error('Get session error:', error);
       return null;

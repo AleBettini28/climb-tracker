@@ -47,8 +47,8 @@ export default function Auth() {
             </h1>
             <p className="text-stone-600">
               {isLogin
-                ? 'Bentornato! Accedi per tracciare falesie, boulder e allenamenti.'
-                : 'Registrati per iniziare a salvare le tue scalate e i tuoi allenamenti.'}
+                ? 'Bentornato! Accedi per tracciare falesie e boulder.'
+                : 'Registrati per iniziare a salvare le tue scalate.'}
             </p>
           </div>
 

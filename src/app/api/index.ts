@@ -4,13 +4,15 @@ export { dashboardApi } from './dashboard';
 export type { DashboardStatsResponse } from './dashboard';
 export { boulderAreasApi } from './boulderAreas';
 export type { BoulderAreaDetailResponse, BoulderDetailResponse } from './boulderAreas';
-export { workoutsApi, workoutSendsApi } from './workouts';
+export { gymsApi, gymBouldersApi } from './gyms';
 export type {
-  WorkoutDetailResponse,
-  WorkoutCreateUpdateRequest,
-  WorkoutSendDetailResponse,
-  WorkoutSendCreateUpdateRequest,
-} from './workouts';
+  GymDetailResponse,
+  GymCreateUpdateRequest,
+  GymBoulderDetailResponse,
+  GymBoulderCreateUpdateRequest,
+  GymSendCreateRequest,
+  GymLeaderboardEntryResponse,
+} from './gyms';
 export { aiPlanApi } from './aiPlan';
 export type {
   AiTrainingPlanRequest,

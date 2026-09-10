@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { Layout } from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AdminRoute } from './components/AdminRoute';
 import { Dashboard } from './pages/Dashboard';
 import { ClimbList } from './pages/ClimbList';
 import { NewClimb } from './pages/NewClimb';
@@ -19,11 +20,11 @@ import { NewBoulderRoute } from './pages/NewBoulderRoute';
 import { NewBoulderSend } from './pages/NewBoulderSend';
 import { BoulderSendList } from './pages/BoulderSendList';
 import { BoulderSendDetail } from './pages/BoulderSendDetail';
-import { Workouts } from './pages/Workouts';
-import { NewWorkout } from './pages/NewWorkout';
-import { WorkoutList } from './pages/WorkoutList';
-import { WorkoutDetail } from './pages/WorkoutDetail';
 import { AIPlan } from './pages/AIPlan';
+import { GymList } from './pages/GymList';
+import { GymDetail } from './pages/GymDetail';
+import { NewGym } from './pages/NewGym';
+import { NewGymBoulder } from './pages/NewGymBoulder';
 import Auth from './pages/Auth';
 
 export const router = createBrowserRouter(
@@ -47,6 +48,8 @@ export const router = createBrowserRouter(
         { path: 'area-boulder/:id', Component: BoulderAreaDetail },
         { path: 'masso/:id', Component: BoulderDetail },
         { path: 'blocco/:id', Component: BoulderRouteDetail },
+        { path: 'palestre', Component: GymList },
+        { path: 'palestra/:id', Component: GymDetail },
 
         // Protected routes: require an authenticated user.
         {
@@ -138,31 +141,7 @@ export const router = createBrowserRouter(
           ),
         },
         {
-          path: 'allenamenti',
-          element: (
-            <ProtectedRoute>
-              <Workouts />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: 'allenamenti/nuovo',
-          element: (
-            <ProtectedRoute>
-              <NewWorkout />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: 'allenamenti/lista',
-          element: (
-            <ProtectedRoute>
-              <WorkoutList />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: 'allenamenti/piano-ai',
+          path: 'piano-ai',
           element: (
             <ProtectedRoute>
               <AIPlan />
@@ -170,11 +149,19 @@ export const router = createBrowserRouter(
           ),
         },
         {
-          path: 'allenamento/:id',
+          path: 'nuova-palestra',
           element: (
-            <ProtectedRoute>
-              <WorkoutDetail />
-            </ProtectedRoute>
+            <AdminRoute>
+              <NewGym />
+            </AdminRoute>
+          ),
+        },
+        {
+          path: 'nuovo-boulder-palestra/:gymId',
+          element: (
+            <AdminRoute>
+              <NewGymBoulder />
+            </AdminRoute>
           ),
         },
       ],

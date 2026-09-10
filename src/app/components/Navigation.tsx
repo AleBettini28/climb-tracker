@@ -8,7 +8,8 @@ import {
   ChevronDown,
   LogOut,
   LogIn,
-  Dumbbell,
+  Sparkles,
+  Building2,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -55,21 +56,18 @@ export function Navigation() {
                   <span className="hidden md:inline text-sm font-medium">Dashboard</span>
                 </Link>
 
-                {/* Tracciamento progressi (Allenamenti) */}
+                {/* Piano AI */}
                 {user && (
                   <Link
-                    to="/allenamenti"
+                    to="/piano-ai"
                     className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                      location.pathname.startsWith('/allenamenti') ||
-                      location.pathname.startsWith('/allenamento')
+                      location.pathname.startsWith('/piano-ai')
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
-                    <Dumbbell className="w-4 h-4" />
-                    <span className="hidden md:inline text-sm font-medium">
-                      Tracciamento progressi
-                    </span>
+                    <Sparkles className="w-4 h-4" />
+                    <span className="hidden md:inline text-sm font-medium">Piano AI</span>
                   </Link>
                 )}
 
@@ -84,6 +82,19 @@ export function Navigation() {
                 >
                   <Compass className="w-4 h-4" />
                   <span className="hidden md:inline text-sm font-medium">Esplora</span>
+                </Link>
+
+                {/* Palestre */}
+                <Link
+                  to="/palestre"
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
+                    location.pathname.startsWith('/palestra')
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  }`}
+                >
+                  <Building2 className="w-4 h-4" />
+                  <span className="hidden md:inline text-sm font-medium">Palestre</span>
                 </Link>
 
                 {/* Attività Dropdown (solo per utenti autenticati) */}
