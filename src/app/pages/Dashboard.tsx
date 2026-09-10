@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -104,9 +104,7 @@ export function Dashboard() {
             </div>
             <div className="min-w-0">
               <p className="text-xs sm:text-sm text-muted-foreground">Grado Migliore (Lead)</p>
-              <p className="text-xl sm:text-2xl font-semibold">
-                {stats.best_grade || 'N/A'}
-              </p>
+              <p className="text-xl sm:text-2xl font-semibold">{stats.best_grade || 'N/A'}</p>
             </div>
           </div>
         </Card>
@@ -124,15 +122,12 @@ export function Dashboard() {
                   stroke="var(--muted-foreground)"
                   style={{ fontSize: '0.75rem' }}
                 />
-                <YAxis
-                  stroke="var(--muted-foreground)"
-                  style={{ fontSize: '0.75rem' }}
-                />
+                <YAxis stroke="var(--muted-foreground)" style={{ fontSize: '0.75rem' }} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: 'var(--card)',
                     border: '1px solid var(--border)',
-                    borderRadius: '0.5rem'
+                    borderRadius: '0.5rem',
                   }}
                 />
                 <Bar dataKey="count" fill="var(--primary)" radius={[8, 8, 0, 0]} />
@@ -160,11 +155,17 @@ export function Dashboard() {
                   className="flex items-start justify-between gap-3 p-3 bg-muted/50 rounded-lg"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm sm:text-base truncate">{climb.route.nome_via || 'Via sconosciuta'}</p>
+                    <p className="font-medium text-sm sm:text-base truncate">
+                      {climb.route.nome_via || 'Via sconosciuta'}
+                    </p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs sm:text-sm text-muted-foreground truncate">{climb.route.crag_name || 'N/A'}</span>
+                      <span className="text-xs sm:text-sm text-muted-foreground truncate">
+                        {climb.route.crag_name || 'N/A'}
+                      </span>
                       <span className="text-xs sm:text-sm text-muted-foreground shrink-0">•</span>
-                      <span className="text-xs sm:text-sm font-medium text-primary shrink-0">{climb.route.grado || 'N/A'}</span>
+                      <span className="text-xs sm:text-sm font-medium text-primary shrink-0">
+                        {climb.route.grado || 'N/A'}
+                      </span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
@@ -182,7 +183,10 @@ export function Dashboard() {
             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Clock className="w-10 sm:w-12 h-10 sm:h-12 mb-2 opacity-50" />
               <p className="text-sm sm:text-base">Nessuna scalata recente</p>
-              <Link to="/nuova-salita" className="text-xs sm:text-sm text-primary hover:underline mt-2">
+              <Link
+                to="/nuova-salita"
+                className="text-xs sm:text-sm text-primary hover:underline mt-2"
+              >
                 Aggiungi la tua prima scalata
               </Link>
             </div>
@@ -200,11 +204,15 @@ export function Dashboard() {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Trophy
-                      className={`w-4 h-4 sm:w-5 sm:h-5 ${index === 0 ? 'text-yellow-600' :
-                        index === 1 ? 'text-gray-400' :
-                          index === 2 ? 'text-amber-700' :
-                            'text-muted-foreground'
-                        }`}
+                      className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                        index === 0
+                          ? 'text-yellow-600'
+                          : index === 1
+                            ? 'text-gray-400'
+                            : index === 2
+                              ? 'text-amber-700'
+                              : 'text-muted-foreground'
+                      }`}
                     />
                     <span className="text-xl sm:text-2xl font-bold text-primary">{item.grade}</span>
                   </div>

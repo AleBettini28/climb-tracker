@@ -48,15 +48,15 @@ export function NewCrag() {
         return;
       }
 
-       const newCrag: CragCreateUpdateRequest = {
-          name: formData.name,
-          description: formData.description || "",
-          city: formData.city || undefined,
-          country: formData.country || undefined,
-          latitude: formData.latitude,
-          longitude: formData.longitude,
-          map_image_url: formData.mapImageUrl || undefined,
-          added_by: session.id,
+      const newCrag: CragCreateUpdateRequest = {
+        name: formData.name,
+        description: formData.description || '',
+        city: formData.city || undefined,
+        country: formData.country || undefined,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        map_image_url: formData.mapImageUrl || undefined,
+        added_by: session.id,
       };
 
       await cragsApi.createOneCrag(newCrag);
@@ -65,7 +65,7 @@ export function NewCrag() {
       navigate(`/falesia/${encodeURIComponent(newCrag.name)}`);
     } catch (error) {
       console.error('Error adding crag:', error);
-      toast.error('Errore durante l\'aggiunta della falesia');
+      toast.error("Errore durante l'aggiunta della falesia");
     } finally {
       setIsSubmitting(false);
     }
@@ -81,7 +81,9 @@ export function NewCrag() {
             </div>
             <h1 className="text-xl sm:text-2xl">Aggiungi Nuova Falesia</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Crea una nuova falesia nell'archivio condiviso</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Crea una nuova falesia nell'archivio condiviso
+          </p>
         </div>
 
         <Card className="p-4 sm:p-6">
@@ -158,7 +160,9 @@ export function NewCrag() {
               <MapPicker
                 latitude={formData.latitude}
                 longitude={formData.longitude}
-                onLocationSelect={(lat, lng) => setFormData({ ...formData, latitude: lat, longitude: lng })}
+                onLocationSelect={(lat, lng) =>
+                  setFormData({ ...formData, latitude: lat, longitude: lng })
+                }
               />
             </div>
 
@@ -172,11 +176,7 @@ export function NewCrag() {
               >
                 Annulla
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Aggiungi Falesia
               </Button>

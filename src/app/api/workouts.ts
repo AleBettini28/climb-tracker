@@ -48,9 +48,6 @@ export const workoutsApi = {
   createOne: async (body: WorkoutCreateUpdateRequest): Promise<string> => {
     return apiRequest<string>(`/workouts/create/one`, { body, method: 'POST' });
   },
-  updateOne: async (id: string, body: WorkoutCreateUpdateRequest): Promise<null> => {
-    return apiRequest<null>(`/workouts/update/${id}`, { body, method: 'PUT' });
-  },
   deleteOne: async (id: string): Promise<null> => {
     return apiRequest<null>(`/workouts/delete/${id}`, { method: 'DELETE' });
   },
@@ -63,14 +60,8 @@ export const workoutSendsApi = {
   list: async (workoutId: string): Promise<WorkoutSendDetailResponse[]> => {
     return apiRequest<WorkoutSendDetailResponse[]>(`/workout-sends/list/${workoutId}`);
   },
-  getOne: async (id: string): Promise<WorkoutSendDetailResponse> => {
-    return apiRequest<WorkoutSendDetailResponse>(`/workout-sends/one/${id}`);
-  },
   createOne: async (body: WorkoutSendCreateUpdateRequest): Promise<string> => {
     return apiRequest<string>(`/workout-sends/create/one`, { body, method: 'POST' });
-  },
-  updateOne: async (id: string, body: WorkoutSendCreateUpdateRequest): Promise<null> => {
-    return apiRequest<null>(`/workout-sends/update/${id}`, { body, method: 'PUT' });
   },
   deleteOne: async (id: string): Promise<null> => {
     return apiRequest<null>(`/workout-sends/delete/${id}`, { method: 'DELETE' });

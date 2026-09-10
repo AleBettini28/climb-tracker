@@ -5,7 +5,21 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
-import { ArrowLeft, Mountain, MapPin, List, Plus, Edit2, Save, X, Trash2, CheckCircle2, Image as ImageIcon, Sparkles, Info } from 'lucide-react';
+import {
+  ArrowLeft,
+  Mountain,
+  MapPin,
+  List,
+  Plus,
+  Edit2,
+  Save,
+  X,
+  Trash2,
+  CheckCircle2,
+  Image as ImageIcon,
+  Sparkles,
+  Info,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { MapView } from '../components/MapView';
 import { MapPicker } from '../components/MapPicker';
@@ -64,7 +78,9 @@ export function CragDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loading]);
 
   useEffect(() => {
@@ -92,7 +108,9 @@ export function CragDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loadingRoutes, user]);
 
   const handleAddRoute = () => {
@@ -110,7 +128,7 @@ export function CragDetail() {
     }
 
     if (!crag.map_image_url) {
-      toast.error('Carica prima un\'immagine della falesia');
+      toast.error("Carica prima un'immagine della falesia");
       return;
     }
 
@@ -130,24 +148,26 @@ export function CragDetail() {
       const { created_routes: createdRoutes, skipped_routes: skippedRoutes } = result;
 
       if (createdRoutes.length > 0) {
-        setRoutes(prevRoutes => [...prevRoutes, ...createdRoutes].sort((a, b) => a.number - b.number));
+        setRoutes((prevRoutes) =>
+          [...prevRoutes, ...createdRoutes].sort((a, b) => a.number - b.number),
+        );
         toast.success(`${createdRoutes.length} vie aggiunte automaticamente dall'immagine!`);
       } else if (skippedRoutes.length === 0) {
-        toast.info('Nessuna via trovata nell\'immagine');
+        toast.info("Nessuna via trovata nell'immagine");
       }
 
       if (skippedRoutes.length > 0) {
         const routesList = skippedRoutes
-          .map(route => `• ${route.nome_via}${route.grado ? ` (${route.grado})` : ''}`)
+          .map((route) => `• ${route.nome_via}${route.grado ? ` (${route.grado})` : ''}`)
           .join('\n');
         setSkippedRoutesMessage(
-          `Le seguenti vie esistevano già nel sistema e non sono state create:\n\n${routesList}`
+          `Le seguenti vie esistevano già nel sistema e non sono state create:\n\n${routesList}`,
         );
         setShowSkippedDialog(true);
       }
     } catch (error) {
       console.error('Error extracting routes from image:', error);
-      toast.error('Errore durante l\'estrazione automatica delle vie');
+      toast.error("Errore durante l'estrazione automatica delle vie");
     } finally {
       setExtractingRoutes(false);
     }
@@ -174,22 +194,25 @@ export function CragDetail() {
     if (!crag) return;
 
     try {
-      await cragsApi.updateOneCrag({
-        name: editForm.name,
-        description: editForm.description,
-        city: editForm.city,
-        country: editForm.country,
-        latitude: editForm.latitude,
-        longitude: editForm.longitude,
-        map_image_url: editForm.mapImageUrl,
-        added_by: crag.added_by, 
-      }, crag.id);
+      await cragsApi.updateOneCrag(
+        {
+          name: editForm.name,
+          description: editForm.description,
+          city: editForm.city,
+          country: editForm.country,
+          latitude: editForm.latitude,
+          longitude: editForm.longitude,
+          map_image_url: editForm.mapImageUrl,
+          added_by: crag.added_by,
+        },
+        crag.id,
+      );
       toast.success('Falesia aggiornata con successo!');
       setIsEditing(false);
       navigate(`/falesia/${id}`);
     } catch (error) {
       console.error('Error updating crag:', error);
-      toast.error('Errore durante l\'aggiornamento della falesia');
+      toast.error("Errore durante l'aggiornamento della falesia");
     }
   };
 
@@ -202,10 +225,10 @@ export function CragDetail() {
       toast.success('Via eliminata con successo!');
     } catch (error) {
       console.error('Error deleting route:', error);
-      toast.error('Errore durante l\'eliminazione della via');
+      toast.error("Errore durante l'eliminazione della via");
     }
 
-    setRoutes(prevRoutes => prevRoutes.filter(route => route.id !== routeId));
+    setRoutes((prevRoutes) => prevRoutes.filter((route) => route.id !== routeId));
   };
 
   if (loading) {
@@ -225,8 +248,45 @@ export function CragDetail() {
   const displayLat = crag ? crag.latitude : 0;
   const displayLng = crag ? crag.longitude : 0;
 
-  const gradeOrder = ['3B', '3C', '4A', '4B', '4C', '5A', '5A+', '5B', '5B+', '5C', '5C+', '6A', '6A+', '6B', '6B+', '6C', '6C+', '7A', '7A+', '7B', '7B+', '7C', '7C+', '8A', '8A+', '8B', '8B+', '8C', '8C+', '9A', '9A+', '9B', '9B+', '9C'];
-  const sortedGrades = routes.map(r => r.grado).sort((a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b));
+  const gradeOrder = [
+    '3B',
+    '3C',
+    '4A',
+    '4B',
+    '4C',
+    '5A',
+    '5A+',
+    '5B',
+    '5B+',
+    '5C',
+    '5C+',
+    '6A',
+    '6A+',
+    '6B',
+    '6B+',
+    '6C',
+    '6C+',
+    '7A',
+    '7A+',
+    '7B',
+    '7B+',
+    '7C',
+    '7C+',
+    '8A',
+    '8A+',
+    '8B',
+    '8B+',
+    '8C',
+    '8C+',
+    '9A',
+    '9A+',
+    '9B',
+    '9B+',
+    '9C',
+  ];
+  const sortedGrades = routes
+    .map((r) => r.grado)
+    .sort((a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b));
   const minGrade = sortedGrades.length > 0 ? sortedGrades[0] : '-';
   const maxGrade = sortedGrades.length > 0 ? sortedGrades[sortedGrades.length - 1] : '-';
 
@@ -262,7 +322,11 @@ export function CragDetail() {
           </div>
           {crag && !isEditing && user && (
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <Button variant="outline" onClick={handleEditToggle} className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                onClick={handleEditToggle}
+                className="flex-1 sm:flex-initial"
+              >
                 <Edit2 className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Modifica</span>
               </Button>
@@ -274,7 +338,11 @@ export function CragDetail() {
           )}
           {isEditing && (
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <Button variant="outline" onClick={handleEditToggle} className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                onClick={handleEditToggle}
+                className="flex-1 sm:flex-initial"
+              >
                 <X className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Annulla</span>
               </Button>
@@ -293,7 +361,9 @@ export function CragDetail() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4" />
                   <span>
-                    {crag.city && crag.country ? `${crag.city}, ${crag.country}` : crag.city || crag.country}
+                    {crag.city && crag.country
+                      ? `${crag.city}, ${crag.country}`
+                      : crag.city || crag.country}
                   </span>
                 </div>
               )}
@@ -345,16 +415,25 @@ export function CragDetail() {
           {!isEditing ? (
             <>
               {displayLat !== 0 && displayLng !== 0 ? (
-                <MapView latitude={displayLat} longitude={displayLng} title={crag ? crag.name : ''} height="250px" />
+                <MapView
+                  latitude={displayLat}
+                  longitude={displayLng}
+                  title={crag ? crag.name : ''}
+                  height="250px"
+                />
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">Posizione non disponibile</p>
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  Posizione non disponibile
+                </p>
               )}
             </>
           ) : (
             <MapPicker
               latitude={editForm.latitude}
               longitude={editForm.longitude}
-              onLocationSelect={(lat, lng) => setEditForm({ ...editForm, latitude: lat, longitude: lng })}
+              onLocationSelect={(lat, lng) =>
+                setEditForm({ ...editForm, latitude: lat, longitude: lng })
+              }
             />
           )}
         </Card>
@@ -388,7 +467,9 @@ export function CragDetail() {
                   className="w-full h-auto rounded-lg border border-border mb-3"
                 />
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">Nessuna foto mappa caricata</p>
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  Nessuna foto mappa caricata
+                </p>
               )}
               {user && (
                 <div className="space-y-2">
@@ -399,7 +480,9 @@ export function CragDetail() {
                     className="w-full sm:w-auto"
                   >
                     <Sparkles className="w-4 h-4 mr-2" />
-                    {extractingRoutes ? 'Estrazione in corso...' : 'Aggiungi vie da immagine automaticamente'}
+                    {extractingRoutes
+                      ? 'Estrazione in corso...'
+                      : 'Aggiungi vie da immagine automaticamente'}
                   </Button>
                   {routes.length > 0 && (
                     <p className="text-sm text-muted-foreground">
@@ -423,23 +506,24 @@ export function CragDetail() {
             <List className="w-5 h-5 text-primary" />
             <h2 className="text-xl font-semibold">Vie ({routes.length})</h2>
           </div>
-          
+
           {routes.length > 0 ? (
             <div className="space-y-2">
-              {routes.map(route => (
+              {routes.map((route) => (
                 <div
                   key={route.id}
                   onClick={() => !isEditing && navigate(`/via/${route.id}`)}
                   className={`flex items-center justify-between p-3 rounded-lg transition-colors border border-border ${!isEditing ? 'hover:bg-muted cursor-pointer hover:border-primary' : ''}`}
                 >
                   <div className="flex-1">
-                    <div className="font-medium">{route.number} - {route.nome_via}</div>
+                    <div className="font-medium">
+                      {route.number} - {route.nome_via}
+                    </div>
                     {route.lunghezza && (
                       <div className="text-sm text-muted-foreground">{route.lunghezza}m</div>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
-
                     {!isEditing && route.is_climbed && (
                       <CheckCircle2 className="w-5 h-5 text-green-600" />
                     )}

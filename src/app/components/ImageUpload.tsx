@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent } from 'react';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
@@ -14,7 +14,7 @@ export function ImageUpload({ currentImageUrl, onImageUrlChange, label }: ImageU
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(currentImageUrl);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -26,7 +26,7 @@ export function ImageUpload({ currentImageUrl, onImageUrlChange, label }: ImageU
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('L\'immagine deve essere massimo 5MB');
+      toast.error("L'immagine deve essere massimo 5MB");
       return;
     }
 
@@ -44,13 +44,13 @@ export function ImageUpload({ currentImageUrl, onImageUrlChange, label }: ImageU
       };
       reader.onerror = () => {
         console.error('Error reading file');
-        toast.error('Errore durante la lettura dell\'immagine');
+        toast.error("Errore durante la lettura dell'immagine");
         setUploading(false);
       };
       reader.readAsDataURL(file);
     } catch (error) {
       console.error('Error uploading image:', error);
-      toast.error('Errore durante il caricamento dell\'immagine');
+      toast.error("Errore durante il caricamento dell'immagine");
       setUploading(false);
     }
   };
@@ -91,9 +91,7 @@ export function ImageUpload({ currentImageUrl, onImageUrlChange, label }: ImageU
               <p className="text-sm text-muted-foreground mb-2">
                 Carica una foto della mappa delle vie/boulder
               </p>
-              <p className="text-xs text-muted-foreground">
-                PNG, JPG o JPEG (max 5MB)
-              </p>
+              <p className="text-xs text-muted-foreground">PNG, JPG o JPEG (max 5MB)</p>
             </div>
             <label htmlFor="image-upload">
               <Button

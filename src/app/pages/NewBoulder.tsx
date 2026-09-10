@@ -50,7 +50,7 @@ export function NewBoulder() {
       navigate(`/area-boulder/${id}`);
     } catch (error) {
       console.error('Error adding boulder:', error);
-      toast.error('Errore durante l\'aggiunta del boulder');
+      toast.error("Errore durante l'aggiunta del boulder");
     } finally {
       setIsSubmitting(false);
     }
@@ -66,7 +66,10 @@ export function NewBoulder() {
             </div>
             <h1 className="text-xl sm:text-2xl">Aggiungi Nuovo Boulder</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Aggiungi un boulder all'archivio condiviso. Potrai poi aggiungere i singoli blocchi/vie su di esso</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Aggiungi un boulder all'archivio condiviso. Potrai poi aggiungere i singoli blocchi/vie
+            su di esso
+          </p>
         </div>
 
         {selectedBoulderArea && (
@@ -107,11 +110,7 @@ export function NewBoulder() {
               >
                 Annulla
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Aggiungi Boulder
               </Button>

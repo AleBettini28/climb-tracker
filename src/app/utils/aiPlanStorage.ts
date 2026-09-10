@@ -1,10 +1,5 @@
 import { AiTrainingPlanResponse } from '../api/aiPlan';
-import {
-  AiPlanFallComfort,
-  AiPlanLimiter,
-  AiPlanSex,
-  AiPlanStyleAspect,
-} from '../types/aiPlan';
+import { AiPlanFallComfort, AiPlanLimiter, AiPlanSex, AiPlanStyleAspect } from '../types/aiPlan';
 
 const STORAGE_KEY = 'climb-tracker:ai-training-plan';
 
@@ -103,27 +98,39 @@ function normalizeForm(raw: LegacyFormFields): AiPlanFormSnapshot {
     ...EMPTY_AI_PLAN_FORM,
     ...raw,
     currentSessionsPerWeek:
-      raw.currentSessionsPerWeek ?? raw.sessionsPerWeek ?? EMPTY_AI_PLAN_FORM.currentSessionsPerWeek,
+      raw.currentSessionsPerWeek ??
+      raw.sessionsPerWeek ??
+      EMPTY_AI_PLAN_FORM.currentSessionsPerWeek,
     currentSessionDurationHours:
-      raw.currentSessionDurationHours
-      ?? raw.sessionDurationHours
-      ?? EMPTY_AI_PLAN_FORM.currentSessionDurationHours,
+      raw.currentSessionDurationHours ??
+      raw.sessionDurationHours ??
+      EMPTY_AI_PLAN_FORM.currentSessionDurationHours,
     currentSessionsOutdoor:
-      raw.currentSessionsOutdoor ?? raw.sessionsOutdoor ?? EMPTY_AI_PLAN_FORM.currentSessionsOutdoor,
+      raw.currentSessionsOutdoor ??
+      raw.sessionsOutdoor ??
+      EMPTY_AI_PLAN_FORM.currentSessionsOutdoor,
     currentSessionsBoulder:
-      raw.currentSessionsBoulder ?? raw.sessionsBoulder ?? EMPTY_AI_PLAN_FORM.currentSessionsBoulder,
+      raw.currentSessionsBoulder ??
+      raw.sessionsBoulder ??
+      EMPTY_AI_PLAN_FORM.currentSessionsBoulder,
     currentSessionsLead:
       raw.currentSessionsLead ?? raw.sessionsLead ?? EMPTY_AI_PLAN_FORM.currentSessionsLead,
     desiredSessionsPerWeek:
-      raw.desiredSessionsPerWeek ?? raw.sessionsPerWeek ?? EMPTY_AI_PLAN_FORM.desiredSessionsPerWeek,
+      raw.desiredSessionsPerWeek ??
+      raw.sessionsPerWeek ??
+      EMPTY_AI_PLAN_FORM.desiredSessionsPerWeek,
     desiredSessionDurationHours:
-      raw.desiredSessionDurationHours
-      ?? raw.sessionDurationHours
-      ?? EMPTY_AI_PLAN_FORM.desiredSessionDurationHours,
+      raw.desiredSessionDurationHours ??
+      raw.sessionDurationHours ??
+      EMPTY_AI_PLAN_FORM.desiredSessionDurationHours,
     desiredSessionsOutdoor:
-      raw.desiredSessionsOutdoor ?? raw.sessionsOutdoor ?? EMPTY_AI_PLAN_FORM.desiredSessionsOutdoor,
+      raw.desiredSessionsOutdoor ??
+      raw.sessionsOutdoor ??
+      EMPTY_AI_PLAN_FORM.desiredSessionsOutdoor,
     desiredSessionsBoulder:
-      raw.desiredSessionsBoulder ?? raw.sessionsBoulder ?? EMPTY_AI_PLAN_FORM.desiredSessionsBoulder,
+      raw.desiredSessionsBoulder ??
+      raw.sessionsBoulder ??
+      EMPTY_AI_PLAN_FORM.desiredSessionsBoulder,
     desiredSessionsLead:
       raw.desiredSessionsLead ?? raw.sessionsLead ?? EMPTY_AI_PLAN_FORM.desiredSessionsLead,
   };

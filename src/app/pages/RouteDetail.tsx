@@ -39,7 +39,9 @@ export function RouteDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loading]);
 
   const handleSelectForClimb = () => {
@@ -74,11 +76,11 @@ export function RouteDetail() {
           <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Via non trovata</h2>
           <p className="text-muted-foreground mb-4">La via che stai cercando non esiste.</p>
-          
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna all'elenco
-            </Button>
+
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna all'elenco
+          </Button>
         </Card>
       </div>
     );
@@ -89,10 +91,10 @@ export function RouteDetail() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-            <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna all'elenco
-            </Button>
+          <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna all'elenco
+          </Button>
 
           <div className="flex items-start justify-between gap-4 mb-2">
             <div className="flex items-center gap-3">
@@ -101,9 +103,7 @@ export function RouteDetail() {
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl">{route.nome_via}</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Dettagli della via
-                </p>
+                <p className="text-sm sm:text-base text-muted-foreground">Dettagli della via</p>
               </div>
             </div>
           </div>
@@ -157,7 +157,6 @@ export function RouteDetail() {
             Ho Arrampicato Questa Via
           </Button>
         </div>
-
       </div>
       <LoginRequiredDialog
         open={showLoginDialog}

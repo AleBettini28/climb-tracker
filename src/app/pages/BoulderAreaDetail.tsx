@@ -5,7 +5,19 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
-import { ArrowLeft, Hexagon, MapPin, List, Plus, Edit2, Save, X, Trash2, TrendingUp, Image as ImageIcon } from 'lucide-react';
+import {
+  ArrowLeft,
+  Hexagon,
+  MapPin,
+  List,
+  Plus,
+  Edit2,
+  Save,
+  X,
+  Trash2,
+  TrendingUp,
+  Image as ImageIcon,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { MapView } from '../components/MapView';
 import { MapPicker } from '../components/MapPicker';
@@ -49,7 +61,7 @@ export function BoulderAreaDetail() {
       } catch (error) {
         if (!cancelled) {
           console.error('Error loading boulder area:', error);
-          toast.error('Errore nel caricamento dell\'area boulder');
+          toast.error("Errore nel caricamento dell'area boulder");
         }
       } finally {
         if (!cancelled) {
@@ -58,7 +70,9 @@ export function BoulderAreaDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loading]);
 
   useEffect(() => {
@@ -84,7 +98,9 @@ export function BoulderAreaDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loadingBoulders]);
 
   const handleAddBoulder = () => {
@@ -112,29 +128,34 @@ export function BoulderAreaDetail() {
     if (!boulderArea) return;
 
     try {
-      await boulderAreasApi.updateOneBoulderArea({
-        name: editForm.name,
-        description: editForm.description,
-        city: editForm.city,
-        country: editForm.country,
-        latitude: editForm.latitude,
-        longitude: editForm.longitude,
-        map_image_url: editForm.mapImageUrl,
-        added_by: boulderArea.added_by,
-      }, boulderArea.id);
+      await boulderAreasApi.updateOneBoulderArea(
+        {
+          name: editForm.name,
+          description: editForm.description,
+          city: editForm.city,
+          country: editForm.country,
+          latitude: editForm.latitude,
+          longitude: editForm.longitude,
+          map_image_url: editForm.mapImageUrl,
+          added_by: boulderArea.added_by,
+        },
+        boulderArea.id,
+      );
       toast.success('Area boulder aggiornata con successo!');
       setIsEditing(false);
       navigate(`/area-boulder/${id}`);
     } catch (error) {
       console.error('Error updating boulder area:', error);
-      toast.error('Errore durante l\'aggiornamento dell\'area boulder');
+      toast.error("Errore durante l'aggiornamento dell'area boulder");
     }
   };
 
   const handleDeleteBoulderArea = async () => {
     if (!boulderArea) return;
 
-    const confirmed = window.confirm(`Sei sicuro di voler eliminare l'area boulder "${boulderArea.name}"?`);
+    const confirmed = window.confirm(
+      `Sei sicuro di voler eliminare l'area boulder "${boulderArea.name}"?`,
+    );
     if (!confirmed) return;
 
     try {
@@ -143,12 +164,14 @@ export function BoulderAreaDetail() {
       navigate('/esplora');
     } catch (error) {
       console.error('Error deleting boulder area:', error);
-      toast.error('Errore durante l\'eliminazione dell\'area boulder');
+      toast.error("Errore durante l'eliminazione dell'area boulder");
     }
   };
 
   const handleDeleteBoulder = async (boulderId: string, boulderName: string) => {
-    const confirmed = window.confirm(`Sei sicuro di voler eliminare il boulder "${boulderName}"? Verranno eliminati anche tutti i suoi blocchi.`);
+    const confirmed = window.confirm(
+      `Sei sicuro di voler eliminare il boulder "${boulderName}"? Verranno eliminati anche tutti i suoi blocchi.`,
+    );
     if (!confirmed) return;
 
     try {
@@ -156,10 +179,10 @@ export function BoulderAreaDetail() {
       toast.success('Boulder eliminato con successo!');
     } catch (error) {
       console.error('Error deleting boulder:', error);
-      toast.error('Errore durante l\'eliminazione del boulder');
+      toast.error("Errore durante l'eliminazione del boulder");
     }
 
-    setBoulders(prevBoulders => prevBoulders.filter(boulder => boulder.id !== boulderId));
+    setBoulders((prevBoulders) => prevBoulders.filter((boulder) => boulder.id !== boulderId));
   };
 
   if (loading) {
@@ -194,7 +217,9 @@ export function BoulderAreaDetail() {
               <Hexagon className="w-6 h-6 text-primary" />
             </div>
             {!isEditing ? (
-              <h1 className="text-2xl sm:text-3xl font-bold">{boulderArea ? boulderArea.name : ''}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">
+                {boulderArea ? boulderArea.name : ''}
+              </h1>
             ) : (
               <div className="space-y-2 flex-1">
                 <Label htmlFor="boulder-area-name">Nome Area Boulder</Label>
@@ -210,7 +235,11 @@ export function BoulderAreaDetail() {
           </div>
           {boulderArea && !isEditing && user && (
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <Button variant="outline" onClick={handleEditToggle} className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                onClick={handleEditToggle}
+                className="flex-1 sm:flex-initial"
+              >
                 <Edit2 className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Modifica</span>
               </Button>
@@ -222,7 +251,11 @@ export function BoulderAreaDetail() {
           )}
           {isEditing && (
             <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <Button variant="outline" onClick={handleEditToggle} className="flex-1 sm:flex-initial">
+              <Button
+                variant="outline"
+                onClick={handleEditToggle}
+                className="flex-1 sm:flex-initial"
+              >
                 <X className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Annulla</span>
               </Button>
@@ -230,7 +263,11 @@ export function BoulderAreaDetail() {
                 <Save className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Salva</span>
               </Button>
-              <Button variant="destructive" onClick={handleDeleteBoulderArea} className="flex-1 sm:flex-initial">
+              <Button
+                variant="destructive"
+                onClick={handleDeleteBoulderArea}
+                className="flex-1 sm:flex-initial"
+              >
                 <Trash2 className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Elimina</span>
               </Button>
@@ -245,7 +282,9 @@ export function BoulderAreaDetail() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <MapPin className="w-4 h-4" />
                   <span>
-                    {boulderArea.city && boulderArea.country ? `${boulderArea.city}, ${boulderArea.country}` : boulderArea.city || boulderArea.country}
+                    {boulderArea.city && boulderArea.country
+                      ? `${boulderArea.city}, ${boulderArea.country}`
+                      : boulderArea.city || boulderArea.country}
                   </span>
                 </div>
               )}
@@ -297,16 +336,25 @@ export function BoulderAreaDetail() {
           {!isEditing ? (
             <>
               {displayLat !== 0 && displayLng !== 0 ? (
-                <MapView latitude={displayLat} longitude={displayLng} title={boulderArea ? boulderArea.name : ''} height="250px" />
+                <MapView
+                  latitude={displayLat}
+                  longitude={displayLng}
+                  title={boulderArea ? boulderArea.name : ''}
+                  height="250px"
+                />
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">Posizione non disponibile</p>
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  Posizione non disponibile
+                </p>
               )}
             </>
           ) : (
             <MapPicker
               latitude={editForm.latitude}
               longitude={editForm.longitude}
-              onLocationSelect={(lat, lng) => setEditForm({ ...editForm, latitude: lat, longitude: lng })}
+              onLocationSelect={(lat, lng) =>
+                setEditForm({ ...editForm, latitude: lat, longitude: lng })
+              }
             />
           )}
         </Card>
@@ -336,7 +384,9 @@ export function BoulderAreaDetail() {
                   className="w-full h-auto rounded-lg border border-border"
                 />
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">Nessuna foto mappa caricata</p>
+                <p className="text-sm text-muted-foreground text-center py-8">
+                  Nessuna foto mappa caricata
+                </p>
               )}
             </>
           ) : (
@@ -356,7 +406,7 @@ export function BoulderAreaDetail() {
 
           {boulders.length > 0 ? (
             <div className="space-y-2">
-              {boulders.map(boulder => (
+              {boulders.map((boulder) => (
                 <div
                   key={boulder.id}
                   onClick={() => !isEditing && navigate(`/masso/${boulder.id}`)}
@@ -365,7 +415,8 @@ export function BoulderAreaDetail() {
                   <div className="flex-1">
                     <div className="font-medium">{boulder.name}</div>
                     <div className="text-sm text-muted-foreground">
-                      {boulder.number_of_routes} {boulder.number_of_routes === 1 ? 'blocco' : 'blocchi'}
+                      {boulder.number_of_routes}{' '}
+                      {boulder.number_of_routes === 1 ? 'blocco' : 'blocchi'}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">

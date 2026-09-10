@@ -2,10 +2,17 @@ import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { Button } from '../components/ui/button';
 import { Search, Filter, Trash2, Mountain, ChevronDown, ChevronUp } from 'lucide-react';
-import { CLIMBING_GRADES, DIFFICULTY_LABELS } from '../types/climb';
+import { CLIMBING_GRADES } from '../types/route';
+import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
 import { auth } from '../utils/auth';
@@ -33,8 +40,12 @@ export function ClimbList() {
   const [searchTerm, setSearchTerm] = useState(savedFilters?.searchTerm || '');
   const [selectedGrade, setSelectedGrade] = useState<string>(savedFilters?.selectedGrade || 'all');
   const [selectedCrag, setSelectedCrag] = useState<string>(savedFilters?.selectedCrag || 'all');
-  const [selectedPeriod, setSelectedPeriod] = useState<string>(savedFilters?.selectedPeriod || 'all');
-  const [selectedLeadType, setSelectedLeadType] = useState<string>(savedFilters?.selectedLeadType || 'all');
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    savedFilters?.selectedPeriod || 'all',
+  );
+  const [selectedLeadType, setSelectedLeadType] = useState<string>(
+    savedFilters?.selectedLeadType || 'all',
+  );
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   // Save filters to localStorage whenever they change
@@ -44,20 +55,19 @@ export function ClimbList() {
       selectedGrade,
       selectedCrag,
       selectedPeriod,
-      selectedLeadType
+      selectedLeadType,
     };
     localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
   }, [searchTerm, selectedGrade, selectedCrag, selectedPeriod, selectedLeadType]);
 
-
   useEffect(() => {
     const fetchClimbs = async () => {
-        const user = await auth.getSession();
-        
-        if(!user) {
-          toast.error('Errore nel recuperare i dati dell utente.');
-          return;
-        }
+      const user = await auth.getSession();
+
+      if (!user) {
+        toast.error('Errore nel recuperare i dati dell utente.');
+        return;
+      }
 
       try {
         const data = await routesApi.getUserClimbs(user.id);
@@ -73,7 +83,7 @@ export function ClimbList() {
 
   // Get unique crags
   const crags = useMemo(() => {
-    const uniqueCrags = new Set(climbs.map(c => c.route.crag_name).filter(Boolean));
+    const uniqueCrags = new Set(climbs.map((c) => c.route.crag_name).filter(Boolean));
     return Array.from(uniqueCrags).sort();
   }, [climbs]);
 
@@ -83,47 +93,48 @@ export function ClimbList() {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(climb =>
-        (climb.route.nome_via?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
-        (climb.route.crag_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
+      filtered = filtered.filter(
+        (climb) =>
+          climb.route.nome_via?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          false ||
+          climb.route.crag_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          false,
       );
     }
 
     // Grade filter
     if (selectedGrade !== 'all') {
-      filtered = filtered.filter(climb => climb.route.grado === selectedGrade);
+      filtered = filtered.filter((climb) => climb.route.grado === selectedGrade);
     }
 
     // Crag filter
     if (selectedCrag !== 'all') {
-      filtered = filtered.filter(climb => climb.route.crag_name === selectedCrag);
+      filtered = filtered.filter((climb) => climb.route.crag_name === selectedCrag);
     }
 
     // Lead type filter
     if (selectedLeadType !== 'all') {
-      filtered = filtered.filter(climb => climb.is_lead === (selectedLeadType === 'lead'));
+      filtered = filtered.filter((climb) => climb.is_lead === (selectedLeadType === 'lead'));
     }
 
     // Period filter
     if (selectedPeriod !== 'all') {
       const now = new Date();
       const periodMap: { [key: string]: number } = {
-        'week': 7,
-        'month': 30,
-        'year': 365
+        week: 7,
+        month: 30,
+        year: 365,
       };
 
       const days = periodMap[selectedPeriod];
       if (days) {
         const cutoffDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(climb => new Date(climb.day) >= cutoffDate);
+        filtered = filtered.filter((climb) => new Date(climb.day) >= cutoffDate);
       }
     }
 
     // Sort by date (most recent first)
-    return filtered.sort((a, b) =>
-      new Date(b.day).getTime() - new Date(a.day).getTime()
-    );
+    return filtered.sort((a, b) => new Date(b.day).getTime() - new Date(a.day).getTime());
   }, [climbs, searchTerm, selectedGrade, selectedCrag, selectedLeadType, selectedPeriod]);
 
   const handleDelete = async (id: string, name: string) => {
@@ -138,7 +149,7 @@ export function ClimbList() {
         toast.success('Scalata eliminata con successo');
       } catch (error) {
         console.error('Error deleting climb:', error);
-        toast.error('Errore durante l\'eliminazione');
+        toast.error("Errore durante l'eliminazione");
       }
 
       const updatedClimbs = await routesApi.getUserClimbs(user.id);
@@ -154,7 +165,12 @@ export function ClimbList() {
     setSelectedPeriod('all');
   };
 
-  const hasActiveFilters = searchTerm || selectedGrade !== 'all' || selectedCrag !== 'all' || selectedLeadType !== 'all' || selectedPeriod !== 'all';
+  const hasActiveFilters =
+    searchTerm ||
+    selectedGrade !== 'all' ||
+    selectedCrag !== 'all' ||
+    selectedLeadType !== 'all' ||
+    selectedPeriod !== 'all';
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
@@ -182,7 +198,9 @@ export function ClimbList() {
           )}
         </button>
 
-        <div className={`space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 ${filtersOpen ? 'block' : 'hidden md:grid'}`}>
+        <div
+          className={`space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 ${filtersOpen ? 'block' : 'hidden md:grid'}`}
+        >
           {/* Search */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-stone-700">Ricerca</label>
@@ -207,8 +225,10 @@ export function ClimbList() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tutti i gradi</SelectItem>
-                {CLIMBING_GRADES.map(grade => (
-                  <SelectItem key={grade} value={grade}>{grade}</SelectItem>
+                {CLIMBING_GRADES.map((grade) => (
+                  <SelectItem key={grade} value={grade}>
+                    {grade}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -223,8 +243,10 @@ export function ClimbList() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tutte le falesie</SelectItem>
-                {crags.map(crag => (
-                  <SelectItem key={crag} value={crag}>{crag}</SelectItem>
+                {crags.map((crag) => (
+                  <SelectItem key={crag} value={crag}>
+                    {crag}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -263,7 +285,9 @@ export function ClimbList() {
         </div>
 
         {hasActiveFilters && (
-          <div className={`mt-6 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${filtersOpen ? 'block' : 'hidden md:flex'}`}>
+          <div
+            className={`mt-6 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${filtersOpen ? 'block' : 'hidden md:flex'}`}
+          >
             <p className="text-sm text-muted-foreground">
               {filteredClimbs.length} {filteredClimbs.length === 1 ? 'risultato' : 'risultati'}
             </p>
@@ -299,8 +323,12 @@ export function ClimbList() {
                         <Mountain className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">{climb.route.nome_via || 'Via sconosciuta'}</h3>
-                        <p className="text-sm text-muted-foreground mb-3 truncate">{climb.route.crag_name || 'N/A'}</p>
+                        <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">
+                          {climb.route.nome_via || 'Via sconosciuta'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3 truncate">
+                          {climb.route.crag_name || 'N/A'}
+                        </p>
 
                         <div className="flex flex-wrap gap-2">
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground rounded-full text-xs sm:text-sm font-medium">
@@ -310,7 +338,9 @@ export function ClimbList() {
                             {climb.is_lead === true ? '🧗 Primo' : '⛓️ Secondo'}
                           </span>
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs sm:text-sm">
-                            {DIFFICULTY_LABELS[climb.difficulty.toString() as unknown as 1 | 2 | 3 | 4 | 5] || 'N/A'}
+                            {DIFFICULTY_LABELS[
+                              climb.difficulty.toString() as unknown as 1 | 2 | 3 | 4 | 5
+                            ] || 'N/A'}
                           </span>
                         </div>
 
@@ -318,7 +348,7 @@ export function ClimbList() {
                           {new Date(climb.day).toLocaleDateString('it-IT', {
                             day: 'numeric',
                             month: 'long',
-                            year: 'numeric'
+                            year: 'numeric',
                           })}
                         </p>
                       </div>

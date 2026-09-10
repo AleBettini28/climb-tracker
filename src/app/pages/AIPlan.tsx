@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { Card } from '../components/ui/card';
@@ -6,7 +6,13 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import {
   ArrowLeft,
@@ -98,9 +104,7 @@ function MultiSelectChips({
   const toggle = (value: string) => {
     if (excluded.includes(value) && !selected.includes(value)) return;
     onChange(
-      selected.includes(value)
-        ? selected.filter((item) => item !== value)
-        : [...selected, value],
+      selected.includes(value) ? selected.filter((item) => item !== value) : [...selected, value],
     );
   };
 
@@ -115,7 +119,7 @@ function MultiSelectChips({
             type="button"
             onClick={() => toggle(option.value)}
             disabled={isExcluded}
-            title={isExcluded ? 'Già selezionato nell\'altro elenco' : undefined}
+            title={isExcluded ? "Già selezionato nell'altro elenco" : undefined}
             className={cn(
               'px-3 py-1.5 rounded-md border text-sm transition-colors',
               isSelected
@@ -227,7 +231,7 @@ export function AIPlan() {
     return null;
   };
 
-  const handleGenerate = async (e: React.FormEvent) => {
+  const handleGenerate = async (e: FormEvent) => {
     e.preventDefault();
 
     const validationError = validateForm();
@@ -265,9 +269,7 @@ export function AIPlan() {
         max_pull_ups: Number(form.maxPullUps),
         trains_fingerboard: form.trainsFingerboard === 'yes',
         fingerboard_times_per_week:
-          form.trainsFingerboard === 'yes'
-            ? Number(form.fingerboardTimesPerWeek)
-            : undefined,
+          form.trainsFingerboard === 'yes' ? Number(form.fingerboardTimesPerWeek) : undefined,
         main_limiter: AI_PLAN_LIMITER_LABELS[form.mainLimiter as AiPlanLimiter],
         fall_comfort: AI_PLAN_FALL_COMFORT_LABELS[form.fallComfort as AiPlanFallComfort],
         other_sports: form.otherSports.trim() || undefined,
@@ -287,9 +289,7 @@ export function AIPlan() {
     } catch (error) {
       console.error('Error generating AI plan:', error);
       const message =
-        error instanceof ApiError
-          ? error.message
-          : 'Errore durante la generazione del piano AI';
+        error instanceof ApiError ? error.message : 'Errore durante la generazione del piano AI';
       toast.error(message);
     } finally {
       setIsGenerating(false);
@@ -329,10 +329,7 @@ export function AIPlan() {
       toast.success('PDF scaricato');
     } catch (error) {
       console.error('Error exporting AI plan PDF:', error);
-      const message =
-        error instanceof ApiError
-          ? error.message
-          : 'Errore durante l\'export del PDF';
+      const message = error instanceof ApiError ? error.message : "Errore durante l'export del PDF";
       toast.error(message);
     } finally {
       setIsExportingPdf(false);
@@ -367,8 +364,8 @@ export function AIPlan() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Crea il tuo percorso personalizzato</h3>
               <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">
-                Compila un breve profilo su volume, gradi, punti di forza e obiettivo.
-                Gemini analizzerà i dati e costruirà un piano con fasi, tempi stimati e workout concreti.
+                Compila un breve profilo su volume, gradi, punti di forza e obiettivo. Gemini
+                analizzerà i dati e costruirà un piano con fasi, tempi stimati e workout concreti.
               </p>
               <Button size="lg" onClick={() => setStep('form')}>
                 <Sparkles className="w-4 h-4 mr-2" />
@@ -483,7 +480,9 @@ export function AIPlan() {
 
               <div className="border-t pt-5 space-y-4">
                 <div>
-                  <h3 className="text-sm font-medium mb-1">Cosa vorresti fare per l&apos;obiettivo</h3>
+                  <h3 className="text-sm font-medium mb-1">
+                    Cosa vorresti fare per l&apos;obiettivo
+                  </h3>
                   <p className="text-xs text-muted-foreground mb-3">
                     Il volume di allenamento che sei disposto a sostenere per arrivare al goal.
                   </p>
@@ -937,7 +936,8 @@ export function AIPlan() {
 
             {isGenerating && (
               <p className="text-center text-sm text-muted-foreground">
-                L'analisi può richiedere fino a un minuto: Gemini sta costruendo un percorso dettagliato.
+                L'analisi può richiedere fino a un minuto: Gemini sta costruendo un percorso
+                dettagliato.
               </p>
             )}
           </form>
@@ -985,7 +985,9 @@ export function AIPlan() {
                 <div className="flex items-start gap-2 mt-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
                   <Clock className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground mb-0.5">Tempo stimato</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-0.5">
+                      Tempo stimato
+                    </p>
                     <p className="text-sm font-medium">{plan.estimated_duration}</p>
                   </div>
                 </div>
@@ -1128,7 +1130,9 @@ export function AIPlan() {
                   <Dumbbell className="w-4 h-4 text-primary" />
                   <h2 className="font-semibold text-lg">Cosa fare nei workout</h2>
                 </div>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{plan.workout_guidelines}</p>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                  {plan.workout_guidelines}
+                </p>
               </Card>
             )}
 
@@ -1138,14 +1142,18 @@ export function AIPlan() {
                   <AlertTriangle className="w-4 h-4 text-amber-600" />
                   <h2 className="font-semibold text-lg">Considerazioni sugli infortuni</h2>
                 </div>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{plan.injury_considerations}</p>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                  {plan.injury_considerations}
+                </p>
               </Card>
             )}
 
             {plan.additional_advice && (
               <Card className="p-5 sm:p-6 space-y-3">
                 <h2 className="font-semibold text-lg">Consigli aggiuntivi</h2>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{plan.additional_advice}</p>
+                <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                  {plan.additional_advice}
+                </p>
               </Card>
             )}
           </div>

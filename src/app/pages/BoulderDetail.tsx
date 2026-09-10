@@ -4,7 +4,11 @@ import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { ArrowLeft, Hexagon, MapPin, List, Plus, Trash2, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { BoulderDetailResponseExtended, BoulderRouteDetailResponse, bouldersApi } from '../api/boulders';
+import {
+  BoulderDetailResponseExtended,
+  BoulderRouteDetailResponse,
+  bouldersApi,
+} from '../api/boulders';
 import { boulderRoutesApi } from '../api/boulderRoutes';
 import { useAuth } from '../context/AuthContext';
 import { BOULDER_GRADES } from '../types/boulderArea';
@@ -42,7 +46,9 @@ export function BoulderDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loading]);
 
   useEffect(() => {
@@ -70,7 +76,9 @@ export function BoulderDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loadingRoutes, user]);
 
   const handleAddBoulderRoute = () => {
@@ -88,10 +96,10 @@ export function BoulderDetail() {
       toast.success('Blocco eliminato con successo!');
     } catch (error) {
       console.error('Error deleting boulder route:', error);
-      toast.error('Errore durante l\'eliminazione del blocco');
+      toast.error("Errore durante l'eliminazione del blocco");
     }
 
-    setBoulderRoutes(prevRoutes => prevRoutes.filter(route => route.id !== boulderRouteId));
+    setBoulderRoutes((prevRoutes) => prevRoutes.filter((route) => route.id !== boulderRouteId));
   };
 
   if (loading) {
@@ -108,7 +116,9 @@ export function BoulderDetail() {
   }
 
   const gradeOrder = [...BOULDER_GRADES];
-  const sortedGrades = boulderRoutes.map(r => r.grade).sort((a, b) => gradeOrder.indexOf(a as any) - gradeOrder.indexOf(b as any));
+  const sortedGrades = boulderRoutes
+    .map((r) => r.grade)
+    .sort((a, b) => gradeOrder.indexOf(a as any) - gradeOrder.indexOf(b as any));
   const minGrade = sortedGrades.length > 0 ? sortedGrades[0] : '-';
 
   return (
@@ -167,7 +177,7 @@ export function BoulderDetail() {
 
           {boulderRoutes.length > 0 ? (
             <div className="space-y-2">
-              {boulderRoutes.map(route => (
+              {boulderRoutes.map((route) => (
                 <div
                   key={route.id}
                   onClick={() => navigate(`/blocco/${route.id}`)}
@@ -176,13 +186,13 @@ export function BoulderDetail() {
                   <div className="flex-1">
                     <div className="font-medium">{route.route_name}</div>
                     {route.route_description && (
-                      <div className="text-sm text-muted-foreground truncate max-w-md">{route.route_description}</div>
+                      <div className="text-sm text-muted-foreground truncate max-w-md">
+                        {route.route_description}
+                      </div>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
-                    {route.is_sent && (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
-                    )}
+                    {route.is_sent && <CheckCircle2 className="w-5 h-5 text-green-600" />}
                     <span className="inline-flex items-center px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
                       {route.grade}
                     </span>

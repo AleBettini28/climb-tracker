@@ -50,7 +50,9 @@ export function Explore() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [cragsLoaded]);
 
   useEffect(() => {
@@ -76,22 +78,28 @@ export function Explore() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [boulderAreasLoaded]);
 
   const filteredCrags = useMemo(() => {
-    return crags.filter(crag => {
-      return crag.name.toLowerCase().includes(cragSearchTerm.toLowerCase()) ||
+    return crags.filter((crag) => {
+      return (
+        crag.name.toLowerCase().includes(cragSearchTerm.toLowerCase()) ||
         (crag.city && crag.city.toLowerCase().includes(cragSearchTerm.toLowerCase())) ||
-        (crag.country && crag.country.toLowerCase().includes(cragSearchTerm.toLowerCase()));
+        (crag.country && crag.country.toLowerCase().includes(cragSearchTerm.toLowerCase()))
+      );
     });
   }, [crags, cragSearchTerm]);
 
   const filteredBoulderAreas = useMemo(() => {
-    return boulderAreas.filter(area => {
-      return area.name.toLowerCase().includes(boulderAreaSearchTerm.toLowerCase()) ||
+    return boulderAreas.filter((area) => {
+      return (
+        area.name.toLowerCase().includes(boulderAreaSearchTerm.toLowerCase()) ||
         (area.city && area.city.toLowerCase().includes(boulderAreaSearchTerm.toLowerCase())) ||
-        (area.country && area.country.toLowerCase().includes(boulderAreaSearchTerm.toLowerCase()));
+        (area.country && area.country.toLowerCase().includes(boulderAreaSearchTerm.toLowerCase()))
+      );
     });
   }, [boulderAreas, boulderAreaSearchTerm]);
 
@@ -105,7 +113,9 @@ export function Explore() {
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold">Esplora</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Scopri falesie e aree boulder da tutto il mondo</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Scopri falesie e aree boulder da tutto il mondo
+          </p>
         </div>
 
         <Tabs value={section} onValueChange={(value) => setSection(value as ExploreSection)}>
@@ -152,15 +162,23 @@ export function Explore() {
               ) : filteredCrags.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredCrags.map((item) => (
-                    <Card key={item.id} onClick={() => navigate(`/falesia/${item.id}`)} className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group">
+                    <Card
+                      key={item.id}
+                      onClick={() => navigate(`/falesia/${item.id}`)}
+                      className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
-                          <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
+                          <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
+                            {item.name}
+                          </h3>
                           {(item.city || item.country) && (
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               <MapPin className="w-3 h-3" />
                               <span>
-                                {item.city && item.country ? `${item.city}, ${item.country}` : item.city || item.country}
+                                {item.city && item.country
+                                  ? `${item.city}, ${item.country}`
+                                  : item.city || item.country}
                               </span>
                             </div>
                           )}
@@ -172,13 +190,18 @@ export function Explore() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-muted-foreground">{'Vie'}</span>
-                          <span className="text-lg font-bold text-primary">{item.number_of_routes}</span>
+                          <span className="text-lg font-bold text-primary">
+                            {item.number_of_routes}
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-muted-foreground flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />Grado max
+                            <TrendingUp className="w-3 h-3" />
+                            Grado max
                           </span>
-                          <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
+                          <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                            {item.max_grade}
+                          </span>
                         </div>
                       </div>
                     </Card>
@@ -188,7 +211,11 @@ export function Explore() {
                 <Card className="p-12 text-center">
                   <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">Nessun risultato</h3>
-                  <p className="text-sm text-muted-foreground">{cragSearchTerm ? 'Prova a modificare la ricerca' : 'Nessuna falesia disponibile'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {cragSearchTerm
+                      ? 'Prova a modificare la ricerca'
+                      : 'Nessuna falesia disponibile'}
+                  </p>
                 </Card>
               )}
             </section>
@@ -226,15 +253,23 @@ export function Explore() {
               ) : filteredBoulderAreas.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredBoulderAreas.map((item) => (
-                    <Card key={item.id} onClick={() => navigate(`/area-boulder/${item.id}`)} className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group">
+                    <Card
+                      key={item.id}
+                      onClick={() => navigate(`/area-boulder/${item.id}`)}
+                      className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
-                          <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
+                          <h3 className="text-lg font-semibold mb-1 group-hover:text-primary transition-colors">
+                            {item.name}
+                          </h3>
                           {(item.city || item.country) && (
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               <MapPin className="w-3 h-3" />
                               <span>
-                                {item.city && item.country ? `${item.city}, ${item.country}` : item.city || item.country}
+                                {item.city && item.country
+                                  ? `${item.city}, ${item.country}`
+                                  : item.city || item.country}
                               </span>
                             </div>
                           )}
@@ -246,13 +281,18 @@ export function Explore() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-muted-foreground">{'Boulder'}</span>
-                          <span className="text-lg font-bold text-primary">{item.number_of_boulders}</span>
+                          <span className="text-lg font-bold text-primary">
+                            {item.number_of_boulders}
+                          </span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-muted-foreground flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />Grado max
+                            <TrendingUp className="w-3 h-3" />
+                            Grado max
                           </span>
-                          <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">{item.max_grade}</span>
+                          <span className="inline-flex items-center px-2.5 py-0.5 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                            {item.max_grade}
+                          </span>
                         </div>
                       </div>
                     </Card>
@@ -262,7 +302,11 @@ export function Explore() {
                 <Card className="p-12 text-center">
                   <Hexagon className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">Nessun risultato</h3>
-                  <p className="text-sm text-muted-foreground">{boulderAreaSearchTerm ? 'Prova a modificare la ricerca' : 'Nessuna area boulder disponibile'}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {boulderAreaSearchTerm
+                      ? 'Prova a modificare la ricerca'
+                      : 'Nessuna area boulder disponibile'}
+                  </p>
                 </Card>
               )}
             </section>

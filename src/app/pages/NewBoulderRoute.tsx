@@ -6,7 +6,13 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { PlusCircle, Hexagon } from 'lucide-react';
 import { toast } from 'sonner';
 import { auth } from '../utils/auth';
@@ -49,7 +55,7 @@ export function NewBoulderRoute() {
 
       await boulderRoutesApi.createOneBoulderRoute(session.id, id, {
         route_name: formData.routeName,
-        route_description: formData.routeDescription || "",
+        route_description: formData.routeDescription || '',
         grade: formData.grade,
       });
 
@@ -57,7 +63,7 @@ export function NewBoulderRoute() {
       navigate(`/masso/${id}`);
     } catch (error) {
       console.error('Error adding boulder route:', error);
-      toast.error('Errore durante l\'aggiunta del blocco');
+      toast.error("Errore durante l'aggiunta del blocco");
     } finally {
       setIsSubmitting(false);
     }
@@ -73,7 +79,9 @@ export function NewBoulderRoute() {
             </div>
             <h1 className="text-xl sm:text-2xl">Aggiungi Nuovo Blocco</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Aggiungi un blocco (linea/passaggio) su questo boulder</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Aggiungi un blocco (linea/passaggio) su questo boulder
+          </p>
         </div>
 
         {selectedBoulder && (
@@ -125,12 +133,17 @@ export function NewBoulderRoute() {
                 onValueChange={(value) => setFormData({ ...formData, grade: value })}
                 required
               >
-                <SelectTrigger id="grade" className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                <SelectTrigger
+                  id="grade"
+                  className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                >
                   <SelectValue placeholder="Seleziona il grado" />
                 </SelectTrigger>
                 <SelectContent>
-                  {BOULDER_GRADES.map(grade => (
-                    <SelectItem key={grade} value={grade}>{grade}</SelectItem>
+                  {BOULDER_GRADES.map((grade) => (
+                    <SelectItem key={grade} value={grade}>
+                      {grade}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -146,11 +159,7 @@ export function NewBoulderRoute() {
               >
                 Annulla
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Aggiungi Blocco
               </Button>

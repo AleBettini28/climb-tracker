@@ -46,15 +46,21 @@ export const boulderAreasApi = {
     return data;
   },
   createOneBoulderArea: async (body: BoulderAreaCreateUpdateRequest): Promise<null> => {
-      const data = await apiRequest<null>(`/boulder-areas/create/one`, {body: body, method: "POST"});
-      return data;
+    const data = await apiRequest<null>(`/boulder-areas/create/one`, {
+      body: body,
+      method: 'POST',
+    });
+    return data;
   },
   updateOneBoulderArea: async (body: BoulderAreaCreateUpdateRequest, id: string): Promise<null> => {
-      const data = await apiRequest<null>(`/boulder-areas/update/${id}`, {body: body, method: "PUT"});
-      return data;
+    const data = await apiRequest<null>(`/boulder-areas/update/${id}`, {
+      body: body,
+      method: 'PUT',
+    });
+    return data;
   },
   deleteOneBoulderArea: async (id: string): Promise<null> => {
-      const data = await apiRequest<null>(`/boulder-areas/one/${id}/delete`, { method: "DELETE"});
-      return data;
+    const data = await apiRequest<null>(`/boulder-areas/one/${id}/delete`, { method: 'DELETE' });
+    return data;
   },
 };

@@ -50,7 +50,7 @@ export function ClimbDetail() {
         toast.success('Scalata eliminata con successo');
       } catch (error) {
         console.error('Error deleting climb:', error);
-        toast.error('Errore durante l\'eliminazione');
+        toast.error("Errore durante l'eliminazione");
       }
     }
   };
@@ -176,7 +176,7 @@ export function ClimbDetail() {
                 {new Date(climb.day).toLocaleDateString('it-IT', {
                   day: 'numeric',
                   month: 'long',
-                  year: 'numeric'
+                  year: 'numeric',
                 })}
               </p>
             </div>

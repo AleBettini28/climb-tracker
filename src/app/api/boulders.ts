@@ -29,19 +29,30 @@ export const bouldersApi = {
     return data;
   },
   deleteOneBoulder: async (boulderId: string): Promise<null> => {
-    const data = await apiRequest<null>(`/boulders/one/${boulderId}/delete`, { method: "DELETE"});
+    const data = await apiRequest<null>(`/boulders/one/${boulderId}/delete`, { method: 'DELETE' });
     return data;
   },
-  createOneBoulder: async (userId: string, boulderAreaId: string, body: BoulderCreateUpdateRequest): Promise<null> => {
-    const data = await apiRequest<null>(`/boulders/create-one/${userId}/${boulderAreaId}`, {body: body, method: "POST"});
+  createOneBoulder: async (
+    userId: string,
+    boulderAreaId: string,
+    body: BoulderCreateUpdateRequest,
+  ): Promise<null> => {
+    const data = await apiRequest<null>(`/boulders/create-one/${userId}/${boulderAreaId}`, {
+      body: body,
+      method: 'POST',
+    });
     return data;
   },
   getOneRoutes: async (id: string, userId: string): Promise<BoulderRouteDetailResponse[]> => {
-    const data = await apiRequest<BoulderRouteDetailResponse[]>(`/boulders/one/${id}/routes/${userId}`);
+    const data = await apiRequest<BoulderRouteDetailResponse[]>(
+      `/boulders/one/${id}/routes/${userId}`,
+    );
     return data;
   },
   getOneRoutesPublic: async (id: string): Promise<BoulderRouteDetailResponse[]> => {
-    const data = await apiRequest<BoulderRouteDetailResponse[]>(`/boulders/one/${id}/routes/public`);
+    const data = await apiRequest<BoulderRouteDetailResponse[]>(
+      `/boulders/one/${id}/routes/public`,
+    );
     return data;
   },
 };

@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { Home, LayoutDashboardIcon, Compass, List, ChevronDown, LogOut, LogIn, Dumbbell } from 'lucide-react';
+import {
+  Home,
+  LayoutDashboardIcon,
+  Compass,
+  List,
+  ChevronDown,
+  LogOut,
+  LogIn,
+  Dumbbell,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ConfirmDialog } from './ConfirmDialog';
 
@@ -9,7 +18,6 @@ export function Navigation() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [showActivityMenu, setShowActivityMenu] = useState(false);
-  const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogout = async () => {
@@ -52,13 +60,16 @@ export function Navigation() {
                   <Link
                     to="/allenamenti"
                     className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                      location.pathname.startsWith('/allenamenti') || location.pathname.startsWith('/allenamento')
+                      location.pathname.startsWith('/allenamenti') ||
+                      location.pathname.startsWith('/allenamento')
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     <Dumbbell className="w-4 h-4" />
-                    <span className="hidden md:inline text-sm font-medium">Tracciamento progressi</span>
+                    <span className="hidden md:inline text-sm font-medium">
+                      Tracciamento progressi
+                    </span>
                   </Link>
                 )}
 

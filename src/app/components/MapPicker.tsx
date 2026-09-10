@@ -18,7 +18,7 @@ export function MapPicker({ latitude, longitude, onLocationSelect }: MapPickerPr
   const markerRef = useRef<L.Marker | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
-  const defaultCenter: [number, number] = [45.4642, 9.1900]; // Milan, Italy
+  const defaultCenter: [number, number] = [45.4642, 9.19]; // Milan, Italy
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -26,11 +26,12 @@ export function MapPicker({ latitude, longitude, onLocationSelect }: MapPickerPr
     // Create map
     const map = L.map(mapContainerRef.current).setView(
       latitude && longitude ? [latitude, longitude] : defaultCenter,
-      latitude && longitude ? 13 : 6
+      latitude && longitude ? 13 : 6,
     );
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
     // Add click handler
@@ -84,7 +85,7 @@ export function MapPicker({ latitude, longitude, onLocationSelect }: MapPickerPr
     setSearching(true);
     try {
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`,
       );
       const data = await response.json();
 
@@ -114,12 +115,7 @@ export function MapPicker({ latitude, longitude, onLocationSelect }: MapPickerPr
             className="pl-10"
           />
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleSearch}
-          disabled={searching}
-        >
+        <Button type="button" variant="outline" onClick={handleSearch} disabled={searching}>
           Cerca
         </Button>
       </div>

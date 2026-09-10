@@ -18,11 +18,12 @@ export function MapView({ latitude, longitude, title, height = '300px' }: MapVie
 
     // Create map
     const map = L.map(mapContainerRef.current, {
-      scrollWheelZoom: false
+      scrollWheelZoom: false,
     }).setView([latitude, longitude], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
     // Add marker

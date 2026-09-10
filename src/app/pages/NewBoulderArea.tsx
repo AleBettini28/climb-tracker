@@ -30,7 +30,7 @@ export function NewBoulderArea() {
     e.preventDefault();
 
     if (!formData.name) {
-      toast.error('Inserisci il nome dell\'area boulder');
+      toast.error("Inserisci il nome dell'area boulder");
       return;
     }
 
@@ -44,19 +44,19 @@ export function NewBoulderArea() {
     try {
       const session = await auth.getSession();
       if (!session?.id) {
-        toast.error('Devi essere autenticato per aggiungere un\'area boulder');
+        toast.error("Devi essere autenticato per aggiungere un'area boulder");
         return;
       }
 
-       const newBoulderArea: BoulderAreaCreateUpdateRequest = {
-          name: formData.name,
-          description: formData.description || "",
-          city: formData.city || undefined,
-          country: formData.country || undefined,
-          latitude: formData.latitude,
-          longitude: formData.longitude,
-          map_image_url: formData.mapImageUrl || undefined,
-          added_by: session.id,
+      const newBoulderArea: BoulderAreaCreateUpdateRequest = {
+        name: formData.name,
+        description: formData.description || '',
+        city: formData.city || undefined,
+        country: formData.country || undefined,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        map_image_url: formData.mapImageUrl || undefined,
+        added_by: session.id,
       };
 
       await boulderAreasApi.createOneBoulderArea(newBoulderArea);
@@ -65,7 +65,7 @@ export function NewBoulderArea() {
       navigate(`/esplora`);
     } catch (error) {
       console.error('Error adding boulder area:', error);
-      toast.error('Errore durante l\'aggiunta dell\'area boulder');
+      toast.error("Errore durante l'aggiunta dell'area boulder");
     } finally {
       setIsSubmitting(false);
     }
@@ -81,7 +81,9 @@ export function NewBoulderArea() {
             </div>
             <h1 className="text-xl sm:text-2xl">Aggiungi Nuova Area Boulder</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Crea una nuova area boulder nell'archivio condiviso</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Crea una nuova area boulder nell'archivio condiviso
+          </p>
         </div>
 
         <Card className="p-4 sm:p-6">
@@ -158,7 +160,9 @@ export function NewBoulderArea() {
               <MapPicker
                 latitude={formData.latitude}
                 longitude={formData.longitude}
-                onLocationSelect={(lat, lng) => setFormData({ ...formData, latitude: lat, longitude: lng })}
+                onLocationSelect={(lat, lng) =>
+                  setFormData({ ...formData, latitude: lat, longitude: lng })
+                }
               />
             </div>
 
@@ -172,11 +176,7 @@ export function NewBoulderArea() {
               >
                 Annulla
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Aggiungi Area Boulder
               </Button>

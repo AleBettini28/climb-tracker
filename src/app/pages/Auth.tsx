@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { Mountain } from 'lucide-react';
 import { auth } from '../utils/auth';
@@ -14,7 +14,7 @@ export default function Auth() {
   const navigate = useNavigate();
   const { refreshUser } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -102,7 +102,7 @@ export default function Auth() {
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {"Password o email errate, riprova."}
+                {'Password o email errate, riprova.'}
               </div>
             )}
 

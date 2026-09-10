@@ -41,40 +41,61 @@ export interface ExtractRoutesFromImageResponse {
 }
 
 export const routesApi = {
-  list: async (): Promise<RouteDetailResponseExtended[]> => {
-    const data = await apiRequest<RouteDetailResponseExtended[]>('/routes/list');
-    return data;
-  },
   getOne: async (id: string): Promise<RouteDetailResponseExtended> => {
     const data = await apiRequest<RouteDetailResponseExtended>(`/routes/one/${id}`);
     return data;
   },
   deleteOneRoute: async (routeId: string): Promise<null> => {
-    const data = await apiRequest<null>(`/routes/one/${routeId}/delete`, { method: "DELETE"});
+    const data = await apiRequest<null>(`/routes/one/${routeId}/delete`, { method: 'DELETE' });
     return data;
   },
   climbOne: async (userId: string, body: ClimbCreateRequest): Promise<null> => {
-    const data = await apiRequest<null>(`/routes/create-one/${userId}/climb-one`, {body: body, method: "POST"});
+    const data = await apiRequest<null>(`/routes/create-one/${userId}/climb-one`, {
+      body: body,
+      method: 'POST',
+    });
     return data;
   },
-  createOneRoute: async (userId: string, cragId: string, body: RouteCreateUpdateRequest): Promise<null> => {
-    const data = await apiRequest<null>(`/routes/create-one/${userId}/${cragId}`, {body: body, method: "POST"});
+  createOneRoute: async (
+    userId: string,
+    cragId: string,
+    body: RouteCreateUpdateRequest,
+  ): Promise<null> => {
+    const data = await apiRequest<null>(`/routes/create-one/${userId}/${cragId}`, {
+      body: body,
+      method: 'POST',
+    });
     return data;
   },
-  extractRoutesFromImage: async (userId: string, cragId: string): Promise<ExtractRoutesFromImageResponse> => {
-    const data = await apiRequest<ExtractRoutesFromImageResponse>(`/routes/extract-from-image/${userId}/${cragId}`, { method: "POST" });
+  extractRoutesFromImage: async (
+    userId: string,
+    cragId: string,
+  ): Promise<ExtractRoutesFromImageResponse> => {
+    const data = await apiRequest<ExtractRoutesFromImageResponse>(
+      `/routes/extract-from-image/${userId}/${cragId}`,
+      { method: 'POST' },
+    );
     return data;
   },
   getUserClimbs: async (userId: string): Promise<ClimbDetailExtendedResponse[]> => {
-    const data = await apiRequest<ClimbDetailExtendedResponse[]>(`/routes/one/${userId}/climbs-list`);
+    const data = await apiRequest<ClimbDetailExtendedResponse[]>(
+      `/routes/one/${userId}/climbs-list`,
+    );
     return data;
   },
-  getOneUserClimb: async (userId: string, routeId: string): Promise<ClimbDetailExtendedResponse> => {
-    const data = await apiRequest<ClimbDetailExtendedResponse>(`/routes/one/${userId}/climb/${routeId}`);
+  getOneUserClimb: async (
+    userId: string,
+    routeId: string,
+  ): Promise<ClimbDetailExtendedResponse> => {
+    const data = await apiRequest<ClimbDetailExtendedResponse>(
+      `/routes/one/${userId}/climb/${routeId}`,
+    );
     return data;
   },
   deleteOneClimb: async (userId: string, routeId: string): Promise<null> => {
-    const data = await apiRequest<null>(`/routes/one/${userId}/climb/${routeId}/delete`, { method: "DELETE"});
+    const data = await apiRequest<null>(`/routes/one/${userId}/climb/${routeId}/delete`, {
+      method: 'DELETE',
+    });
     return data;
   },
 };

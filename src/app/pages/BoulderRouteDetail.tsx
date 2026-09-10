@@ -12,7 +12,9 @@ export function BoulderRouteDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [boulderRoute, setBoulderRoute] = useState<BoulderRouteDetailResponseExtended | undefined>(undefined);
+  const [boulderRoute, setBoulderRoute] = useState<BoulderRouteDetailResponseExtended | undefined>(
+    undefined,
+  );
   const [loading, setLoading] = useState(false);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
 
@@ -39,7 +41,9 @@ export function BoulderRouteDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [loading]);
 
   const handleSelectForSend = () => {
@@ -74,10 +78,10 @@ export function BoulderRouteDetail() {
           <h2 className="text-xl font-semibold mb-2">Blocco non trovato</h2>
           <p className="text-muted-foreground mb-4">Il blocco che stai cercando non esiste.</p>
 
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna all'elenco
-            </Button>
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna all'elenco
+          </Button>
         </Card>
       </div>
     );
@@ -88,10 +92,10 @@ export function BoulderRouteDetail() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-            <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna all'elenco
-            </Button>
+          <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna all'elenco
+          </Button>
 
           <div className="flex items-start justify-between gap-4 mb-2">
             <div className="flex items-center gap-3">
@@ -100,9 +104,7 @@ export function BoulderRouteDetail() {
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl">{boulderRoute.route_name}</h1>
-                <p className="text-sm sm:text-base text-muted-foreground">
-                  Dettagli del blocco
-                </p>
+                <p className="text-sm sm:text-base text-muted-foreground">Dettagli del blocco</p>
               </div>
             </div>
           </div>
@@ -156,7 +158,6 @@ export function BoulderRouteDetail() {
             Ho Inviato Questo Blocco
           </Button>
         </div>
-
       </div>
       <LoginRequiredDialog
         open={showLoginDialog}

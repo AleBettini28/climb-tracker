@@ -5,7 +5,13 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { PlusCircle, Mountain, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 import { MapPicker } from '../components/MapPicker';
@@ -22,7 +28,7 @@ export function NewRoute() {
     crag: selectedCrag?.name || '',
     grade: '',
     length: undefined as number | undefined,
-    number:  undefined as number | undefined,
+    number: undefined as number | undefined,
     latitude: selectedCrag?.latitude || undefined,
     longitude: selectedCrag?.longitude || undefined,
   });
@@ -46,12 +52,12 @@ export function NewRoute() {
 
     try {
       const session = await auth.getSession();
-      if (!session?.id ) {
+      if (!session?.id) {
         toast.error('Devi essere autenticato per aggiungere una via');
         return;
       }
 
-      if(!id) {
+      if (!id) {
         toast.error('Id via non trovato');
         return;
       }
@@ -67,7 +73,7 @@ export function NewRoute() {
       navigate(`/falesia/${id}`);
     } catch (error) {
       console.error('Error adding route:', error);
-      toast.error('Errore durante l\'aggiunta della via');
+      toast.error("Errore durante l'aggiunta della via");
     } finally {
       setIsSubmitting(false);
     }
@@ -83,7 +89,9 @@ export function NewRoute() {
             </div>
             <h1 className="text-xl sm:text-2xl">Aggiungi Nuova Via</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Aggiungi una via all'archivio condiviso</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Aggiungi una via all'archivio condiviso
+          </p>
         </div>
 
         {selectedCrag && (
@@ -114,7 +122,7 @@ export function NewRoute() {
               />
             </div>
 
-             <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="number">Numero della Via *</Label>
               <Input
                 id="number"
@@ -122,7 +130,12 @@ export function NewRoute() {
                 min="0"
                 placeholder="Es. 1"
                 value={formData.number}
-                onChange={(e) => setFormData({ ...formData, number: e.target.value ? parseInt(e.target.value) : 0 })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    number: e.target.value ? parseInt(e.target.value) : 0,
+                  })
+                }
                 className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
                 required
               />
@@ -152,12 +165,17 @@ export function NewRoute() {
                 onValueChange={(value) => setFormData({ ...formData, grade: value })}
                 required
               >
-                <SelectTrigger id="grade" className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all">
+                <SelectTrigger
+                  id="grade"
+                  className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                >
                   <SelectValue placeholder="Seleziona il grado" />
                 </SelectTrigger>
                 <SelectContent>
-                  {CLIMBING_GRADES.map(grade => (
-                    <SelectItem key={grade} value={grade}>{grade}</SelectItem>
+                  {CLIMBING_GRADES.map((grade) => (
+                    <SelectItem key={grade} value={grade}>
+                      {grade}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -172,7 +190,12 @@ export function NewRoute() {
                 min="1"
                 placeholder="Es. 25"
                 value={formData.length || ''}
-                onChange={(e) => setFormData({ ...formData, length: e.target.value ? parseInt(e.target.value) : undefined })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    length: e.target.value ? parseInt(e.target.value) : undefined,
+                  })
+                }
                 className="border-2 border-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
               />
             </div>
@@ -189,7 +212,9 @@ export function NewRoute() {
               <MapPicker
                 latitude={formData.latitude}
                 longitude={formData.longitude}
-                onLocationSelect={(lat, lng) => setFormData({ ...formData, latitude: lat, longitude: lng })}
+                onLocationSelect={(lat, lng) =>
+                  setFormData({ ...formData, latitude: lat, longitude: lng })
+                }
               />
             </div>
 
@@ -203,11 +228,7 @@ export function NewRoute() {
               >
                 Annulla
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="flex-1" disabled={isSubmitting}>
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Aggiungi Via
               </Button>

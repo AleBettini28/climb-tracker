@@ -21,7 +21,7 @@ export function NewClimb() {
     leadType: 'lead' as 'lead' | 'second',
     perceivedDifficulty: '3' as '1' | '2' | '3' | '4' | '5',
     date: new Date().toISOString().split('T')[0],
-    description: ''
+    description: '',
   });
 
   useEffect(() => {
@@ -37,13 +37,13 @@ export function NewClimb() {
     e.preventDefault();
 
     if (!selectedRoute || !routeId) {
-      toast.error('Seleziona una via dall\'archivio');
+      toast.error("Seleziona una via dall'archivio");
       return;
     }
 
     const user = await auth.getSession();
 
-    if(!user) {
+    if (!user) {
       toast.error('Errore nel recuperare i dati dell utente.');
       return;
     }
@@ -52,10 +52,10 @@ export function NewClimb() {
 
     const newClimb: ClimbCreateRequest = {
       route_id: routeId,
-      is_lead: formData.leadType === "lead" ? true : false,
+      is_lead: formData.leadType === 'lead' ? true : false,
       difficulty: parseInt(formData.perceivedDifficulty) as 1 | 2 | 3 | 4 | 5,
       day: formData.date,
-      description: formData.description || "",
+      description: formData.description || '',
     };
 
     try {
@@ -64,7 +64,7 @@ export function NewClimb() {
       navigate(`/falesia/${selectedRoute.crag_id}`);
     } catch (error) {
       console.error('Error adding climb:', error);
-      toast.error('Errore durante l\'aggiunta della scalata');
+      toast.error("Errore durante l'aggiunta della scalata");
     } finally {
       setIsSubmitting(false);
     }
@@ -82,7 +82,9 @@ export function NewClimb() {
             </div>
             <h1 className="text-xl sm:text-2xl">Nuova Scalata</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Registra una nuova via completata</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Registra una nuova via completata
+          </p>
         </div>
 
         {/* Selected Route Info */}
@@ -130,7 +132,9 @@ export function NewClimb() {
                 <Label className="text-sm sm:text-base">Tipologia *</Label>
                 <RadioGroup
                   value={formData.leadType}
-                  onValueChange={(value) => setFormData({ ...formData, leadType: value as 'lead' | 'second' })}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, leadType: value as 'lead' | 'second' })
+                  }
                   className="flex flex-col sm:flex-row gap-3 sm:gap-4"
                 >
                   <div className="flex items-center space-x-2 flex-1">
@@ -141,8 +145,10 @@ export function NewClimb() {
                       htmlFor="lead"
                       className="flex-1 cursor-pointer p-3 sm:p-4 border-2 border-border rounded-lg hover:bg-accent/10 transition-colors"
                       style={{
-                        backgroundColor: formData.leadType === 'lead' ? 'var(--accent)' : 'transparent',
-                        borderColor: formData.leadType === 'lead' ? 'var(--primary)' : 'var(--border)'
+                        backgroundColor:
+                          formData.leadType === 'lead' ? 'var(--accent)' : 'transparent',
+                        borderColor:
+                          formData.leadType === 'lead' ? 'var(--primary)' : 'var(--border)',
                       }}
                     >
                       <div className="flex items-center gap-2">
@@ -163,8 +169,10 @@ export function NewClimb() {
                       htmlFor="second"
                       className="flex-1 cursor-pointer p-3 sm:p-4 border-2 border-border rounded-lg hover:bg-accent/10 transition-colors"
                       style={{
-                        backgroundColor: formData.leadType === 'second' ? 'var(--accent)' : 'transparent',
-                        borderColor: formData.leadType === 'second' ? 'var(--primary)' : 'var(--border)'
+                        backgroundColor:
+                          formData.leadType === 'second' ? 'var(--accent)' : 'transparent',
+                        borderColor:
+                          formData.leadType === 'second' ? 'var(--primary)' : 'var(--border)',
                       }}
                     >
                       <div className="flex items-center gap-2">
@@ -184,7 +192,12 @@ export function NewClimb() {
                 <Label className="text-sm sm:text-base">Difficoltà Percepita *</Label>
                 <RadioGroup
                   value={formData.perceivedDifficulty}
-                  onValueChange={(value) => setFormData({ ...formData, perceivedDifficulty: value as '1' | '2' | '3' | '4' | '5' })}
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      perceivedDifficulty: value as '1' | '2' | '3' | '4' | '5',
+                    })
+                  }
                   className="grid grid-cols-5 gap-2 sm:gap-3"
                 >
                   {difficultyOptions.map((level) => (
@@ -198,10 +211,14 @@ export function NewClimb() {
                         htmlFor={`difficulty-${level}`}
                         className="flex flex-col items-center justify-center p-2 sm:p-3 border-2 border-border rounded-lg cursor-pointer hover:bg-accent/10 transition-colors peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=checked]:border-primary"
                       >
-                        <span className="text-xl sm:text-2xl font-bold mb-0.5 sm:mb-1">{level}</span>
+                        <span className="text-xl sm:text-2xl font-bold mb-0.5 sm:mb-1">
+                          {level}
+                        </span>
                         <span className="text-[0.65rem] sm:text-xs text-center leading-tight">
                           {DIFFICULTY_LABELS[level].split(' ').map((word, i) => (
-                            <span key={i} className="block">{word}</span>
+                            <span key={i} className="block">
+                              {word}
+                            </span>
                           ))}
                         </span>
                       </Label>
@@ -246,11 +263,7 @@ export function NewClimb() {
                 >
                   Annulla
                 </Button>
-                <Button
-                  type="submit"
-                  className="flex-1"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" className="flex-1" disabled={isSubmitting}>
                   <PlusCircle className="w-4 h-4 mr-2" />
                   Aggiungi Scalata
                 </Button>

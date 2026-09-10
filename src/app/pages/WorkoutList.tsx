@@ -34,7 +34,9 @@ export function WorkoutList() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   const handleDeleteWorkout = async () => {
@@ -71,8 +73,8 @@ export function WorkoutList() {
               <h1 className="text-2xl sm:text-3xl font-bold">I Miei Allenamenti</h1>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground">
-              Rivedi lo storico dei tuoi allenamenti: apri un allenamento per vederne i dettagli, riprenderlo se
-              è ancora in corso, oppure eliminarlo definitivamente.
+              Rivedi lo storico dei tuoi allenamenti: apri un allenamento per vederne i dettagli,
+              riprenderlo se è ancora in corso, oppure eliminarlo definitivamente.
             </p>
           </div>
           <Button onClick={() => navigate('/allenamenti/nuovo')}>
@@ -93,7 +95,9 @@ export function WorkoutList() {
             {workouts.map((workout) => (
               <Card
                 key={workout.id}
-                onClick={() => navigate(workout.open ? '/allenamenti/nuovo' : `/allenamento/${workout.id}`)}
+                onClick={() =>
+                  navigate(workout.open ? '/allenamenti/nuovo' : `/allenamento/${workout.id}`)
+                }
                 className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group relative"
               >
                 <div className="flex items-start justify-between mb-3">
@@ -138,7 +142,9 @@ export function WorkoutList() {
           <Card className="p-12 text-center">
             <Dumbbell className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">Nessun allenamento</h3>
-            <p className="text-sm text-muted-foreground mb-4">Non hai ancora registrato nessun allenamento</p>
+            <p className="text-sm text-muted-foreground mb-4">
+              Non hai ancora registrato nessun allenamento
+            </p>
             <Button onClick={() => navigate('/allenamenti/nuovo')}>
               <PlusCircle className="w-4 h-4 mr-2" />
               Inizia il tuo primo allenamento

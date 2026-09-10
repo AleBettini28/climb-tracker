@@ -2,7 +2,13 @@ import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { Button } from '../components/ui/button';
 import { Search, Filter, Trash2, Hexagon, ChevronDown, ChevronUp } from 'lucide-react';
 import { BOULDER_GRADES } from '../types/boulderArea';
@@ -32,9 +38,15 @@ export function BoulderSendList() {
 
   const [searchTerm, setSearchTerm] = useState(savedFilters?.searchTerm || '');
   const [selectedGrade, setSelectedGrade] = useState<string>(savedFilters?.selectedGrade || 'all');
-  const [selectedBoulderArea, setSelectedBoulderArea] = useState<string>(savedFilters?.selectedBoulderArea || 'all');
-  const [selectedPeriod, setSelectedPeriod] = useState<string>(savedFilters?.selectedPeriod || 'all');
-  const [selectedSendType, setSelectedSendType] = useState<string>(savedFilters?.selectedSendType || 'all');
+  const [selectedBoulderArea, setSelectedBoulderArea] = useState<string>(
+    savedFilters?.selectedBoulderArea || 'all',
+  );
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    savedFilters?.selectedPeriod || 'all',
+  );
+  const [selectedSendType, setSelectedSendType] = useState<string>(
+    savedFilters?.selectedSendType || 'all',
+  );
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
@@ -43,20 +55,19 @@ export function BoulderSendList() {
       selectedGrade,
       selectedBoulderArea,
       selectedPeriod,
-      selectedSendType
+      selectedSendType,
     };
     localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
   }, [searchTerm, selectedGrade, selectedBoulderArea, selectedPeriod, selectedSendType]);
 
-
   useEffect(() => {
     const fetchBoulderSends = async () => {
-        const user = await auth.getSession();
+      const user = await auth.getSession();
 
-        if (!user) {
-          toast.error('Errore nel recuperare i dati dell utente.');
-          return;
-        }
+      if (!user) {
+        toast.error('Errore nel recuperare i dati dell utente.');
+        return;
+      }
 
       try {
         const data = await boulderRoutesApi.getUserBoulderSends(user.id);
@@ -71,7 +82,9 @@ export function BoulderSendList() {
   }, []);
 
   const boulderAreas = useMemo(() => {
-    const uniqueAreas = new Set(boulderSends.map(c => c.boulder_route.boulder_area_name).filter(Boolean));
+    const uniqueAreas = new Set(
+      boulderSends.map((c) => c.boulder_route.boulder_area_name).filter(Boolean),
+    );
     return Array.from(uniqueAreas).sort();
   }, [boulderSends]);
 
@@ -79,44 +92,55 @@ export function BoulderSendList() {
     let filtered = [...boulderSends];
 
     if (searchTerm) {
-      filtered = filtered.filter(send =>
-        (send.boulder_route.route_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
-        (send.boulder_route.boulder_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
-        (send.boulder_route.boulder_area_name?.toLowerCase().includes(searchTerm.toLowerCase()) || false)
+      filtered = filtered.filter(
+        (send) =>
+          send.boulder_route.route_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          false ||
+          send.boulder_route.boulder_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          false ||
+          send.boulder_route.boulder_area_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          false,
       );
     }
 
     if (selectedGrade !== 'all') {
-      filtered = filtered.filter(send => send.boulder_route.grade === selectedGrade);
+      filtered = filtered.filter((send) => send.boulder_route.grade === selectedGrade);
     }
 
     if (selectedBoulderArea !== 'all') {
-      filtered = filtered.filter(send => send.boulder_route.boulder_area_name === selectedBoulderArea);
+      filtered = filtered.filter(
+        (send) => send.boulder_route.boulder_area_name === selectedBoulderArea,
+      );
     }
 
     if (selectedSendType !== 'all') {
-      filtered = filtered.filter(send => send.is_flash === (selectedSendType === 'flash'));
+      filtered = filtered.filter((send) => send.is_flash === (selectedSendType === 'flash'));
     }
 
     if (selectedPeriod !== 'all') {
       const now = new Date();
       const periodMap: { [key: string]: number } = {
-        'week': 7,
-        'month': 30,
-        'year': 365
+        week: 7,
+        month: 30,
+        year: 365,
       };
 
       const days = periodMap[selectedPeriod];
       if (days) {
         const cutoffDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-        filtered = filtered.filter(send => new Date(send.day) >= cutoffDate);
+        filtered = filtered.filter((send) => new Date(send.day) >= cutoffDate);
       }
     }
 
-    return filtered.sort((a, b) =>
-      new Date(b.day).getTime() - new Date(a.day).getTime()
-    );
-  }, [boulderSends, searchTerm, selectedGrade, selectedBoulderArea, selectedSendType, selectedPeriod]);
+    return filtered.sort((a, b) => new Date(b.day).getTime() - new Date(a.day).getTime());
+  }, [
+    boulderSends,
+    searchTerm,
+    selectedGrade,
+    selectedBoulderArea,
+    selectedSendType,
+    selectedPeriod,
+  ]);
 
   const handleDelete = async (id: string, name: string) => {
     if (confirm(`Sei sicuro di voler eliminare l'invio "${name}"?`)) {
@@ -130,7 +154,7 @@ export function BoulderSendList() {
         toast.success('Invio eliminato con successo');
       } catch (error) {
         console.error('Error deleting boulder send:', error);
-        toast.error('Errore durante l\'eliminazione');
+        toast.error("Errore durante l'eliminazione");
       }
 
       const updatedBoulderSends = await boulderRoutesApi.getUserBoulderSends(user.id);
@@ -146,14 +170,20 @@ export function BoulderSendList() {
     setSelectedPeriod('all');
   };
 
-  const hasActiveFilters = searchTerm || selectedGrade !== 'all' || selectedBoulderArea !== 'all' || selectedSendType !== 'all' || selectedPeriod !== 'all';
+  const hasActiveFilters =
+    searchTerm ||
+    selectedGrade !== 'all' ||
+    selectedBoulderArea !== 'all' ||
+    selectedSendType !== 'all' ||
+    selectedPeriod !== 'all';
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
       <div className="mb-6 sm:mb-8">
         <h1 className="mb-2 text-xl sm:text-2xl">I Miei Boulder</h1>
         <p className="text-sm sm:text-base text-muted-foreground">
-          {boulderSends.length} {boulderSends.length === 1 ? 'boulder completato' : 'boulder completati'}
+          {boulderSends.length}{' '}
+          {boulderSends.length === 1 ? 'boulder completato' : 'boulder completati'}
         </p>
       </div>
 
@@ -174,7 +204,9 @@ export function BoulderSendList() {
           )}
         </button>
 
-        <div className={`space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 ${filtersOpen ? 'block' : 'hidden md:grid'}`}>
+        <div
+          className={`space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 ${filtersOpen ? 'block' : 'hidden md:grid'}`}
+        >
           {/* Search */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-stone-700">Ricerca</label>
@@ -199,8 +231,10 @@ export function BoulderSendList() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tutti i gradi</SelectItem>
-                {BOULDER_GRADES.map(grade => (
-                  <SelectItem key={grade} value={grade}>{grade}</SelectItem>
+                {BOULDER_GRADES.map((grade) => (
+                  <SelectItem key={grade} value={grade}>
+                    {grade}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -215,8 +249,10 @@ export function BoulderSendList() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tutte le aree</SelectItem>
-                {boulderAreas.map(area => (
-                  <SelectItem key={area} value={area}>{area}</SelectItem>
+                {boulderAreas.map((area) => (
+                  <SelectItem key={area} value={area}>
+                    {area}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -255,9 +291,12 @@ export function BoulderSendList() {
         </div>
 
         {hasActiveFilters && (
-          <div className={`mt-6 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${filtersOpen ? 'block' : 'hidden md:flex'}`}>
+          <div
+            className={`mt-6 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${filtersOpen ? 'block' : 'hidden md:flex'}`}
+          >
             <p className="text-sm text-muted-foreground">
-              {filteredBoulderSends.length} {filteredBoulderSends.length === 1 ? 'risultato' : 'risultati'}
+              {filteredBoulderSends.length}{' '}
+              {filteredBoulderSends.length === 1 ? 'risultato' : 'risultati'}
             </p>
             <Button variant="outline" size="sm" onClick={resetFilters}>
               Cancella filtri
@@ -268,7 +307,8 @@ export function BoulderSendList() {
         {hasActiveFilters && !filtersOpen && (
           <div className="md:hidden flex items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
-              {filteredBoulderSends.length} {filteredBoulderSends.length === 1 ? 'risultato' : 'risultati'}
+              {filteredBoulderSends.length}{' '}
+              {filteredBoulderSends.length === 1 ? 'risultato' : 'risultati'}
             </p>
             <Button variant="outline" size="sm" onClick={resetFilters}>
               Cancella filtri
@@ -290,8 +330,13 @@ export function BoulderSendList() {
                         <Hexagon className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">{send.boulder_route.route_name || 'Blocco sconosciuto'}</h3>
-                        <p className="text-sm text-muted-foreground mb-3 truncate">{send.boulder_route.boulder_name} · {send.boulder_route.boulder_area_name || 'N/A'}</p>
+                        <h3 className="font-semibold text-base sm:text-lg mb-1 truncate group-hover:text-primary transition-colors">
+                          {send.boulder_route.route_name || 'Blocco sconosciuto'}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3 truncate">
+                          {send.boulder_route.boulder_name} ·{' '}
+                          {send.boulder_route.boulder_area_name || 'N/A'}
+                        </p>
 
                         <div className="flex flex-wrap gap-2">
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-primary text-primary-foreground rounded-full text-xs sm:text-sm font-medium">
@@ -301,7 +346,9 @@ export function BoulderSendList() {
                             {send.is_flash === true ? '⚡ Flash' : '🔁 Dopo Tentativi'}
                           </span>
                           <span className="inline-flex items-center px-2.5 sm:px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-xs sm:text-sm">
-                            {DIFFICULTY_LABELS[send.difficulty.toString() as unknown as 1 | 2 | 3 | 4 | 5] || 'N/A'}
+                            {DIFFICULTY_LABELS[
+                              send.difficulty.toString() as unknown as 1 | 2 | 3 | 4 | 5
+                            ] || 'N/A'}
                           </span>
                         </div>
 
@@ -309,7 +356,7 @@ export function BoulderSendList() {
                           {new Date(send.day).toLocaleDateString('it-IT', {
                             day: 'numeric',
                             month: 'long',
-                            year: 'numeric'
+                            year: 'numeric',
                           })}
                         </p>
                       </div>
@@ -322,7 +369,10 @@ export function BoulderSendList() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      handleDelete(send.boulder_route.id, send.boulder_route.route_name || 'questo invio');
+                      handleDelete(
+                        send.boulder_route.id,
+                        send.boulder_route.route_name || 'questo invio',
+                      );
                     }}
                     className="text-destructive hover:text-destructive hover:bg-destructive/10 shrink-0"
                   >

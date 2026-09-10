@@ -24,7 +24,9 @@ export function Workouts() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   const options = [
@@ -75,7 +77,9 @@ export function Workouts() {
               <div className="p-3 bg-primary/10 rounded-lg w-fit mb-4">
                 <option.icon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">{option.title}</h3>
+              <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                {option.title}
+              </h3>
               <p className="text-sm text-muted-foreground flex-1">{option.description}</p>
               <div className="flex items-center gap-1 text-sm font-medium text-primary mt-4">
                 Vai <ArrowRight className="w-4 h-4" />

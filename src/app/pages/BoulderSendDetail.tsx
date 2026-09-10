@@ -26,7 +26,7 @@ export function BoulderSendDetail() {
         setBoulderSend(foundBoulderSend);
       } catch (error) {
         console.error('Error loading boulder send:', error);
-        toast.error('Errore nel caricamento dell\'invio');
+        toast.error("Errore nel caricamento dell'invio");
       } finally {
         setLoading(false);
       }
@@ -50,7 +50,7 @@ export function BoulderSendDetail() {
         toast.success('Invio eliminato con successo');
       } catch (error) {
         console.error('Error deleting boulder send:', error);
-        toast.error('Errore durante l\'eliminazione');
+        toast.error("Errore durante l'eliminazione");
       }
     }
   };
@@ -103,7 +103,9 @@ export function BoulderSendDetail() {
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Hexagon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
-              <h1 className="text-xl sm:text-2xl">{boulderSend.boulder_route.route_name || 'Blocco sconosciuto'}</h1>
+              <h1 className="text-xl sm:text-2xl">
+                {boulderSend.boulder_route.route_name || 'Blocco sconosciuto'}
+              </h1>
             </div>
             <div className="flex gap-2">
               <Button variant="destructive" size="sm" onClick={handleDelete}>
@@ -123,15 +125,21 @@ export function BoulderSendDetail() {
           <div className="space-y-3">
             <div>
               <p className="text-xs text-muted-foreground mb-1">Nome Blocco</p>
-              <p className="text-base font-semibold">{boulderSend.boulder_route.route_name || 'N/A'}</p>
+              <p className="text-base font-semibold">
+                {boulderSend.boulder_route.route_name || 'N/A'}
+              </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Boulder</p>
-              <p className="text-base font-medium">{boulderSend.boulder_route.boulder_name || 'N/A'}</p>
+              <p className="text-base font-medium">
+                {boulderSend.boulder_route.boulder_name || 'N/A'}
+              </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Area Boulder</p>
-              <p className="text-base font-medium">{boulderSend.boulder_route.boulder_area_name || 'N/A'}</p>
+              <p className="text-base font-medium">
+                {boulderSend.boulder_route.boulder_area_name || 'N/A'}
+              </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Grado</p>
@@ -145,7 +153,8 @@ export function BoulderSendDetail() {
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                   <p className="text-xs font-mono">
-                    {boulderSend.boulder_route.latitude.toFixed(4)}, {boulderSend.boulder_route.longitude.toFixed(4)}
+                    {boulderSend.boulder_route.latitude.toFixed(4)},{' '}
+                    {boulderSend.boulder_route.longitude.toFixed(4)}
                   </p>
                 </div>
               </div>
@@ -180,7 +189,7 @@ export function BoulderSendDetail() {
                 {new Date(boulderSend.day).toLocaleDateString('it-IT', {
                   day: 'numeric',
                   month: 'long',
-                  year: 'numeric'
+                  year: 'numeric',
                 })}
               </p>
             </div>

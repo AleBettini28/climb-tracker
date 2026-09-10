@@ -4,8 +4,23 @@ import { toast } from 'sonner';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { Dumbbell, Calendar, CheckCircle2, XCircle, Sparkles, ListChecks, PlayCircle, Trash2, ArrowLeft } from 'lucide-react';
-import { workoutsApi, workoutSendsApi, WorkoutDetailResponse, WorkoutSendDetailResponse } from '../api';
+import {
+  Dumbbell,
+  Calendar,
+  CheckCircle2,
+  XCircle,
+  Sparkles,
+  ListChecks,
+  PlayCircle,
+  Trash2,
+  ArrowLeft,
+} from 'lucide-react';
+import {
+  workoutsApi,
+  workoutSendsApi,
+  WorkoutDetailResponse,
+  WorkoutSendDetailResponse,
+} from '../api';
 import { WORKOUT_SEND_KIND_LABELS, CLIMBING_TYPE_LABELS } from '../types/workout';
 
 export function WorkoutDetail() {
@@ -43,7 +58,9 @@ export function WorkoutDetail() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   const handleDeleteWorkout = async () => {
@@ -126,7 +143,12 @@ export function WorkoutDetail() {
                 : 'Riepilogo degli invii registrati durante questo allenamento. Genera un report AI per analizzare i tuoi progressi.'}
             </p>
           </div>
-          <Button variant="outline" size="icon" onClick={() => setShowDeleteDialog(true)} title="Elimina allenamento">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setShowDeleteDialog(true)}
+            title="Elimina allenamento"
+          >
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
@@ -166,7 +188,9 @@ export function WorkoutDetail() {
           </div>
         ) : (
           <Card className="p-8 text-center mb-8">
-            <p className="text-sm text-muted-foreground">Nessun invio registrato in questo allenamento</p>
+            <p className="text-sm text-muted-foreground">
+              Nessun invio registrato in questo allenamento
+            </p>
           </Card>
         )}
 

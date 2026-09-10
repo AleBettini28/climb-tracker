@@ -5,9 +5,24 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../components/ui/select';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { Dumbbell, PlusCircle, Calendar, Trash2, CheckCircle2, XCircle, Flag, ArrowLeft } from 'lucide-react';
+import {
+  Dumbbell,
+  PlusCircle,
+  Calendar,
+  Trash2,
+  CheckCircle2,
+  XCircle,
+  Flag,
+  ArrowLeft,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { workoutsApi, workoutSendsApi, WorkoutSendDetailResponse } from '../api';
 import {
@@ -73,7 +88,9 @@ export function NewWorkout() {
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   const handleStartWorkout = async (e: React.FormEvent) => {
@@ -119,7 +136,9 @@ export function NewWorkout() {
           workout_id: workoutId,
           grade: sendForm.grade || undefined,
           kind: sendForm.kind,
-          number_of_tries: sendForm.numberOfTries ? parseInt(sendForm.numberOfTries, 10) : undefined,
+          number_of_tries: sendForm.numberOfTries
+            ? parseInt(sendForm.numberOfTries, 10)
+            : undefined,
           sent: sendForm.sent,
           climbing_type: sendForm.climbingType || undefined,
         },
@@ -203,7 +222,9 @@ export function NewWorkout() {
             <div className="p-2 bg-primary/10 rounded-lg">
               <Dumbbell className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
-            <h1 className="text-xl sm:text-2xl">{workoutId ? 'Allenamento in Corso' : 'Nuovo Allenamento'}</h1>
+            <h1 className="text-xl sm:text-2xl">
+              {workoutId ? 'Allenamento in Corso' : 'Nuovo Allenamento'}
+            </h1>
           </div>
           <p className="text-sm sm:text-base text-muted-foreground">
             {workoutId
@@ -232,7 +253,12 @@ export function NewWorkout() {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button type="button" variant="outline" onClick={() => navigate(-1)} className="flex-1">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => navigate(-1)}
+                  className="flex-1"
+                >
                   Annulla
                 </Button>
                 <Button type="submit" className="flex-1" disabled={isStarting}>
@@ -263,7 +289,9 @@ export function NewWorkout() {
                         </p>
                         <p className="text-xs text-muted-foreground">
                           {send.number_of_tries ? `${send.number_of_tries} tentativi` : ''}
-                          {send.climbing_type ? ` · ${CLIMBING_TYPE_LABELS[send.climbing_type]}` : ''}
+                          {send.climbing_type
+                            ? ` · ${CLIMBING_TYPE_LABELS[send.climbing_type]}`
+                            : ''}
                         </p>
                       </div>
                     </div>
@@ -279,8 +307,8 @@ export function NewWorkout() {
             <Card className="p-4 sm:p-6">
               <h3 className="text-base font-semibold mb-1">Aggiungi Invio</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Registra ogni boulder o via provata durante l'allenamento: grado, numero di tentativi e se sei
-                riuscito a chiuderla.
+                Registra ogni boulder o via provata durante l'allenamento: grado, numero di
+                tentativi e se sei riuscito a chiuderla.
               </p>
               <form onSubmit={handleAddSend} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -315,11 +343,13 @@ export function NewWorkout() {
                         <SelectValue placeholder="Seleziona il grado" />
                       </SelectTrigger>
                       <SelectContent>
-                        {(sendForm.kind === 'BOULDER' ? BOULDER_GRADES : CLIMBING_GRADES).map((grade) => (
-                          <SelectItem key={grade} value={grade}>
-                            {grade}
-                          </SelectItem>
-                        ))}
+                        {(sendForm.kind === 'BOULDER' ? BOULDER_GRADES : CLIMBING_GRADES).map(
+                          (grade) => (
+                            <SelectItem key={grade} value={grade}>
+                              {grade}
+                            </SelectItem>
+                          ),
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
@@ -341,7 +371,9 @@ export function NewWorkout() {
                     <Label>Tipologia di Arrampicata</Label>
                     <Select
                       value={sendForm.climbingType}
-                      onValueChange={(value) => setSendForm({ ...sendForm, climbingType: value as ClimbingType })}
+                      onValueChange={(value) =>
+                        setSendForm({ ...sendForm, climbingType: value as ClimbingType })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Seleziona (opzionale)" />
@@ -397,11 +429,7 @@ export function NewWorkout() {
                 <Trash2 className="w-4 h-4 mr-2" />
                 Elimina Allenamento
               </Button>
-              <Button
-                className="flex-1"
-                onClick={handleCloseWorkout}
-                disabled={isClosing}
-              >
+              <Button className="flex-1" onClick={handleCloseWorkout} disabled={isClosing}>
                 <Flag className="w-4 h-4 mr-2" />
                 Chiudi Allenamento
               </Button>

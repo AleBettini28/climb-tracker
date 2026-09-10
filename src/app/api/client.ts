@@ -53,7 +53,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   if (response.status === 204) {
     return undefined as T;
   }
-  
+
   const text = await response.text();
-  return text ? JSON.parse(text) as T : undefined as T;
+  return text ? (JSON.parse(text) as T) : (undefined as T);
 }

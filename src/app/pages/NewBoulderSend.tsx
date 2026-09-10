@@ -9,24 +9,31 @@ import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { PlusCircle, Hexagon, ArrowRight } from 'lucide-react';
 import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
-import { BoulderSendCreateRequest, BoulderRouteDetailResponseExtended, boulderRoutesApi } from '../api/boulderRoutes';
+import {
+  BoulderSendCreateRequest,
+  BoulderRouteDetailResponseExtended,
+  boulderRoutesApi,
+} from '../api/boulderRoutes';
 import { auth } from '../utils/auth';
 
 export function NewBoulderSend() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedBoulderRoute, setSelectedBoulderRoute] = useState<BoulderRouteDetailResponseExtended | null>(null);
+  const [selectedBoulderRoute, setSelectedBoulderRoute] =
+    useState<BoulderRouteDetailResponseExtended | null>(null);
   const [formData, setFormData] = useState({
     sendType: 'flash' as 'flash' | 'attempts',
     perceivedDifficulty: '3' as '1' | '2' | '3' | '4' | '5',
     date: new Date().toISOString().split('T')[0],
-    description: ''
+    description: '',
   });
 
   useEffect(() => {
     if (location.state?.selectedBoulderRoute) {
-      setSelectedBoulderRoute(location.state.selectedBoulderRoute as BoulderRouteDetailResponseExtended);
+      setSelectedBoulderRoute(
+        location.state.selectedBoulderRoute as BoulderRouteDetailResponseExtended,
+      );
     }
   }, [location.state]);
 
@@ -36,7 +43,7 @@ export function NewBoulderSend() {
     e.preventDefault();
 
     if (!selectedBoulderRoute || !boulderRouteId) {
-      toast.error('Seleziona un blocco dall\'archivio');
+      toast.error("Seleziona un blocco dall'archivio");
       return;
     }
 
@@ -51,10 +58,10 @@ export function NewBoulderSend() {
 
     const newBoulderSend: BoulderSendCreateRequest = {
       boulder_route_id: boulderRouteId,
-      is_flash: formData.sendType === "flash" ? true : false,
+      is_flash: formData.sendType === 'flash' ? true : false,
       difficulty: parseInt(formData.perceivedDifficulty) as 1 | 2 | 3 | 4 | 5,
       day: formData.date,
-      description: formData.description || "",
+      description: formData.description || '',
     };
 
     try {
@@ -63,7 +70,7 @@ export function NewBoulderSend() {
       navigate(`/masso/${selectedBoulderRoute.boulder_id}`);
     } catch (error) {
       console.error('Error adding boulder send:', error);
-      toast.error('Errore durante l\'aggiunta dell\'invio');
+      toast.error("Errore durante l'aggiunta dell'invio");
     } finally {
       setIsSubmitting(false);
     }
@@ -81,7 +88,9 @@ export function NewBoulderSend() {
             </div>
             <h1 className="text-xl sm:text-2xl">Nuovo Invio</h1>
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">Registra un nuovo blocco completato</p>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Registra un nuovo blocco completato
+          </p>
         </div>
 
         {/* Selected Boulder Route Info */}
@@ -91,7 +100,9 @@ export function NewBoulderSend() {
               <div className="flex-1">
                 <p className="text-xs text-muted-foreground mb-1">Blocco Selezionato</p>
                 <h3 className="text-lg font-semibold mb-1">{selectedBoulderRoute.route_name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">{selectedBoulderRoute.boulder_name} · {selectedBoulderRoute.boulder_area_name}</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  {selectedBoulderRoute.boulder_name} · {selectedBoulderRoute.boulder_area_name}
+                </p>
                 <span className="inline-flex items-center px-2.5 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
                   {selectedBoulderRoute.grade}
                 </span>
@@ -124,7 +135,9 @@ export function NewBoulderSend() {
                 <Label className="text-sm sm:text-base">Tipologia *</Label>
                 <RadioGroup
                   value={formData.sendType}
-                  onValueChange={(value) => setFormData({ ...formData, sendType: value as 'flash' | 'attempts' })}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, sendType: value as 'flash' | 'attempts' })
+                  }
                   className="flex flex-col sm:flex-row gap-3 sm:gap-4"
                 >
                   <div className="flex items-center space-x-2 flex-1">
@@ -135,8 +148,10 @@ export function NewBoulderSend() {
                       htmlFor="flash"
                       className="flex-1 cursor-pointer p-3 sm:p-4 border-2 border-border rounded-lg hover:bg-accent/10 transition-colors"
                       style={{
-                        backgroundColor: formData.sendType === 'flash' ? 'var(--accent)' : 'transparent',
-                        borderColor: formData.sendType === 'flash' ? 'var(--primary)' : 'var(--border)'
+                        backgroundColor:
+                          formData.sendType === 'flash' ? 'var(--accent)' : 'transparent',
+                        borderColor:
+                          formData.sendType === 'flash' ? 'var(--primary)' : 'var(--border)',
                       }}
                     >
                       <div className="flex items-center gap-2">
@@ -157,8 +172,10 @@ export function NewBoulderSend() {
                       htmlFor="attempts"
                       className="flex-1 cursor-pointer p-3 sm:p-4 border-2 border-border rounded-lg hover:bg-accent/10 transition-colors"
                       style={{
-                        backgroundColor: formData.sendType === 'attempts' ? 'var(--accent)' : 'transparent',
-                        borderColor: formData.sendType === 'attempts' ? 'var(--primary)' : 'var(--border)'
+                        backgroundColor:
+                          formData.sendType === 'attempts' ? 'var(--accent)' : 'transparent',
+                        borderColor:
+                          formData.sendType === 'attempts' ? 'var(--primary)' : 'var(--border)',
                       }}
                     >
                       <div className="flex items-center gap-2">
@@ -178,7 +195,12 @@ export function NewBoulderSend() {
                 <Label className="text-sm sm:text-base">Difficoltà Percepita *</Label>
                 <RadioGroup
                   value={formData.perceivedDifficulty}
-                  onValueChange={(value) => setFormData({ ...formData, perceivedDifficulty: value as '1' | '2' | '3' | '4' | '5' })}
+                  onValueChange={(value) =>
+                    setFormData({
+                      ...formData,
+                      perceivedDifficulty: value as '1' | '2' | '3' | '4' | '5',
+                    })
+                  }
                   className="grid grid-cols-5 gap-2 sm:gap-3"
                 >
                   {difficultyOptions.map((level) => (
@@ -192,10 +214,14 @@ export function NewBoulderSend() {
                         htmlFor={`difficulty-${level}`}
                         className="flex flex-col items-center justify-center p-2 sm:p-3 border-2 border-border rounded-lg cursor-pointer hover:bg-accent/10 transition-colors peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-primary-foreground peer-data-[state=checked]:border-primary"
                       >
-                        <span className="text-xl sm:text-2xl font-bold mb-0.5 sm:mb-1">{level}</span>
+                        <span className="text-xl sm:text-2xl font-bold mb-0.5 sm:mb-1">
+                          {level}
+                        </span>
                         <span className="text-[0.65rem] sm:text-xs text-center leading-tight">
                           {DIFFICULTY_LABELS[level].split(' ').map((word, i) => (
-                            <span key={i} className="block">{word}</span>
+                            <span key={i} className="block">
+                              {word}
+                            </span>
                           ))}
                         </span>
                       </Label>
@@ -240,11 +266,7 @@ export function NewBoulderSend() {
                 >
                   Annulla
                 </Button>
-                <Button
-                  type="submit"
-                  className="flex-1"
-                  disabled={isSubmitting}
-                >
+                <Button type="submit" className="flex-1" disabled={isSubmitting}>
                   <PlusCircle className="w-4 h-4 mr-2" />
                   Aggiungi Invio
                 </Button>
