@@ -17,6 +17,7 @@ import { PlusCircle, Hexagon } from 'lucide-react';
 import { toast } from 'sonner';
 import { auth } from '../utils/auth';
 import { boulderRoutesApi } from '../api/boulderRoutes';
+import { outdoorPath } from '../paths';
 
 export function NewBoulderRoute() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export function NewBoulderRoute() {
       });
 
       toast.success('Blocco aggiunto con successo! 🎉');
-      navigate(`/masso/${id}`);
+      navigate(outdoorPath(`masso/${id}`));
     } catch (error) {
       console.error('Error adding boulder route:', error);
       toast.error("Errore durante l'aggiunta del blocco");

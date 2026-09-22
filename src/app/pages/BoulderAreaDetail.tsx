@@ -26,6 +26,7 @@ import { BoulderAreaDetailResponse, boulderAreasApi } from '../api';
 import { BoulderDetailResponse } from '../api/boulderAreas';
 import { bouldersApi } from '../api/boulders';
 import { useAuth } from '../context/AuthContext';
+import { outdoorPath } from '../paths';
 
 export function BoulderAreaDetail() {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ export function BoulderAreaDetail() {
 
   const handleAddBoulder = () => {
     if (boulderArea) {
-      navigate(`/nuovo-masso/${boulderArea.id}`, { state: { selectedBoulderArea: boulderArea } });
+      navigate(outdoorPath(`nuovo-masso/${boulderArea.id}`), { state: { selectedBoulderArea: boulderArea } });
     }
   };
 
@@ -143,7 +144,7 @@ export function BoulderAreaDetail() {
       );
       toast.success('Area boulder aggiornata con successo!');
       setIsEditing(false);
-      navigate(`/area-boulder/${id}`);
+      navigate(outdoorPath(`area-boulder/${id}`));
     } catch (error) {
       console.error('Error updating boulder area:', error);
       toast.error("Errore durante l'aggiornamento dell'area boulder");
@@ -161,7 +162,7 @@ export function BoulderAreaDetail() {
     try {
       await boulderAreasApi.deleteOneBoulderArea(boulderArea.id);
       toast.success('Area boulder eliminata con successo!');
-      navigate('/esplora');
+      navigate(outdoorPath('esplora'));
     } catch (error) {
       console.error('Error deleting boulder area:', error);
       toast.error("Errore durante l'eliminazione dell'area boulder");
@@ -204,7 +205,7 @@ export function BoulderAreaDetail() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
       <div className="max-w-6xl mx-auto">
-        <Link to="/esplora">
+        <Link to={outdoorPath("esplora")}>
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Torna a Esplora
@@ -409,7 +410,7 @@ export function BoulderAreaDetail() {
               {boulders.map((boulder) => (
                 <div
                   key={boulder.id}
-                  onClick={() => !isEditing && navigate(`/masso/${boulder.id}`)}
+                  onClick={() => !isEditing && navigate(outdoorPath(`masso/${boulder.id}`))}
                   className={`flex items-center justify-between p-3 rounded-lg transition-colors border border-border ${!isEditing ? 'hover:bg-muted cursor-pointer hover:border-primary' : ''}`}
                 >
                   <div className="flex-1">

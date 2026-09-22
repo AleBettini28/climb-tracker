@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Compass, Search, Mountain, Hexagon, MapPin, TrendingUp, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
+import { outdoorPath } from '../paths';
 
 type ExploreSection = 'falesie' | 'boulder';
 
@@ -145,7 +146,7 @@ export function Explore() {
                   />
                 </div>
                 {user && (
-                  <Button onClick={() => navigate('/nuova-falesia')}>
+                  <Button onClick={() => navigate(outdoorPath('nuova-falesia'))}>
                     <Plus className="w-4 h-4 mr-2" />
                     Nuova Falesia
                   </Button>
@@ -164,7 +165,7 @@ export function Explore() {
                   {filteredCrags.map((item) => (
                     <Card
                       key={item.id}
-                      onClick={() => navigate(`/falesia/${item.id}`)}
+                      onClick={() => navigate(outdoorPath(`falesia/${item.id}`))}
                       className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group"
                     >
                       <div className="flex items-start justify-between mb-3">
@@ -236,7 +237,7 @@ export function Explore() {
                   />
                 </div>
                 {user && (
-                  <Button onClick={() => navigate('/nuova-area-boulder')}>
+                  <Button onClick={() => navigate(outdoorPath('nuova-area-boulder'))}>
                     <Plus className="w-4 h-4 mr-2" />
                     Nuova Area Boulder
                   </Button>
@@ -255,7 +256,7 @@ export function Explore() {
                   {filteredBoulderAreas.map((item) => (
                     <Card
                       key={item.id}
-                      onClick={() => navigate(`/area-boulder/${item.id}`)}
+                      onClick={() => navigate(outdoorPath(`area-boulder/${item.id}`))}
                       className="p-5 hover:shadow-lg transition-all cursor-pointer border-2 hover:border-primary group"
                     >
                       <div className="flex items-start justify-between mb-3">

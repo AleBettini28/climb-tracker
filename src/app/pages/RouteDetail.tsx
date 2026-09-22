@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { RouteDetailResponseExtended, routesApi } from '../api/routes';
 import { useAuth } from '../context/AuthContext';
 import { LoginRequiredDialog } from '../components/LoginRequiredDialog';
+import { outdoorPath } from '../paths';
 
 export function RouteDetail() {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +54,7 @@ export function RouteDetail() {
     }
 
     // Navigate to new climb page with route pre-selected
-    navigate(`/nuova-salita/${route.id}`, { state: { selectedRoute: route } });
+    navigate(outdoorPath(`nuova-salita/${route.id}`), { state: { selectedRoute: route } });
   };
 
   if (loading) {

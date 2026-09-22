@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { LogIn, X } from 'lucide-react';
 import { Button } from './ui/button';
+import { authPath } from '../paths';
 
 interface LoginRequiredDialogProps {
   open: boolean;
@@ -10,6 +11,7 @@ interface LoginRequiredDialogProps {
 
 export function LoginRequiredDialog({ open, onClose, message }: LoginRequiredDialogProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (!open) return null;
 
@@ -41,7 +43,10 @@ export function LoginRequiredDialog({ open, onClose, message }: LoginRequiredDia
             <Button variant="outline" className="flex-1" onClick={onClose}>
               Annulla
             </Button>
-            <Button className="flex-1" onClick={() => navigate('/auth')}>
+            <Button
+              className="flex-1"
+              onClick={() => navigate(authPath(`${location.pathname}${location.search}`))}
+            >
               Accedi
             </Button>
           </div>

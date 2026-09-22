@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 import { MapPicker } from '../components/MapPicker';
 import { auth } from '../utils/auth';
 import { routesApi } from '../api/routes';
+import { outdoorPath } from '../paths';
 
 export function NewRoute() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export function NewRoute() {
       });
 
       toast.success('Via aggiunta con successo! 🎉');
-      navigate(`/falesia/${id}`);
+      navigate(outdoorPath(`falesia/${id}`));
     } catch (error) {
       console.error('Error adding route:', error);
       toast.error("Errore durante l'aggiunta della via");

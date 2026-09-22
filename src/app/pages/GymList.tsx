@@ -4,9 +4,8 @@ import { Building2, MapPin, Plus, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { gymsApi, GymDetailResponse } from '../api';
 import { useAuth } from '../context/AuthContext';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
+import { gymPath } from '../paths';
 
 export function GymList() {
   const navigate = useNavigate();
@@ -47,75 +46,79 @@ export function GymList() {
   }, [gyms, searchTerm]);
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-semibold">Palestre</h1>
-            <p className="text-sm text-muted-foreground">
-              Scegli una palestra e scala i boulder
-            </p>
-          </div>
+    <div className="gym-page gym-page--wide">
+      <div className="flex items-end justify-between gap-4 px-4 sm:px-5 pb-4 border-b border-[var(--gym-border)]">
+        <div>
+          <p className="gym-eyebrow mb-1">Catalogo</p>
+          <h1 className="gym-title text-3xl sm:text-4xl">Palestre</h1>
+          <p className="text-sm mt-2" style={{ color: 'var(--gym-text-dim)' }}>
+            Scegli una palestra e scala i boulder
+          </p>
         </div>
-        {user?.isAdmin && (
-          <Button onClick={() => navigate('/nuova-palestra')} className="gap-2">
-            <Plus className="w-4 h-4" />
-            Nuova palestra
-          </Button>
-        )}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="gym-stat-badge hidden sm:flex">
+            <span className="gym-stat-badge__value">{gyms.length}</span>
+            <span className="gym-stat-badge__label">gym</span>
+          </div>
+          {user?.isAdmin && (
+            <button
+              type="button"
+              onClick={() => navigate(gymPath('nuova-palestra'))}
+              className="gym-send-btn !py-2.5 !px-3 !text-xs inline-flex items-center gap-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              Nuova
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="relative mb-6 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="relative px-4 sm:px-5 py-3 border-b border-[var(--gym-border)]">
+        <Search
+          className="absolute left-7 sm:left-8 top-1/2 -translate-y-1/2 w-4 h-4"
+          style={{ color: 'var(--gym-text-dim)' }}
+        />
         <Input
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Cerca per nome o città..."
-          className="pl-9"
+          placeholder="Cerca per nome o citta'..."
+          className="pl-9 bg-[var(--gym-surface)] border-[var(--gym-border-strong)]"
         />
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground">Caricamento palestre...</div>
+        <div className="gym-empty">Caricamento palestre...</div>
       ) : filteredGyms.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">Nessuna palestra trovata</div>
+        <div className="gym-empty">Nessuna palestra trovata</div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="gym-list">
           {filteredGyms.map((gym) => (
-            <Card
+            <button
               key={gym.id}
-              className="overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
-              onClick={() => navigate(`/palestra/${gym.id}`)}
+              type="button"
+              className="gym-list-row"
+              onClick={() => navigate(gymPath(`palestra/${gym.id}`))}
             >
-              <div className="aspect-[16/10] bg-muted flex items-center justify-center overflow-hidden">
+              <div className="gym-thumb">
                 {gym.logo_url ? (
-                  <img
-                    src={gym.logo_url}
-                    alt={gym.name}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={gym.logo_url} alt={gym.name} />
                 ) : (
-                  <Building2 className="w-10 h-10 text-muted-foreground" />
-                )}
-              </div>
-              <div className="p-4 space-y-2">
-                <h2 className="font-semibold text-lg leading-tight">{gym.name}</h2>
-                {(gym.city || gym.address) && (
-                  <div className="flex items-start gap-1.5 text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                    <span>
-                      {[gym.address, gym.city].filter(Boolean).join(', ')}
-                    </span>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Building2 className="w-8 h-8" style={{ color: 'var(--gym-text-ghost)' }} />
                   </div>
                 )}
-                <p className="text-sm text-muted-foreground">
-                  {gym.number_of_boulders} boulder
-                </p>
               </div>
-            </Card>
+              <div className="flex-1 min-w-0">
+                <p className="gym-list-row__title is-sent truncate">{gym.name}</p>
+                {(gym.city || gym.address) && (
+                  <p className="gym-list-row__meta flex items-center gap-1 truncate">
+                    <MapPin className="w-3.5 h-3.5 shrink-0" />
+                    <span>{[gym.address, gym.city].filter(Boolean).join(', ')}</span>
+                  </p>
+                )}
+                <p className="gym-list-row__sub">{gym.number_of_boulders} boulder</p>
+              </div>
+            </button>
           ))}
         </div>
       )}

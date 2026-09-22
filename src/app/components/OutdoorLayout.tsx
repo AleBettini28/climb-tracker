@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router';
-import { Navigation } from './Navigation';
+import { OutdoorNavigation } from './OutdoorNavigation';
 import { Toaster } from './ui/sonner';
 
-export function Layout() {
+export function OutdoorLayout() {
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+      <OutdoorNavigation />
       <main>
         <Outlet />
       </main>

@@ -12,6 +12,7 @@ import { ImageUpload } from '../components/ImageUpload';
 import { auth } from '../utils/auth';
 import { cragsApi } from '../api';
 import { CragCreateUpdateRequest } from '../api/crags';
+import { outdoorPath } from '../paths';
 
 export function NewCrag() {
   const navigate = useNavigate();
@@ -59,10 +60,10 @@ export function NewCrag() {
         added_by: session.id,
       };
 
-      await cragsApi.createOneCrag(newCrag);
+      const cragId = await cragsApi.createOneCrag(newCrag);
 
       toast.success('Falesia aggiunta con successo! 🎉');
-      navigate(`/falesia/${encodeURIComponent(newCrag.name)}`);
+      navigate(outdoorPath(`falesia/${cragId}`));
     } catch (error) {
       console.error('Error adding crag:', error);
       toast.error("Errore durante l'aggiunta della falesia");

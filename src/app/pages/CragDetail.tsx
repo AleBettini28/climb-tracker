@@ -29,6 +29,7 @@ import { CragDetailResponse, cragsApi } from '../api';
 import { RouteDetailResponse } from '../api/crags';
 import { routesApi } from '../api/routes';
 import { useAuth } from '../context/AuthContext';
+import { outdoorPath } from '../paths';
 
 export function CragDetail() {
   const navigate = useNavigate();
@@ -115,7 +116,7 @@ export function CragDetail() {
 
   const handleAddRoute = () => {
     if (crag) {
-      navigate(`/nuova-via/${crag.id}`, { state: { selectedCrag: crag } });
+      navigate(outdoorPath(`nuova-via/${crag.id}`), { state: { selectedCrag: crag } });
     }
   };
 
@@ -209,7 +210,7 @@ export function CragDetail() {
       );
       toast.success('Falesia aggiornata con successo!');
       setIsEditing(false);
-      navigate(`/falesia/${id}`);
+      navigate(outdoorPath(`falesia/${id}`));
     } catch (error) {
       console.error('Error updating crag:', error);
       toast.error("Errore durante l'aggiornamento della falesia");
@@ -293,7 +294,7 @@ export function CragDetail() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
       <div className="max-w-6xl mx-auto">
-        <Link to="/esplora">
+        <Link to={outdoorPath("esplora")}>
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Torna a Esplora
@@ -512,7 +513,7 @@ export function CragDetail() {
               {routes.map((route) => (
                 <div
                   key={route.id}
-                  onClick={() => !isEditing && navigate(`/via/${route.id}`)}
+                  onClick={() => !isEditing && navigate(outdoorPath(`via/${route.id}`))}
                   className={`flex items-center justify-between p-3 rounded-lg transition-colors border border-border ${!isEditing ? 'hover:bg-muted cursor-pointer hover:border-primary' : ''}`}
                 >
                   <div className="flex-1">

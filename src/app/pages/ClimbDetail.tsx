@@ -7,6 +7,7 @@ import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
 import { auth } from '../utils/auth';
+import { outdoorPath } from '../paths';
 
 export function ClimbDetail() {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +47,7 @@ export function ClimbDetail() {
       }
       try {
         await routesApi.deleteOneClimb(user.id, climb.route.id);
-        navigate('/vie');
+        navigate(outdoorPath('vie'));
         toast.success('Scalata eliminata con successo');
       } catch (error) {
         console.error('Error deleting climb:', error);
@@ -75,7 +76,7 @@ export function ClimbDetail() {
           <Mountain className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
           <h2 className="text-xl font-semibold mb-2">Scalata non trovata</h2>
           <p className="text-muted-foreground mb-4">La scalata che stai cercando non esiste.</p>
-          <Link to="/vie">
+          <Link to={outdoorPath("vie")}>
             <Button variant="outline">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Torna alla lista
@@ -91,7 +92,7 @@ export function ClimbDetail() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <Link to="/vie">
+          <Link to={outdoorPath("vie")}>
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Torna alla lista

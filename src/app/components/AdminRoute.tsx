@@ -1,8 +1,10 @@
-import { Navigate } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import { useAuth } from '../context/AuthContext';
+import { authPath, gymPath } from '../paths';
 
 export function AdminRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -16,11 +18,11 @@ export function AdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to={authPath(`${location.pathname}${location.search}`)} replace />;
   }
 
   if (!user.isAdmin) {
-    return <Navigate to="/palestre" replace />;
+    return <Navigate to={gymPath('palestre')} replace />;
   }
 
   return <>{children}</>;

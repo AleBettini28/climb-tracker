@@ -7,6 +7,7 @@ import { dashboardApi, DashboardStatsResponse } from '../api/dashboard';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { LoginRequiredDialog } from '../components/LoginRequiredDialog';
+import { outdoorPath } from '../paths';
 
 export function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -143,7 +144,7 @@ export function Dashboard() {
         <Card className="p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg sm:text-xl">Ultime Scalate</h2>
-            <Link to="/vie" className="text-xs sm:text-sm text-primary hover:underline">
+            <Link to={outdoorPath("vie")} className="text-xs sm:text-sm text-primary hover:underline">
               Vedi tutte
             </Link>
           </div>
@@ -184,7 +185,7 @@ export function Dashboard() {
               <Clock className="w-10 sm:w-12 h-10 sm:h-12 mb-2 opacity-50" />
               <p className="text-sm sm:text-base">Nessuna scalata recente</p>
               <Link
-                to="/nuova-salita"
+                to={outdoorPath("esplora")}
                 className="text-xs sm:text-sm text-primary hover:underline mt-2"
               >
                 Aggiungi la tua prima scalata

@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { BoulderRouteDetailResponseExtended, boulderRoutesApi } from '../api/boulderRoutes';
 import { useAuth } from '../context/AuthContext';
 import { LoginRequiredDialog } from '../components/LoginRequiredDialog';
+import { outdoorPath } from '../paths';
 
 export function BoulderRouteDetail() {
   const { id } = useParams<{ id: string }>();
@@ -54,7 +55,7 @@ export function BoulderRouteDetail() {
       return;
     }
 
-    navigate(`/nuovo-invio/${boulderRoute.id}`, { state: { selectedBoulderRoute: boulderRoute } });
+    navigate(outdoorPath(`nuovo-invio/${boulderRoute.id}`), { state: { selectedBoulderRoute: boulderRoute } });
   };
 
   if (loading) {

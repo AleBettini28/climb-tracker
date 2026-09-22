@@ -12,6 +12,7 @@ import {
 import { boulderRoutesApi } from '../api/boulderRoutes';
 import { useAuth } from '../context/AuthContext';
 import { BOULDER_GRADES } from '../types/boulderArea';
+import { outdoorPath } from '../paths';
 
 export function BoulderDetail() {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ export function BoulderDetail() {
 
   const handleAddBoulderRoute = () => {
     if (boulder) {
-      navigate(`/nuovo-blocco/${boulder.id}`, { state: { selectedBoulder: boulder } });
+      navigate(outdoorPath(`nuovo-blocco/${boulder.id}`), { state: { selectedBoulder: boulder } });
     }
   };
 
@@ -124,7 +125,7 @@ export function BoulderDetail() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
       <div className="max-w-6xl mx-auto">
-        <Link to={boulder ? `/area-boulder/${boulder.boulder_area_id}` : '/esplora'}>
+        <Link to={boulder ? outdoorPath(`area-boulder/${boulder.boulder_area_id}`) : outdoorPath('esplora')}>
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Torna all'Area Boulder
@@ -180,7 +181,7 @@ export function BoulderDetail() {
               {boulderRoutes.map((route) => (
                 <div
                   key={route.id}
-                  onClick={() => navigate(`/blocco/${route.id}`)}
+                  onClick={() => navigate(outdoorPath(`blocco/${route.id}`))}
                   className="flex items-center justify-between p-3 rounded-lg transition-colors border border-border hover:bg-muted cursor-pointer hover:border-primary"
                 >
                   <div className="flex-1">

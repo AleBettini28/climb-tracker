@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router';
-import { Mountain } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router';
+import { Mountain, Building2 } from 'lucide-react';
 import { auth } from '../utils/auth';
 import { useAuth } from '../context/AuthContext';
+import { GYM_BASE, OUTDOOR_BASE, resolvePostAuthRedirect } from '../paths';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,7 +13,13 @@ export default function Auth() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { refreshUser } = useAuth();
+
+  const redirect = searchParams.get('redirect');
+  const isGym = redirect?.startsWith(GYM_BASE) ?? false;
+  const isOutdoor = redirect?.startsWith(OUTDOOR_BASE) ?? false;
+  const appLabel = isGym ? 'Gym Tracker' : isOutdoor ? 'Outdoor Tracker' : 'le applicazioni';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -26,7 +33,7 @@ export default function Auth() {
         await auth.signup(email, password, name);
       }
       await refreshUser();
-      navigate('/dashboard');
+      navigate(resolvePostAuthRedirect(redirect));
     } catch (err: any) {
       setError(err.message || 'Autenticazione fallita');
     } finally {
@@ -34,20 +41,22 @@ export default function Auth() {
     }
   };
 
+  const Icon = isGym ? Building2 : Mountain;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-stone-100 to-stone-200 flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-lg shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="inline-flex p-3 bg-gradient-to-br from-primary to-accent rounded-full mb-4">
-              <Mountain className="w-7 h-7 text-primary-foreground" />
+              <Icon className="w-7 h-7 text-primary-foreground" />
             </div>
             <h1 className="text-3xl font-bold text-stone-800 mb-2">
-              {isLogin ? 'Accedi a ClimbTracker' : 'Crea il tuo account'}
+              {isLogin ? `Accedi a ${appLabel}` : 'Crea il tuo account'}
             </h1>
             <p className="text-stone-600">
               {isLogin
-                ? 'Bentornato! Accedi per tracciare falesie e boulder.'
+                ? 'Bentornato! Accedi per continuare.'
                 : 'Registrati per iniziare a salvare le tue scalate.'}
             </p>
           </div>

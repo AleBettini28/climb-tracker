@@ -16,6 +16,7 @@ import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { BoulderSendDetailExtendedResponse, boulderRoutesApi } from '../api/boulderRoutes';
 import { auth } from '../utils/auth';
+import { outdoorPath } from '../paths';
 
 const FILTERS_STORAGE_KEY = 'boulder-send-list-filters';
 
@@ -321,7 +322,7 @@ export function BoulderSendList() {
       {filteredBoulderSends.length > 0 ? (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {filteredBoulderSends.map((send) => (
-            <Link key={send.boulder_route.id} to={`/boulder/${send.boulder_route.id}`}>
+            <Link key={send.boulder_route.id} to={outdoorPath(`boulder/${send.boulder_route.id}`)}>
               <Card className="p-4 sm:p-5 hover:shadow-md transition-shadow group cursor-pointer">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">

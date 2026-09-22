@@ -12,6 +12,7 @@ import { ImageUpload } from '../components/ImageUpload';
 import { auth } from '../utils/auth';
 import { boulderAreasApi } from '../api';
 import { BoulderAreaCreateUpdateRequest } from '../api/boulderAreas';
+import { outdoorPath } from '../paths';
 
 export function NewBoulderArea() {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ export function NewBoulderArea() {
       await boulderAreasApi.createOneBoulderArea(newBoulderArea);
 
       toast.success('Area boulder aggiunta con successo! 🎉');
-      navigate(`/esplora`);
+      navigate(outdoorPath('esplora'));
     } catch (error) {
       console.error('Error adding boulder area:', error);
       toast.error("Errore durante l'aggiunta dell'area boulder");

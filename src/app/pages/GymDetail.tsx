@@ -20,9 +20,9 @@ import {
 import { ApiError } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { GYM_DIFFICULTIES, GYM_DIFFICULTY_META, GymDifficulty } from '../types/gym';
-import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
+import { GymGradeCircle } from '../components/gym/GymGradeCircle';
 import { LoginRequiredDialog } from '../components/LoginRequiredDialog';
+import { gymPath } from '../paths';
 
 export function GymDetail() {
   const { id } = useParams<{ id: string }>();
@@ -76,6 +76,11 @@ export function GymDetail() {
     return grouped;
   }, [boulders]);
 
+  const sentCount = useMemo(
+    () => boulders.filter((b) => b.is_sent).length,
+    [boulders],
+  );
+
   const handleSend = async (boulderId: string) => {
     if (!user) {
       setShowLoginDialog(true);
@@ -93,7 +98,7 @@ export function GymDetail() {
     } catch (error) {
       console.error('Error sending gym boulder:', error);
       if (error instanceof ApiError && error.status === 409) {
-        toast.error('Hai già scalato questo boulder');
+        toast.error('Hai gia scalato questo boulder');
       } else {
         toast.error("Errore durante la registrazione dell'invio");
       }
@@ -103,133 +108,157 @@ export function GymDetail() {
   };
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-12 text-center text-muted-foreground">
-        Caricamento...
-      </div>
-    );
+    return <div className="gym-empty">Caricamento...</div>;
   }
 
   if (!gym) {
-    return (
-      <div className="container mx-auto px-4 py-12 text-center text-muted-foreground">
-        Palestra non trovata
-      </div>
-    );
+    return <div className="gym-empty">Palestra non trovata</div>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8 space-y-8">
-      <div className="flex items-start gap-3">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/palestre')}>
+    <div className="gym-page gym-page--wide">
+      <div className="flex items-start gap-3 px-4 sm:px-5 pb-4 border-b border-[var(--gym-border)]">
+        <button
+          type="button"
+          onClick={() => navigate(gymPath('palestre'))}
+          className="gym-nav-link p-2 mt-1"
+          aria-label="Indietro"
+        >
           <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex-1 flex flex-col sm:flex-row gap-4 sm:items-start sm:justify-between">
-          <div className="flex gap-4">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-muted flex items-center justify-center shrink-0">
+        </button>
+
+        <div className="flex-1 min-w-0 flex flex-col sm:flex-row gap-4 sm:items-start sm:justify-between">
+          <div className="flex gap-4 min-w-0">
+            <div className="gym-thumb !w-20 !h-20 sm:!w-24 sm:!h-24 !rounded-2xl">
               {gym.logo_url ? (
-                <img src={gym.logo_url} alt={gym.name} className="w-full h-full object-cover" />
+                <img src={gym.logo_url} alt={gym.name} />
               ) : (
-                <Building2 className="w-8 h-8 text-muted-foreground" />
-              )}
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-semibold">{gym.name}</h1>
-              {(gym.city || gym.address) && (
-                <div className="flex items-start gap-1.5 text-sm text-muted-foreground mt-1">
-                  <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                  <span>{[gym.address, gym.city].filter(Boolean).join(', ')}</span>
+                <div className="w-full h-full flex items-center justify-center">
+                  <Building2 className="w-8 h-8" style={{ color: 'var(--gym-text-ghost)' }} />
                 </div>
               )}
+            </div>
+            <div className="min-w-0">
+              <p className="gym-eyebrow mb-1">Settore</p>
+              <h1 className="gym-title text-3xl sm:text-4xl truncate">{gym.name}</h1>
+              {(gym.city || gym.address) && (
+                <p className="gym-list-row__meta flex items-start gap-1.5 mt-2">
+                  <MapPin className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                  <span>{[gym.address, gym.city].filter(Boolean).join(', ')}</span>
+                </p>
+              )}
               {gym.description && (
-                <p className="text-sm text-muted-foreground mt-2 max-w-2xl">{gym.description}</p>
+                <p className="text-sm mt-2 max-w-xl" style={{ color: 'var(--gym-text-dim)' }}>
+                  {gym.description}
+                </p>
               )}
             </div>
           </div>
-          {user?.isAdmin && (
-            <Button
-              onClick={() => navigate(`/nuovo-boulder-palestra/${gym.id}`)}
-              className="gap-2 shrink-0"
-            >
-              <Plus className="w-4 h-4" />
-              Aggiungi boulder
-            </Button>
-          )}
+
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="gym-stat-badge">
+              <span className="gym-stat-badge__value">{sentCount}</span>
+              <span className="gym-stat-badge__label">sends</span>
+            </div>
+            {user?.isAdmin && (
+              <button
+                type="button"
+                onClick={() => navigate(gymPath(`nuovo-boulder-palestra/${gym.id}`))}
+                className="gym-send-btn !py-2.5 !px-3 !text-xs inline-flex items-center gap-1.5"
+              >
+                <Plus className="w-4 h-4" />
+                Boulder
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      <section className="space-y-6">
-        <h2 className="text-lg font-semibold">Boulder per grado</h2>
+      <section>
+        <div className="flex items-center justify-between px-4 sm:px-5 py-4">
+          <h2 className="gym-section-title">Boulder</h2>
+          <p className="text-xs" style={{ color: 'var(--gym-text-faint)' }}>
+            <span style={{ color: 'var(--gym-success)', fontFamily: 'var(--gym-font-display)', fontWeight: 900 }}>
+              {sentCount}
+            </span>
+            <span style={{ color: 'var(--gym-text-ghost)' }}> / </span>
+            <span style={{ fontFamily: 'var(--gym-font-display)', fontWeight: 900 }}>
+              {boulders.length}
+            </span>
+            {' '}sent
+          </p>
+        </div>
+
         {boulders.length === 0 ? (
-          <Card className="p-6 text-center text-muted-foreground">
-            Nessun boulder in questa palestra
-          </Card>
+          <div className="gym-empty">Nessun boulder in questa palestra</div>
         ) : (
           GYM_DIFFICULTIES.map((difficulty) => {
             const group = bouldersByDifficulty[difficulty];
             if (!group.length) return null;
             const meta = GYM_DIFFICULTY_META[difficulty];
             return (
-              <div key={difficulty} className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${meta.className}`}
-                  >
-                    {meta.label}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {meta.points} {meta.points === 1 ? 'punto' : 'punti'} · {group.length} boulder
+              <div key={difficulty}>
+                <div className="flex items-center gap-2 px-4 sm:px-5 py-2 border-y border-[var(--gym-border)] bg-[var(--gym-bg-deep)]">
+                  <span className={meta.className}>{meta.label}</span>
+                  <span className="text-xs" style={{ color: 'var(--gym-text-dim)' }}>
+                    {meta.points} {meta.points === 1 ? 'punto' : 'punti'} · {group.length}
                   </span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="gym-list">
                   {group.map((boulder) => (
-                    <Card key={boulder.id} className="overflow-hidden">
-                      <div className="flex gap-3 p-3">
-                        <div className="w-24 h-24 rounded-md overflow-hidden bg-muted flex items-center justify-center shrink-0">
-                          {boulder.photo_url ? (
-                            <img
-                              src={boulder.photo_url}
-                              alt={boulder.name}
-                              className="w-full h-full object-cover"
+                    <div key={boulder.id} className="gym-list-row !cursor-default hover:!bg-transparent">
+                      <div className={`gym-thumb ${boulder.is_sent ? 'gym-thumb--sent' : ''}`}>
+                        {boulder.photo_url ? (
+                          <img src={boulder.photo_url} alt={boulder.name} />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Building2
+                              className="w-6 h-6"
+                              style={{ color: 'var(--gym-text-ghost)' }}
                             />
-                          ) : (
-                            <Building2 className="w-6 h-6 text-muted-foreground" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0 space-y-2">
-                          <div>
-                            <h3 className="font-medium truncate">{boulder.name}</h3>
-                            {boulder.description && (
-                              <p className="text-sm text-muted-foreground line-clamp-2">
-                                {boulder.description}
-                              </p>
-                            )}
                           </div>
-                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Users className="w-3.5 h-3.5" />
-                            <span>
-                              {boulder.send_count}{' '}
-                              {boulder.send_count === 1 ? 'utente' : 'utenti'} lo{' '}
-                              {boulder.send_count === 1 ? 'ha' : 'hanno'} scalato
-                            </span>
-                          </div>
-                          {boulder.is_sent ? (
-                            <div className="inline-flex items-center gap-1.5 text-sm text-green-700">
-                              <CheckCircle2 className="w-4 h-4" />
-                              Già scalato
-                            </div>
-                          ) : (
-                            <Button
-                              size="sm"
-                              onClick={() => handleSend(boulder.id)}
-                              disabled={sendingId === boulder.id}
-                            >
-                              {sendingId === boulder.id ? 'Salvataggio...' : 'Ho scalato'}
-                            </Button>
-                          )}
-                        </div>
+                        )}
+                        {boulder.is_sent && (
+                          <div className="gym-thumb__sent-overlay">✓</div>
+                        )}
                       </div>
-                    </Card>
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <p
+                          className={`gym-list-row__title truncate ${
+                            boulder.is_sent ? 'is-sent' : ''
+                          }`}
+                        >
+                          {boulder.name}
+                        </p>
+                        {boulder.description && (
+                          <p className="gym-list-row__meta line-clamp-2">{boulder.description}</p>
+                        )}
+                        <p className="gym-list-row__sub flex items-center gap-1">
+                          <Users className="w-3.5 h-3.5" />
+                          {boulder.send_count}{' '}
+                          {boulder.send_count === 1 ? 'utente' : 'utenti'}
+                        </p>
+                        {boulder.is_sent ? (
+                          <div className="gym-sent-badge">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Gia scalato
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="gym-send-btn !py-2 !text-xs"
+                            onClick={() => handleSend(boulder.id)}
+                            disabled={sendingId === boulder.id}
+                          >
+                            {sendingId === boulder.id ? 'Salvataggio...' : 'Ho scalato'}
+                          </button>
+                        )}
+                      </div>
+                      <GymGradeCircle
+                        difficulty={boulder.difficulty}
+                        sent={Boolean(boulder.is_sent)}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -238,38 +267,58 @@ export function GymDetail() {
         )}
       </section>
 
-      <section className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-primary" />
-          <h2 className="text-lg font-semibold">Classifica</h2>
+      <section className="mt-2">
+        <div className="gym-leaderboard-banner">
+          <p className="gym-eyebrow mb-1">Classifica</p>
+          <h2 className="gym-title text-3xl sm:text-4xl flex items-center gap-2">
+            <Trophy className="w-7 h-7" style={{ color: 'var(--gym-accent)' }} />
+            Top Climbers
+          </h2>
         </div>
-        <Card className="overflow-hidden">
-          {leaderboard.length === 0 ? (
-            <div className="p-6 text-center text-muted-foreground">
-              Nessun punteggio ancora. Sii il primo a scalare!
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {leaderboard.map((entry) => (
-                <div
-                  key={entry.user_id}
-                  className="flex items-center justify-between px-4 py-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="w-8 text-sm font-semibold text-muted-foreground">
-                      #{entry.rank}
-                    </span>
-                    <span className="font-medium">{entry.name}</span>
-                  </div>
-                  <span className="text-sm font-semibold">
-                    {entry.total_points}{' '}
-                    {entry.total_points === 1 ? 'punto' : 'punti'}
+
+        {leaderboard.length === 0 ? (
+          <div className="gym-empty">Nessun punteggio ancora. Sii il primo a scalare!</div>
+        ) : (
+          <div className="px-4 sm:px-5 pb-6">
+            {leaderboard.map((entry) => {
+              const initials = entry.name
+                .split(/\s+/)
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((part) => part[0]?.toUpperCase() ?? '')
+                .join('');
+              const isTop = entry.rank <= 3;
+              return (
+                <div key={entry.user_id} className="gym-leaderboard-row">
+                  <span className={`gym-leaderboard-rank ${isTop ? 'is-top' : ''}`}>
+                    {entry.rank}
                   </span>
+                  <div className="gym-leaderboard-avatar">{initials || '?'}</div>
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className="font-bold text-sm truncate"
+                      style={{
+                        fontFamily: 'var(--gym-font-display)',
+                        color: 'var(--gym-text-secondary)',
+                      }}
+                    >
+                      {entry.name}
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--gym-text-faint)' }}>
+                      {entry.total_points} {entry.total_points === 1 ? 'punto' : 'punti'}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="gym-leaderboard-points">{entry.total_points}</span>
+                    <span className="text-xs" style={{ color: 'var(--gym-text-faint)' }}>
+                      pts
+                    </span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </Card>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <LoginRequiredDialog

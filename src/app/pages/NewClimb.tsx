@@ -11,6 +11,7 @@ import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { ClimbCreateRequest, RouteDetailResponseExtended, routesApi } from '../api/routes';
 import { auth } from '../utils/auth';
+import { outdoorPath } from '../paths';
 
 export function NewClimb() {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ export function NewClimb() {
     try {
       await routesApi.climbOne(user.id, newClimb);
       toast.success('Scalata aggiunta con successo! 🎉');
-      navigate(`/falesia/${selectedRoute.crag_id}`);
+      navigate(outdoorPath(`falesia/${selectedRoute.crag_id}`));
     } catch (error) {
       console.error('Error adding climb:', error);
       toast.error("Errore durante l'aggiunta della scalata");
@@ -99,7 +100,7 @@ export function NewClimb() {
                   {selectedRoute.grado}
                 </span>
               </div>
-              <Link to="/tutte-le-vie">
+              <Link to={outdoorPath("vie")}>
                 <Button variant="outline" size="sm">
                   Cambia Via
                 </Button>
@@ -113,7 +114,7 @@ export function NewClimb() {
             <p className="text-sm text-muted-foreground mb-4">
               Seleziona una via dall'archivio per registrare la tua scalata
             </p>
-            <Link to="/tutte-le-vie">
+            <Link to={outdoorPath("vie")}>
               <Button>
                 <Mountain className="w-4 h-4 mr-2" />
                 Cerca Via nell'Archivio

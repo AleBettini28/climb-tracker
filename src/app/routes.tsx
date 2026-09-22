@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router';
-import { Layout } from './components/Layout';
+import { OutdoorLayout } from './components/OutdoorLayout';
+import { GymLayout } from './components/GymLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminRoute } from './components/AdminRoute';
 import { Dashboard } from './pages/Dashboard';
@@ -25,22 +26,26 @@ import { GymList } from './pages/GymList';
 import { GymDetail } from './pages/GymDetail';
 import { NewGym } from './pages/NewGym';
 import { NewGymBoulder } from './pages/NewGymBoulder';
+import Landing from './pages/Landing';
 import Auth from './pages/Auth';
+import { OutdoorLegacyRedirect, GymLegacyRedirect } from './components/LegacyRedirect';
+import { outdoorPath, gymPath, OUTDOOR_BASE, GYM_BASE } from './paths';
 
 export const router = createBrowserRouter(
   [
+    {
+      path: '/',
+      Component: Landing,
+    },
     {
       path: '/auth',
       Component: Auth,
     },
     {
-      path: '/',
-      Component: Layout,
+      path: OUTDOOR_BASE,
+      Component: OutdoorLayout,
       children: [
-        // Public routes: browsable without an account.
-        // The app lands on Explore by default; Auth is only reached explicitly
-        // (e.g. via the login button) instead of forcing an auth redirect.
-        { index: true, element: <Navigate to="/esplora" replace /> },
+        { index: true, element: <Navigate to={outdoorPath('esplora')} replace /> },
         { path: 'esplora', Component: Explore },
         { path: 'dashboard', Component: Dashboard },
         { path: 'falesia/:id', Component: CragDetail },
@@ -48,10 +53,6 @@ export const router = createBrowserRouter(
         { path: 'area-boulder/:id', Component: BoulderAreaDetail },
         { path: 'masso/:id', Component: BoulderDetail },
         { path: 'blocco/:id', Component: BoulderRouteDetail },
-        { path: 'palestre', Component: GymList },
-        { path: 'palestra/:id', Component: GymDetail },
-
-        // Protected routes: require an authenticated user.
         {
           path: 'nuova-falesia',
           element: (
@@ -148,6 +149,15 @@ export const router = createBrowserRouter(
             </ProtectedRoute>
           ),
         },
+      ],
+    },
+    {
+      path: GYM_BASE,
+      Component: GymLayout,
+      children: [
+        { index: true, element: <Navigate to={gymPath('palestre')} replace /> },
+        { path: 'palestre', Component: GymList },
+        { path: 'palestra/:id', Component: GymDetail },
         {
           path: 'nuova-palestra',
           element: (
@@ -165,6 +175,33 @@ export const router = createBrowserRouter(
           ),
         },
       ],
+    },
+    // Legacy redirects from old root paths
+    { path: '/esplora', element: <Navigate to={outdoorPath('esplora')} replace /> },
+    { path: '/dashboard', element: <Navigate to={outdoorPath('dashboard')} replace /> },
+    { path: '/falesia/:id', element: <OutdoorLegacyRedirect suffix="falesia/:id" /> },
+    { path: '/via/:id', element: <OutdoorLegacyRedirect suffix="via/:id" /> },
+    { path: '/area-boulder/:id', element: <OutdoorLegacyRedirect suffix="area-boulder/:id" /> },
+    { path: '/masso/:id', element: <OutdoorLegacyRedirect suffix="masso/:id" /> },
+    { path: '/blocco/:id', element: <OutdoorLegacyRedirect suffix="blocco/:id" /> },
+    { path: '/vie', element: <Navigate to={outdoorPath('vie')} replace /> },
+    { path: '/vie/:id', element: <OutdoorLegacyRedirect suffix="vie/:id" /> },
+    { path: '/boulder', element: <Navigate to={outdoorPath('boulder')} replace /> },
+    { path: '/boulder/:id', element: <OutdoorLegacyRedirect suffix="boulder/:id" /> },
+    { path: '/piano-ai', element: <Navigate to={outdoorPath('piano-ai')} replace /> },
+    { path: '/nuova-falesia', element: <Navigate to={outdoorPath('nuova-falesia')} replace /> },
+    { path: '/nuova-area-boulder', element: <Navigate to={outdoorPath('nuova-area-boulder')} replace /> },
+    { path: '/nuova-salita/:id', element: <OutdoorLegacyRedirect suffix="nuova-salita/:id" /> },
+    { path: '/nuova-via/:id', element: <OutdoorLegacyRedirect suffix="nuova-via/:id" /> },
+    { path: '/nuovo-masso/:id', element: <OutdoorLegacyRedirect suffix="nuovo-masso/:id" /> },
+    { path: '/nuovo-blocco/:id', element: <OutdoorLegacyRedirect suffix="nuovo-blocco/:id" /> },
+    { path: '/nuovo-invio/:id', element: <OutdoorLegacyRedirect suffix="nuovo-invio/:id" /> },
+    { path: '/palestre', element: <Navigate to={gymPath('palestre')} replace /> },
+    { path: '/palestra/:id', element: <GymLegacyRedirect suffix="palestra/:id" /> },
+    { path: '/nuova-palestra', element: <Navigate to={gymPath('nuova-palestra')} replace /> },
+    {
+      path: '/nuovo-boulder-palestra/:gymId',
+      element: <GymLegacyRedirect suffix="nuovo-boulder-palestra/:gymId" />,
     },
   ],
   {

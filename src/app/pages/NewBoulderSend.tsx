@@ -15,6 +15,7 @@ import {
   boulderRoutesApi,
 } from '../api/boulderRoutes';
 import { auth } from '../utils/auth';
+import { outdoorPath } from '../paths';
 
 export function NewBoulderSend() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export function NewBoulderSend() {
     try {
       await boulderRoutesApi.sendOne(user.id, newBoulderSend);
       toast.success('Invio aggiunto con successo! 🎉');
-      navigate(`/masso/${selectedBoulderRoute.boulder_id}`);
+      navigate(outdoorPath(`masso/${selectedBoulderRoute.boulder_id}`));
     } catch (error) {
       console.error('Error adding boulder send:', error);
       toast.error("Errore durante l'aggiunta dell'invio");
@@ -116,7 +117,7 @@ export function NewBoulderSend() {
             <p className="text-sm text-muted-foreground mb-4">
               Seleziona un blocco dall'archivio per registrare il tuo invio
             </p>
-            <Link to="/esplora">
+            <Link to={outdoorPath("esplora")}>
               <Button>
                 <Hexagon className="w-4 h-4 mr-2" />
                 Cerca Boulder nell'Archivio

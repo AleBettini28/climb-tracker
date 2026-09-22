@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Building2, PlusCircle } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { gymsApi, GymCreateUpdateRequest } from '../api';
 import { auth } from '../utils/auth';
 import { ImageUpload } from '../components/ImageUpload';
 import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
+import { gymPath } from '../paths';
 
 export function NewGym() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export function NewGym() {
 
       await gymsApi.createOne(session.id, body);
       toast.success('Palestra creata con successo!');
-      navigate('/palestre');
+      navigate(gymPath('palestre'));
     } catch (error) {
       console.error('Error creating gym:', error);
       toast.error('Errore durante la creazione della palestra');
@@ -59,21 +59,17 @@ export function NewGym() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 sm:py-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-            </div>
-            <h1 className="text-xl sm:text-2xl">Nuova palestra</h1>
-          </div>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Aggiungi una palestra al catalogo
-          </p>
-        </div>
+    <div className="gym-page">
+      <div className="px-4 sm:px-5 pb-4 border-b border-[var(--gym-border)]">
+        <p className="gym-eyebrow mb-1">Admin</p>
+        <h1 className="gym-title text-3xl sm:text-4xl">Nuova palestra</h1>
+        <p className="text-sm mt-2" style={{ color: 'var(--gym-text-dim)' }}>
+          Aggiungi una palestra al catalogo
+        </p>
+      </div>
 
-        <Card className="p-4 sm:p-6">
+      <div className="px-4 sm:px-5 py-5">
+        <div className="gym-card-surface p-4 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Nome *</Label>
@@ -99,7 +95,7 @@ export function NewGym() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="city">Città</Label>
+                <Label htmlFor="city">Citta'</Label>
                 <Input
                   id="city"
                   value={formData.city}
@@ -129,7 +125,7 @@ export function NewGym() {
               {isSubmitting ? 'Salvataggio...' : 'Crea palestra'}
             </Button>
           </form>
-        </Card>
+        </div>
       </div>
     </div>
   );

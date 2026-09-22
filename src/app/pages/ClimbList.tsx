@@ -16,6 +16,7 @@ import { DIFFICULTY_LABELS } from '../types/climb';
 import { toast } from 'sonner';
 import { ClimbDetailExtendedResponse, routesApi } from '../api/routes';
 import { auth } from '../utils/auth';
+import { outdoorPath } from '../paths';
 
 const FILTERS_STORAGE_KEY = 'climb-list-filters';
 
@@ -314,7 +315,7 @@ export function ClimbList() {
       {filteredClimbs.length > 0 ? (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {filteredClimbs.map((climb) => (
-            <Link key={climb.route.id} to={`/vie/${climb.route.id}`}>
+            <Link key={climb.route.id} to={outdoorPath(`vie/${climb.route.id}`)}>
               <Card className="p-4 sm:p-5 hover:shadow-md transition-shadow group cursor-pointer">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">

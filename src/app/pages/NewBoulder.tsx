@@ -8,6 +8,7 @@ import { PlusCircle, Hexagon } from 'lucide-react';
 import { toast } from 'sonner';
 import { auth } from '../utils/auth';
 import { bouldersApi } from '../api/boulders';
+import { outdoorPath } from '../paths';
 
 export function NewBoulder() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export function NewBoulder() {
       });
 
       toast.success('Boulder aggiunto con successo! 🎉');
-      navigate(`/area-boulder/${id}`);
+      navigate(outdoorPath(`area-boulder/${id}`));
     } catch (error) {
       console.error('Error adding boulder:', error);
       toast.error("Errore durante l'aggiunta del boulder");

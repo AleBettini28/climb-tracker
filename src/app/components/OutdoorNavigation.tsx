@@ -9,12 +9,13 @@ import {
   LogOut,
   LogIn,
   Sparkles,
-  Building2,
+  LayoutGrid,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ConfirmDialog } from './ConfirmDialog';
+import { outdoorPath, authPath, zoneHomeFromPath } from '../paths';
 
-export function Navigation() {
+export function OutdoorNavigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -24,30 +25,35 @@ export function Navigation() {
   const handleLogout = async () => {
     await logout();
     setShowLogoutDialog(false);
-    navigate('/esplora');
+    navigate(zoneHomeFromPath(location.pathname));
   };
 
-  const isActivityActive = location.pathname === '/vie' || location.pathname === '/boulder';
+  const viesPath = outdoorPath('vie');
+  const boulderPath = outdoorPath('boulder');
+  const isActivityActive =
+    location.pathname === viesPath ||
+    location.pathname.startsWith(`${viesPath}/`) ||
+    location.pathname === boulderPath ||
+    location.pathname.startsWith(`${boulderPath}/`);
 
   return (
     <>
       <nav className="bg-card border-b border-border sticky top-0 z-50">
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center justify-between py-3 sm:py-4">
-            <Link to="/esplora" className="flex items-center gap-2">
+            <Link to={outdoorPath('esplora')} className="flex items-center gap-2">
               <div className="p-1.5 bg-gradient-to-br from-primary to-accent rounded-lg">
                 <Home className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
               </div>
-              <span className="text-base sm:text-xl font-bold text-foreground">ClimbTracker</span>
+              <span className="text-base sm:text-xl font-bold text-foreground">Outdoor Tracker</span>
             </Link>
 
             <div className="flex items-center gap-2 sm:gap-4">
               <div className="flex gap-1">
-                {/* Dashboard */}
                 <Link
-                  to="/dashboard"
+                  to={outdoorPath('dashboard')}
                   className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                    location.pathname === '/dashboard'
+                    location.pathname === outdoorPath('dashboard')
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   }`}
@@ -56,12 +62,11 @@ export function Navigation() {
                   <span className="hidden md:inline text-sm font-medium">Dashboard</span>
                 </Link>
 
-                {/* Piano AI */}
                 {user && (
                   <Link
-                    to="/piano-ai"
+                    to={outdoorPath('piano-ai')}
                     className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                      location.pathname.startsWith('/piano-ai')
+                      location.pathname.startsWith(outdoorPath('piano-ai'))
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
@@ -71,11 +76,10 @@ export function Navigation() {
                   </Link>
                 )}
 
-                {/* Esplora */}
                 <Link
-                  to="/esplora"
+                  to={outdoorPath('esplora')}
                   className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                    location.pathname === '/esplora'
+                    location.pathname === outdoorPath('esplora')
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                   }`}
@@ -84,20 +88,6 @@ export function Navigation() {
                   <span className="hidden md:inline text-sm font-medium">Esplora</span>
                 </Link>
 
-                {/* Palestre */}
-                <Link
-                  to="/palestre"
-                  className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors ${
-                    location.pathname.startsWith('/palestra')
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                  }`}
-                >
-                  <Building2 className="w-4 h-4" />
-                  <span className="hidden md:inline text-sm font-medium">Palestre</span>
-                </Link>
-
-                {/* Attività Dropdown (solo per utenti autenticati) */}
                 {user && (
                   <div className="relative">
                     <button
@@ -121,14 +111,14 @@ export function Navigation() {
                         />
                         <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-50">
                           <Link
-                            to="/vie"
+                            to={viesPath}
                             onClick={() => setShowActivityMenu(false)}
                             className="block px-4 py-3 text-sm hover:bg-muted transition-colors border-b border-border"
                           >
                             Le Mie Vie
                           </Link>
                           <Link
-                            to="/boulder"
+                            to={boulderPath}
                             onClick={() => setShowActivityMenu(false)}
                             className="block px-4 py-3 text-sm hover:bg-muted transition-colors"
                           >
@@ -142,6 +132,14 @@ export function Navigation() {
               </div>
 
               <div className="flex items-center gap-2 sm:gap-3 border-l border-border pl-2 sm:pl-4">
+                <Link
+                  to="/"
+                  className="flex items-center gap-1.5 px-2 sm:px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                  title="Applicazioni"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                  <span className="hidden sm:inline text-sm">Apps</span>
+                </Link>
                 {user ? (
                   <>
                     <span className="text-xs sm:text-sm text-muted-foreground hidden lg:inline truncate max-w-[120px]">
@@ -158,7 +156,7 @@ export function Navigation() {
                   </>
                 ) : (
                   <button
-                    onClick={() => navigate('/auth')}
+                    onClick={() => navigate(authPath(location.pathname))}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                     title="Accedi"
                   >
