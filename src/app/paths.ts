@@ -1,5 +1,4 @@
 export const OUTDOOR_BASE = '/outdoor-tracker';
-export const GYM_BASE = '/gym-tracker';
 
 export function outdoorPath(segment = ''): string {
   if (!segment) {
@@ -7,14 +6,6 @@ export function outdoorPath(segment = ''): string {
   }
   const clean = segment.startsWith('/') ? segment.slice(1) : segment;
   return `${OUTDOOR_BASE}/${clean}`;
-}
-
-export function gymPath(segment = ''): string {
-  if (!segment) {
-    return GYM_BASE;
-  }
-  const clean = segment.startsWith('/') ? segment.slice(1) : segment;
-  return `${GYM_BASE}/${clean}`;
 }
 
 export function authPath(redirect?: string): string {
@@ -25,12 +16,7 @@ export function authPath(redirect?: string): string {
 }
 
 export function isSafeAppRedirect(path: string): boolean {
-  return (
-    path.startsWith(`${OUTDOOR_BASE}/`) ||
-    path === OUTDOOR_BASE ||
-    path.startsWith(`${GYM_BASE}/`) ||
-    path === GYM_BASE
-  );
+  return path.startsWith(`${OUTDOOR_BASE}/`) || path === OUTDOOR_BASE;
 }
 
 export function resolvePostAuthRedirect(redirect: string | null): string {
@@ -41,9 +27,6 @@ export function resolvePostAuthRedirect(redirect: string | null): string {
 }
 
 export function zoneHomeFromPath(pathname: string): string {
-  if (pathname.startsWith(GYM_BASE)) {
-    return gymPath('palestre');
-  }
   if (pathname.startsWith(OUTDOOR_BASE)) {
     return outdoorPath('esplora');
   }

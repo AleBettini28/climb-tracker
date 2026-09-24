@@ -249,47 +249,8 @@ export function CragDetail() {
   const displayLat = crag ? crag.latitude : 0;
   const displayLng = crag ? crag.longitude : 0;
 
-  const gradeOrder = [
-    '3B',
-    '3C',
-    '4A',
-    '4B',
-    '4C',
-    '5A',
-    '5A+',
-    '5B',
-    '5B+',
-    '5C',
-    '5C+',
-    '6A',
-    '6A+',
-    '6B',
-    '6B+',
-    '6C',
-    '6C+',
-    '7A',
-    '7A+',
-    '7B',
-    '7B+',
-    '7C',
-    '7C+',
-    '8A',
-    '8A+',
-    '8B',
-    '8B+',
-    '8C',
-    '8C+',
-    '9A',
-    '9A+',
-    '9B',
-    '9B+',
-    '9C',
-  ];
-  const sortedGrades = routes
-    .map((r) => r.grado)
-    .sort((a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b));
-  const minGrade = sortedGrades.length > 0 ? sortedGrades[0] : '-';
-  const maxGrade = sortedGrades.length > 0 ? sortedGrades[sortedGrades.length - 1] : '-';
+  const minGrade = crag?.min_grade || '-';
+  const maxGrade = crag?.max_grade || '-';
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">

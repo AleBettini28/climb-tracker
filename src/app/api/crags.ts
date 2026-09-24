@@ -11,7 +11,8 @@ export interface CragDetailResponse {
   added_by: string;
   latitude: number;
   longitude: number;
-  max_grade: string;
+  min_grade: string | null;
+  max_grade: string | null;
 }
 
 export interface CragCreateUpdateRequest {

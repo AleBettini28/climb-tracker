@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import {
-  Home,
   LayoutDashboardIcon,
   Compass,
   List,
@@ -42,9 +41,6 @@ export function OutdoorNavigation() {
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center justify-between py-3 sm:py-4">
             <Link to={outdoorPath('esplora')} className="flex items-center gap-2">
-              <div className="p-1.5 bg-gradient-to-br from-primary to-accent rounded-lg">
-                <Home className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
-              </div>
               <span className="text-base sm:text-xl font-bold text-foreground">Outdoor Tracker</span>
             </Link>
 

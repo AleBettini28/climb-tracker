@@ -1,9 +1,7 @@
 import { Navigate, useParams, useLocation } from 'react-router';
-import { outdoorPath, gymPath } from '../paths';
+import { outdoorPath } from '../paths';
 
-type Zone = 'outdoor' | 'gym';
-
-function LegacyRedirect({ zone, suffix }: { zone: Zone; suffix: string }) {
+export function OutdoorLegacyRedirect({ suffix }: { suffix: string }) {
   const params = useParams();
   const location = useLocation();
 
@@ -14,14 +12,6 @@ function LegacyRedirect({ zone, suffix }: { zone: Zone; suffix: string }) {
     }
   }
 
-  const target = zone === 'outdoor' ? outdoorPath(resolved) : gymPath(resolved);
+  const target = outdoorPath(resolved);
   return <Navigate to={`${target}${location.search}${location.hash}`} replace />;
-}
-
-export function OutdoorLegacyRedirect({ suffix }: { suffix: string }) {
-  return <LegacyRedirect zone="outdoor" suffix={suffix} />;
-}
-
-export function GymLegacyRedirect({ suffix }: { suffix: string }) {
-  return <LegacyRedirect zone="gym" suffix={suffix} />;
 }

@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
-import { Mountain, Building2 } from 'lucide-react';
-import { outdoorPath, gymPath } from '../paths';
+import { Mountain } from 'lucide-react';
+import { outdoorPath } from '../paths';
 
 export default function Landing() {
   return (
@@ -10,7 +10,7 @@ export default function Landing() {
           Alessandro Bettini applications
         </h1>
         <p className="text-stone-600 mb-10 text-sm sm:text-base">
-          Scegli l&apos;applicazione a cui accedere.
+          Accedi all&apos;applicazione.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -20,13 +20,6 @@ export default function Landing() {
           >
             <Mountain className="w-5 h-5" />
             Accedi a outdoor-tracker
-          </Link>
-          <Link
-            to={gymPath('palestre')}
-            className="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-stone-800 hover:bg-stone-900 text-white font-semibold transition-colors shadow-md"
-          >
-            <Building2 className="w-5 h-5" />
-            Accedi a gym-tracker
           </Link>
         </div>
       </div>

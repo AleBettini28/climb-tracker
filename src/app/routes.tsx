@@ -1,8 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 import { OutdoorLayout } from './components/OutdoorLayout';
-import { GymLayout } from './components/GymLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { AdminRoute } from './components/AdminRoute';
 import { Dashboard } from './pages/Dashboard';
 import { ClimbList } from './pages/ClimbList';
 import { NewClimb } from './pages/NewClimb';
@@ -22,14 +20,10 @@ import { NewBoulderSend } from './pages/NewBoulderSend';
 import { BoulderSendList } from './pages/BoulderSendList';
 import { BoulderSendDetail } from './pages/BoulderSendDetail';
 import { AIPlan } from './pages/AIPlan';
-import { GymList } from './pages/GymList';
-import { GymDetail } from './pages/GymDetail';
-import { NewGym } from './pages/NewGym';
-import { NewGymBoulder } from './pages/NewGymBoulder';
 import Landing from './pages/Landing';
 import Auth from './pages/Auth';
-import { OutdoorLegacyRedirect, GymLegacyRedirect } from './components/LegacyRedirect';
-import { outdoorPath, gymPath, OUTDOOR_BASE, GYM_BASE } from './paths';
+import { OutdoorLegacyRedirect } from './components/LegacyRedirect';
+import { outdoorPath, OUTDOOR_BASE } from './paths';
 
 export const router = createBrowserRouter(
   [
@@ -151,31 +145,6 @@ export const router = createBrowserRouter(
         },
       ],
     },
-    {
-      path: GYM_BASE,
-      Component: GymLayout,
-      children: [
-        { index: true, element: <Navigate to={gymPath('palestre')} replace /> },
-        { path: 'palestre', Component: GymList },
-        { path: 'palestra/:id', Component: GymDetail },
-        {
-          path: 'nuova-palestra',
-          element: (
-            <AdminRoute>
-              <NewGym />
-            </AdminRoute>
-          ),
-        },
-        {
-          path: 'nuovo-boulder-palestra/:gymId',
-          element: (
-            <AdminRoute>
-              <NewGymBoulder />
-            </AdminRoute>
-          ),
-        },
-      ],
-    },
     // Legacy redirects from old root paths
     { path: '/esplora', element: <Navigate to={outdoorPath('esplora')} replace /> },
     { path: '/dashboard', element: <Navigate to={outdoorPath('dashboard')} replace /> },
@@ -196,13 +165,6 @@ export const router = createBrowserRouter(
     { path: '/nuovo-masso/:id', element: <OutdoorLegacyRedirect suffix="nuovo-masso/:id" /> },
     { path: '/nuovo-blocco/:id', element: <OutdoorLegacyRedirect suffix="nuovo-blocco/:id" /> },
     { path: '/nuovo-invio/:id', element: <OutdoorLegacyRedirect suffix="nuovo-invio/:id" /> },
-    { path: '/palestre', element: <Navigate to={gymPath('palestre')} replace /> },
-    { path: '/palestra/:id', element: <GymLegacyRedirect suffix="palestra/:id" /> },
-    { path: '/nuova-palestra', element: <Navigate to={gymPath('nuova-palestra')} replace /> },
-    {
-      path: '/nuovo-boulder-palestra/:gymId',
-      element: <GymLegacyRedirect suffix="nuovo-boulder-palestra/:gymId" />,
-    },
   ],
   {
     basename: '/',
