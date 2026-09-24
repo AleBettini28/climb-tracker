@@ -106,30 +106,29 @@ export function Explore() {
 
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-              <Compass className="w-6 h-6 text-primary" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold">Esplora</h1>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+            <Compass className="w-6 h-6 text-primary" />
           </div>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            Scopri falesie e aree boulder da tutto il mondo
-          </p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Esplora</h1>
         </div>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Scopri falesie e aree boulder da tutto il mondo
+        </p>
+      </div>
 
-        <Tabs value={section} onValueChange={(value) => setSection(value as ExploreSection)}>
-          <TabsList className="mb-6 sm:mb-8">
-            <TabsTrigger value="falesie">
-              <Mountain className="w-4 h-4" />
-              Falesie
-            </TabsTrigger>
-            <TabsTrigger value="boulder">
-              <Hexagon className="w-4 h-4" />
-              Aree Boulder
-            </TabsTrigger>
-          </TabsList>
+      <Tabs value={section} onValueChange={(value) => setSection(value as ExploreSection)}>
+        <TabsList className="mb-6 sm:mb-8">
+          <TabsTrigger value="falesie">
+            <Mountain className="w-4 h-4" />
+            Falesie
+          </TabsTrigger>
+          <TabsTrigger value="boulder">
+            <Hexagon className="w-4 h-4" />
+            Aree Boulder
+          </TabsTrigger>
+        </TabsList>
 
           {/* Falesie */}
           <TabsContent value="falesie">
@@ -313,7 +312,6 @@ export function Explore() {
             </section>
           </TabsContent>
         </Tabs>
-      </div>
     </div>
   );
 }

@@ -264,56 +264,54 @@ export function CragDetail() {
 
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
+            <div className="p-2 bg-primary/10 rounded-lg shrink-0">
               <Mountain className="w-6 h-6 text-primary" />
             </div>
             {!isEditing ? (
-              <h1 className="text-2xl sm:text-3xl font-bold">{crag ? crag.name : ''}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold min-w-0 flex-1 truncate">
+                {crag ? crag.name : ''}
+              </h1>
             ) : (
-              <div className="space-y-2 flex-1">
-                <Label htmlFor="crag-name">Nome Falesia</Label>
-                <Input
-                  id="crag-name"
-                  type="text"
-                  value={editForm.name}
-                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                  className="text-xl font-bold"
-                />
+              <Input
+                id="crag-name"
+                type="text"
+                value={editForm.name}
+                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                className="text-xl sm:text-2xl font-bold h-9 flex-1 min-w-0"
+                aria-label="Nome Falesia"
+              />
+            )}
+            {crag && !isEditing && user && (
+              <div className="flex items-center gap-2 shrink-0 ml-auto">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  title="Modifica"
+                  onClick={handleEditToggle}
+                >
+                  <Edit2 className="w-4 h-4" />
+                </Button>
+                <Button size="icon" title="Aggiungi Via" onClick={handleAddRoute}>
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+            {isEditing && (
+              <div className="flex items-center gap-2 shrink-0 ml-auto">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  title="Annulla"
+                  onClick={handleEditToggle}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+                <Button size="icon" title="Salva" onClick={handleSave}>
+                  <Save className="w-4 h-4" />
+                </Button>
               </div>
             )}
           </div>
-          {crag && !isEditing && user && (
-            <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <Button
-                variant="outline"
-                onClick={handleEditToggle}
-                className="flex-1 sm:flex-initial"
-              >
-                <Edit2 className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Modifica</span>
-              </Button>
-              <Button onClick={handleAddRoute} className="flex-1 sm:flex-initial">
-                <Plus className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Aggiungi Via</span>
-              </Button>
-            </div>
-          )}
-          {isEditing && (
-            <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <Button
-                variant="outline"
-                onClick={handleEditToggle}
-                className="flex-1 sm:flex-initial"
-              >
-                <X className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Annulla</span>
-              </Button>
-              <Button onClick={handleSave} className="flex-1 sm:flex-initial">
-                <Save className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Salva</span>
-              </Button>
-            </div>
-          )}
           {!isEditing && (
             <>
               {crag?.description && (
