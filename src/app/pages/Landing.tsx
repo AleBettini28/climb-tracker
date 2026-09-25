@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { Mountain } from 'lucide-react';
+import { Book, Mountain } from 'lucide-react';
 import { outdoorPath } from '../paths';
 
 export default function Landing() {
@@ -21,6 +21,13 @@ export default function Landing() {
             <Mountain className="w-5 h-5" />
             Accedi a outdoor-tracker
           </Link>
+          <a
+            href="https://alebettini28.github.io/dnd-wiki/"
+            className="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-[#c4b583] hover:bg-[#b3a472] text-stone-900 font-semibold transition-colors shadow-md"
+          >
+            <Book className="w-5 h-5" />
+            DnD Wiki
+          </a>
         </div>
       </div>
     </div>
