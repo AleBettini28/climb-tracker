@@ -1,5 +1,5 @@
+import { Book, Gamepad, Mountain } from 'lucide-react';
 import { Link } from 'react-router';
-import { Book, Mountain } from 'lucide-react';
 import { outdoorPath } from '../paths';
 
 export default function Landing() {
@@ -9,9 +9,7 @@ export default function Landing() {
         <h1 className="text-3xl sm:text-4xl font-bold text-stone-800 tracking-tight mb-3">
           Alessandro Bettini applications
         </h1>
-        <p className="text-stone-600 mb-10 text-sm sm:text-base">
-          Accedi all&apos;applicazione.
-        </p>
+        <p className="text-stone-600 mb-10 text-sm sm:text-base">Accedi all&apos;applicazione.</p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
@@ -27,6 +25,13 @@ export default function Landing() {
           >
             <Book className="w-5 h-5" />
             DnD Wiki
+          </a>
+          <a
+            href="https://alebettini28.github.io/fortnite-tracker/"
+            className="flex items-center justify-center gap-3 px-6 py-4 rounded-lg bg-[#8b5cf6] hover:bg-[#8b5cf6] text-stone-900 font-semibold transition-colors shadow-md"
+          >
+            <Gamepad className="w-5 h-5" />
+            Fortnite Tracker
           </a>
         </div>
       </div>
