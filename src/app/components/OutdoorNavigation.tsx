@@ -8,7 +8,6 @@ import {
   LogOut,
   LogIn,
   Sparkles,
-  LayoutGrid,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -128,14 +127,6 @@ export function OutdoorNavigation() {
               </div>
 
               <div className="flex items-center gap-2 sm:gap-3 border-l border-border pl-2 sm:pl-4">
-                <Link
-                  to="/"
-                  className="flex items-center gap-1.5 px-2 sm:px-3 py-2 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                  title="Applicazioni"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                  <span className="hidden sm:inline text-sm">Apps</span>
-                </Link>
                 {user ? (
                   <>
                     <span className="text-xs sm:text-sm text-muted-foreground hidden lg:inline truncate max-w-[120px]">
