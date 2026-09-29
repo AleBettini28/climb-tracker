@@ -20,23 +20,14 @@ import { NewBoulderSend } from './pages/NewBoulderSend';
 import { BoulderSendList } from './pages/BoulderSendList';
 import { BoulderSendDetail } from './pages/BoulderSendDetail';
 import { AIPlan } from './pages/AIPlan';
-import Landing from './pages/Landing';
 import Auth from './pages/Auth';
-import { OutdoorLegacyRedirect } from './components/LegacyRedirect';
-import { outdoorPath, OUTDOOR_BASE } from './paths';
+import { OutdoorTrackerLegacyRedirect } from './components/LegacyRedirect';
+import { outdoorPath } from './paths';
 
 export const router = createBrowserRouter(
   [
     {
       path: '/',
-      Component: Landing,
-    },
-    {
-      path: '/auth',
-      Component: Auth,
-    },
-    {
-      path: OUTDOOR_BASE,
       Component: OutdoorLayout,
       children: [
         { index: true, element: <Navigate to={outdoorPath('esplora')} replace /> },
@@ -145,26 +136,13 @@ export const router = createBrowserRouter(
         },
       ],
     },
-    // Legacy redirects from old root paths
-    { path: '/esplora', element: <Navigate to={outdoorPath('esplora')} replace /> },
-    { path: '/dashboard', element: <Navigate to={outdoorPath('dashboard')} replace /> },
-    { path: '/falesia/:id', element: <OutdoorLegacyRedirect suffix="falesia/:id" /> },
-    { path: '/via/:id', element: <OutdoorLegacyRedirect suffix="via/:id" /> },
-    { path: '/area-boulder/:id', element: <OutdoorLegacyRedirect suffix="area-boulder/:id" /> },
-    { path: '/masso/:id', element: <OutdoorLegacyRedirect suffix="masso/:id" /> },
-    { path: '/blocco/:id', element: <OutdoorLegacyRedirect suffix="blocco/:id" /> },
-    { path: '/vie', element: <Navigate to={outdoorPath('vie')} replace /> },
-    { path: '/vie/:id', element: <OutdoorLegacyRedirect suffix="vie/:id" /> },
-    { path: '/boulder', element: <Navigate to={outdoorPath('boulder')} replace /> },
-    { path: '/boulder/:id', element: <OutdoorLegacyRedirect suffix="boulder/:id" /> },
-    { path: '/piano-ai', element: <Navigate to={outdoorPath('piano-ai')} replace /> },
-    { path: '/nuova-falesia', element: <Navigate to={outdoorPath('nuova-falesia')} replace /> },
-    { path: '/nuova-area-boulder', element: <Navigate to={outdoorPath('nuova-area-boulder')} replace /> },
-    { path: '/nuova-salita/:id', element: <OutdoorLegacyRedirect suffix="nuova-salita/:id" /> },
-    { path: '/nuova-via/:id', element: <OutdoorLegacyRedirect suffix="nuova-via/:id" /> },
-    { path: '/nuovo-masso/:id', element: <OutdoorLegacyRedirect suffix="nuovo-masso/:id" /> },
-    { path: '/nuovo-blocco/:id', element: <OutdoorLegacyRedirect suffix="nuovo-blocco/:id" /> },
-    { path: '/nuovo-invio/:id', element: <OutdoorLegacyRedirect suffix="nuovo-invio/:id" /> },
+    {
+      path: '/auth',
+      Component: Auth,
+    },
+    // Legacy redirects from /outdoor-tracker prefix
+    { path: '/outdoor-tracker', element: <OutdoorTrackerLegacyRedirect /> },
+    { path: '/outdoor-tracker/*', element: <OutdoorTrackerLegacyRedirect /> },
   ],
   {
     basename: '/',

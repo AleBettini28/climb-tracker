@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { Mountain } from 'lucide-react';
 import { auth } from '../utils/auth';
 import { useAuth } from '../context/AuthContext';
-import { OUTDOOR_BASE, resolvePostAuthRedirect } from '../paths';
+import { resolvePostAuthRedirect } from '../paths';
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,8 +17,6 @@ export default function Auth() {
   const { refreshUser } = useAuth();
 
   const redirect = searchParams.get('redirect');
-  const isOutdoor = redirect?.startsWith(OUTDOOR_BASE) ?? false;
-  const appLabel = isOutdoor ? 'Outdoor Tracker' : 'le applicazioni';
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -49,7 +47,7 @@ export default function Auth() {
               <Mountain className="w-7 h-7 text-primary-foreground" />
             </div>
             <h1 className="text-3xl font-bold text-stone-800 mb-2">
-              {isLogin ? `Accedi a ${appLabel}` : 'Crea il tuo account'}
+              {isLogin ? 'Accedi a Outdoor Tracker' : 'Crea il tuo account'}
             </h1>
             <p className="text-stone-600">
               {isLogin

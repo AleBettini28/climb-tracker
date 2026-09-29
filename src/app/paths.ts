@@ -1,11 +1,9 @@
-export const OUTDOOR_BASE = '/outdoor-tracker';
-
 export function outdoorPath(segment = ''): string {
   if (!segment) {
-    return OUTDOOR_BASE;
+    return '/';
   }
   const clean = segment.startsWith('/') ? segment.slice(1) : segment;
-  return `${OUTDOOR_BASE}/${clean}`;
+  return `/${clean}`;
 }
 
 export function authPath(redirect?: string): string {
@@ -16,7 +14,13 @@ export function authPath(redirect?: string): string {
 }
 
 export function isSafeAppRedirect(path: string): boolean {
-  return path.startsWith(`${OUTDOOR_BASE}/`) || path === OUTDOOR_BASE;
+  if (!path.startsWith('/') || path.startsWith('//')) {
+    return false;
+  }
+  if (path === '/auth' || path.startsWith('/auth/') || path.startsWith('/auth?')) {
+    return false;
+  }
+  return true;
 }
 
 export function resolvePostAuthRedirect(redirect: string | null): string {
@@ -24,11 +28,4 @@ export function resolvePostAuthRedirect(redirect: string | null): string {
     return redirect;
   }
   return outdoorPath('dashboard');
-}
-
-export function zoneHomeFromPath(pathname: string): string {
-  if (pathname.startsWith(OUTDOOR_BASE)) {
-    return outdoorPath('esplora');
-  }
-  return '/';
 }

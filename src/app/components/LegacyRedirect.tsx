@@ -1,17 +1,10 @@
-import { Navigate, useParams, useLocation } from 'react-router';
-import { outdoorPath } from '../paths';
+import { Navigate, useLocation } from 'react-router';
 
-export function OutdoorLegacyRedirect({ suffix }: { suffix: string }) {
-  const params = useParams();
+const OUTDOOR_TRACKER_PREFIX = '/outdoor-tracker';
+
+export function OutdoorTrackerLegacyRedirect() {
   const location = useLocation();
-
-  let resolved = suffix;
-  for (const [key, value] of Object.entries(params)) {
-    if (value) {
-      resolved = resolved.replace(`:${key}`, value);
-    }
-  }
-
-  const target = outdoorPath(resolved);
+  const rest = location.pathname.slice(OUTDOOR_TRACKER_PREFIX.length).replace(/^\//, '');
+  const target = rest ? `/${rest}` : '/esplora';
   return <Navigate to={`${target}${location.search}${location.hash}`} replace />;
 }

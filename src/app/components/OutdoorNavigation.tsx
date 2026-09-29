@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ConfirmDialog } from './ConfirmDialog';
-import { outdoorPath, authPath, zoneHomeFromPath } from '../paths';
+import { outdoorPath, authPath } from '../paths';
 
 export function OutdoorNavigation() {
   const location = useLocation();
@@ -24,7 +24,7 @@ export function OutdoorNavigation() {
   const handleLogout = async () => {
     await logout();
     setShowLogoutDialog(false);
-    navigate(zoneHomeFromPath(location.pathname));
+    navigate(outdoorPath('esplora'));
   };
 
   const viesPath = outdoorPath('vie');
