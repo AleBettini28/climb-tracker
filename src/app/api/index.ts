@@ -12,3 +12,10 @@ export type {
   AiTrainingPlanSession,
   AiTrainingPlanMetric,
 } from './aiPlan';
+export { extraActivitiesApi, EXTRA_ACTIVITY_TYPE_LABELS, PROTECTION_STYLE_LABELS } from './extraActivities';
+export type {
+  ExtraActivityDetailResponse,
+  ExtraActivityCreateRequest,
+  ExtraActivityType,
+  ProtectionStyle,
+} from './extraActivities';

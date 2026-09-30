@@ -23,6 +23,9 @@ import { AIPlan } from './pages/AIPlan';
 import Auth from './pages/Auth';
 import { OutdoorTrackerLegacyRedirect } from './components/LegacyRedirect';
 import { outdoorPath } from './paths';
+import { NewExtraActivity } from './pages/NewExtraActivity';
+import { ExtraActivityList } from './pages/ExtraActivityList';
+import { ExtraActivityDetail } from './pages/ExtraActivityDetail';
 
 export const router = createBrowserRouter(
   [
@@ -131,6 +134,30 @@ export const router = createBrowserRouter(
           element: (
             <ProtectedRoute>
               <AIPlan />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: 'nuova-attivita',
+          element: (
+            <ProtectedRoute>
+              <NewExtraActivity />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: 'attivita-extra',
+          element: (
+            <ProtectedRoute>
+              <ExtraActivityList />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: 'attivita-extra/:id',
+          element: (
+            <ProtectedRoute>
+              <ExtraActivityDetail />
             </ProtectedRoute>
           ),
         },

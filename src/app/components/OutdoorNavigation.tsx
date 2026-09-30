@@ -28,11 +28,15 @@ export function OutdoorNavigation() {
 
   const viesPath = outdoorPath('vie');
   const boulderPath = outdoorPath('boulder');
+  const extraActivitiesPath = outdoorPath('attivita-extra');
   const isActivityActive =
     location.pathname === viesPath ||
     location.pathname.startsWith(`${viesPath}/`) ||
     location.pathname === boulderPath ||
-    location.pathname.startsWith(`${boulderPath}/`);
+    location.pathname.startsWith(`${boulderPath}/`) ||
+    location.pathname === extraActivitiesPath ||
+    location.pathname.startsWith(`${extraActivitiesPath}/`) ||
+    location.pathname === outdoorPath('nuova-attivita');
 
   return (
     <>
@@ -115,9 +119,16 @@ export function OutdoorNavigation() {
                           <Link
                             to={boulderPath}
                             onClick={() => setShowActivityMenu(false)}
-                            className="block px-4 py-3 text-sm hover:bg-muted transition-colors"
+                            className="block px-4 py-3 text-sm hover:bg-muted transition-colors border-b border-border"
                           >
                             I Miei Boulder
+                          </Link>
+                          <Link
+                            to={extraActivitiesPath}
+                            onClick={() => setShowActivityMenu(false)}
+                            className="block px-4 py-3 text-sm hover:bg-muted transition-colors"
+                          >
+                            Attivita Extra
                           </Link>
                         </div>
                       </>
