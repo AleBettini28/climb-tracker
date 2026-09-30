@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: climbtracker-ui
+
+    expose:
+      - "80"
+
+    restart: unless-stopped
+
+    networks:
+      - climbtracker-web
+
+networks:
+  climbtracker-web:
+    external: true
